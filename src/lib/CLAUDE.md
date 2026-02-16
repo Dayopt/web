@@ -42,8 +42,7 @@ src/lib/
 ├── search.ts             # 検索ロジック
 ├── toc.ts                # 目次生成
 ├── tags-server.ts        # タグ処理（サーバー）
-├── tags-client.ts        # タグ処理（クライアント）
-└── cookie-consent.ts     # Cookie同意管理
+└── tags-client.ts        # タグ処理（クライアント）
 
 # ※ 国際化（i18n）は src/i18n/ ディレクトリで管理
 # 詳細は src/i18n/CLAUDE.md を参照

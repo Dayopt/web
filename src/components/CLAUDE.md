@@ -146,8 +146,6 @@ src/components/
 ├── analytics/               # 分析関連
 │   ├── GoogleAnalytics.tsx
 │   └── WebVitals.tsx
-├── privacy/                 # プライバシー関連
-│   └── CookieConsent.tsx
 └── errors/                  # エラー関連
     └── ErrorLayout.tsx
 ```
