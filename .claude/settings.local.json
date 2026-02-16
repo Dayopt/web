@@ -265,9 +265,19 @@
       "Bash(npx vercel:*)",
       "Bash(npm run type-check:*)",
       "Bash(npm run format:*)",
-      "Bash(do echo \"=== PR #$pr ===\")"
+      "Bash(do echo \"=== PR #$pr ===\")",
+      "Read(//Users/takayasutomoya/Desktop/app/src/styles/**)",
+      "Bash(while read f)",
+      "Bash(do sed -i '' 's/rounded-sm/rounded/g' \"$f\")",
+      "Bash(do sed -i '' 's/rounded-md/rounded-lg/g' \"$f\")",
+      "Bash(do sed -i '' 's/rounded-xl/rounded-2xl/g' \"$f\")",
+      "Bash(gh pr diff:*)",
+      "Bash(comm -23:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "/Users/takayasutomoya/Desktop/boxlog-web"
+    ]
   }
 }
