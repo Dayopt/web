@@ -57,6 +57,7 @@ export function Footer() {
 
       { name: t('footer.legal.security'), href: '/legal/security' },
       { name: t('footer.legal.tokushoho'), href: '/legal/tokushoho' },
+      { name: t('footer.legal.ossCredits'), href: '/legal/oss-credits' },
     ],
   };
 

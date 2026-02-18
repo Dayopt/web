@@ -44,7 +44,11 @@
     "test:performance": "npm run build && npm run audit:performance",
     "cleanup:console": "node src/scripts/cleanup-console.js",
     "prepare:production": "npm run cleanup:console && npm run lint && npm run type-check && npm run build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "license:check": "npx license-checker --production --excludePackages \"dayopt-marketing@$(node -p 'require(\"./package.json\").version')\" --onlyAllow \"$(cat .licensrc.json | jq -r .onlyAllow)\"",
+    "license:check-risks": "tsx scripts/check-license-risks.ts",
+    "license:audit": "npx license-checker --production --summary",
+    "generate-licenses": "tsx scripts/generate-licenses.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -100,12 +104,14 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "husky": "^9.1.7",
+    "license-checker": "^25.0.1",
     "lint-staged": "^16.2.7",
     "postcss": "^8.4.38",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.15",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   },
   "optionalDependencies": {

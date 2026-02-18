@@ -97,7 +97,8 @@
       "privacyPolicy": "プライバシーポリシー",
       "termsOfService": "利用規約",
       "security": "セキュリティ",
-      "tokushoho": "特定商取引法に基づく表記"
+      "tokushoho": "特定商取引法に基づく表記",
+      "ossCredits": "OSSライセンス"
     }
   },
   "errors": {
