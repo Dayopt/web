@@ -1,3 +1,4 @@
+import { createMDXComponents } from '@/components/content/ContentMDXComponents';
 import { ReleaseCard } from '@/components/releases/ReleaseCard';
 import { ReleaseHeader } from '@/components/releases/ReleaseHeader';
 import { Container } from '@/components/ui/container';
@@ -12,18 +13,6 @@ import rehypeHighlight from 'rehype-highlight';
 import remarkGfm from 'remark-gfm';
 
 type HeadingProps = ComponentPropsWithoutRef<'h1'>;
-type ParagraphProps = ComponentPropsWithoutRef<'p'>;
-type AnchorProps = ComponentPropsWithoutRef<'a'> & { href?: string };
-type BlockquoteProps = ComponentPropsWithoutRef<'blockquote'>;
-type CodeProps = ComponentPropsWithoutRef<'code'>;
-type PreProps = ComponentPropsWithoutRef<'pre'>;
-type ListProps = ComponentPropsWithoutRef<'ul'>;
-type OrderedListProps = ComponentPropsWithoutRef<'ol'>;
-type ListItemProps = ComponentPropsWithoutRef<'li'>;
-type ImageProps = ComponentPropsWithoutRef<'img'> & { src?: string; alt?: string };
-type TableProps = ComponentPropsWithoutRef<'table'>;
-type ThProps = ComponentPropsWithoutRef<'th'>;
-type TdProps = ComponentPropsWithoutRef<'td'>;
 
 interface ReleasePageProps {
   params: Promise<{
@@ -99,81 +88,12 @@ export async function generateStaticParams() {
   return params;
 }
 
-// MDX Components
-const mdxComponents = {
-  h1: (props: HeadingProps) => (
-    <h1 className="text-foreground mt-8 mb-4 text-3xl font-bold first:mt-0" {...props} />
-  ),
+// Releases-specific MDX Components (overrides for shared base)
+const mdxComponents = createMDXComponents({
+  // Releases: h2 with bottom border for visual separation
   h2: (props: HeadingProps) => (
     <h2
-      className="border-border text-foreground mt-8 mb-4 border-b pb-2 text-2xl font-bold"
-      {...props}
-    />
-  ),
-  h3: (props: HeadingProps) => (
-    <h3 className="text-foreground mt-6 mb-4 text-xl font-bold" {...props} />
-  ),
-  h4: (props: HeadingProps) => (
-    <h4 className="text-foreground mt-6 mb-4 text-lg font-bold" {...props} />
-  ),
-  p: (props: ParagraphProps) => <p className="text-foreground mb-4 leading-relaxed" {...props} />,
-  a: (props: AnchorProps) => (
-    <a
-      className="text-primary hover:text-primary/80 underline underline-offset-2"
-      target={props.href?.startsWith('http') ? '_blank' : undefined}
-      rel={props.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-      {...props}
-    />
-  ),
-  blockquote: (props: BlockquoteProps) => (
-    <blockquote
-      className="border-info bg-muted text-foreground my-6 rounded-r-lg border-l-4 py-2 pl-4 italic"
-      {...props}
-    />
-  ),
-  code: (props: CodeProps) => (
-    <code className="bg-muted text-foreground rounded px-2 py-1 font-mono text-sm" {...props} />
-  ),
-  pre: (props: PreProps) => (
-    <pre
-      className="bg-muted text-foreground my-6 overflow-x-auto rounded-lg p-4 text-sm"
-      {...props}
-    />
-  ),
-  ul: (props: ListProps) => (
-    <ul className="text-foreground mb-4 list-inside list-disc space-y-2" {...props} />
-  ),
-  ol: (props: OrderedListProps) => (
-    <ol className="text-foreground mb-4 list-inside list-decimal space-y-2" {...props} />
-  ),
-  li: (props: ListItemProps) => <li className="leading-relaxed" {...props} />,
-  img: (props: ImageProps) => (
-    <Image
-      className="my-6 h-auto max-w-full rounded-lg shadow-lg"
-      width={800}
-      height={600}
-      loading="lazy"
-      alt={props.alt || 'Release image'}
-      src={props.src || ''}
-    />
-  ),
-  table: (props: TableProps) => (
-    <div className="my-6 overflow-x-auto">
-      <table
-        className="divide-border border-border min-w-full divide-y rounded-lg border"
-        {...props}
-      />
-    </div>
-  ),
-  th: (props: ThProps) => (
-    <th
-      className="bg-container text-muted-foreground px-6 py-4 text-left text-xs font-bold tracking-wider uppercase"
-      {...props}
-    />
-  ),
-  td: (props: TdProps) => (
-    <td
-      className="border-border text-foreground border-t px-6 py-4 text-sm whitespace-nowrap"
+      className="border-border text-foreground mt-8 mb-4 border-b pb-2 text-3xl font-bold"
       {...props}
     />
   ),
@@ -198,7 +118,6 @@ const mdxComponents = {
     );
   },
 
-  // Warning component
   Warning: ({ children }: { children: React.ReactNode }) => (
     <div className="border-warning bg-muted my-6 rounded-lg border p-4">
       <div className="flex items-start">
@@ -220,7 +139,6 @@ const mdxComponents = {
     </div>
   ),
 
-  // Info component
   Info: ({ children }: { children: React.ReactNode }) => (
     <div className="border-info bg-muted my-6 rounded-lg border p-4">
       <div className="flex items-start">
@@ -242,7 +160,6 @@ const mdxComponents = {
     </div>
   ),
 
-  // Migration guide
   Migration: ({ children }: { children: React.ReactNode }) => (
     <div className="border-primary bg-muted my-6 rounded-lg border p-4">
       <div className="flex items-start">
@@ -266,7 +183,7 @@ const mdxComponents = {
       </div>
     </div>
   ),
-};
+});
 
 export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
   const { locale, version } = await params;
@@ -336,7 +253,7 @@ export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
         <article id="changes" className="py-16">
           <Container>
             <div className="mx-auto max-w-4xl">
-              <div className="prose prose-lg max-w-none">
+              <div>
                 <MDXRemote
                   source={release.content}
                   components={mdxComponents}

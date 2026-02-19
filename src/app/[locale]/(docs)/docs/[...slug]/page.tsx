@@ -166,7 +166,7 @@ export default async function DocPage({ params }: DocPageProps) {
             <Breadcrumbs slug={slug} title={frontMatter.title} />
 
             {/* MDX content */}
-            <article className="prose prose-gray dark:prose-invert max-w-none">
+            <article>
               <MDXRemote
                 source={mdxContent}
                 components={mdxComponents}
