@@ -8,6 +8,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { ComponentPropsWithoutRef } from 'react';
+import rehypeHighlight from 'rehype-highlight';
+import remarkGfm from 'remark-gfm';
 
 type HeadingProps = ComponentPropsWithoutRef<'h1'>;
 type ParagraphProps = ComponentPropsWithoutRef<'p'>;
@@ -335,7 +337,16 @@ export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
           <Container>
             <div className="mx-auto max-w-4xl">
               <div className="prose prose-lg max-w-none">
-                <MDXRemote source={release.content} components={mdxComponents} />
+                <MDXRemote
+                  source={release.content}
+                  components={mdxComponents}
+                  options={{
+                    mdxOptions: {
+                      remarkPlugins: [remarkGfm],
+                      rehypePlugins: [rehypeHighlight],
+                    },
+                  }}
+                />
               </div>
 
               {/* Release end marker */}

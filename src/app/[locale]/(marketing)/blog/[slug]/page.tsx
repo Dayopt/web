@@ -12,6 +12,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import rehypeHighlight from 'rehype-highlight';
+import remarkGfm from 'remark-gfm';
 
 interface BlogPostPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -124,7 +126,7 @@ const mdxComponents = {
     return <h4 id={id} className="text-foreground mt-6 mb-4 text-lg font-bold" {...props} />;
   },
   p: (props: ParagraphProps) => (
-    <p className="text-foreground mb-4 text-xl leading-relaxed" {...props} />
+    <p className="text-foreground mb-4 text-base leading-relaxed" {...props} />
   ),
   a: (props: AnchorProps) => (
     <a
@@ -136,7 +138,7 @@ const mdxComponents = {
   ),
   blockquote: (props: BlockquoteProps) => (
     <blockquote
-      className="border-info bg-muted text-foreground my-6 rounded-r-lg border-l-4 py-2 pl-4 text-xl italic"
+      className="border-info bg-muted text-foreground my-6 rounded-r-lg border-l-4 py-2 pl-4 text-base italic"
       {...props}
     />
   ),
@@ -150,10 +152,10 @@ const mdxComponents = {
     />
   ),
   ul: (props: ListProps) => (
-    <ul className="text-foreground mb-4 list-inside list-disc space-y-2 text-xl" {...props} />
+    <ul className="text-foreground mb-4 list-inside list-disc space-y-2 text-base" {...props} />
   ),
   ol: (props: OrderedListProps) => (
-    <ol className="text-foreground mb-4 list-inside list-decimal space-y-2 text-xl" {...props} />
+    <ol className="text-foreground mb-4 list-inside list-decimal space-y-2 text-base" {...props} />
   ),
   li: (props: ListItemProps) => <li className="leading-relaxed" {...props} />,
   img: (props: ImageProps) => (
@@ -232,7 +234,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  // Remove duplicate title and description from MDX content
+  // Remove duplicate h1 title from MDX content (already shown in page header)
   let processedContent = post.content;
 
   const titlePattern = new RegExp(
@@ -241,34 +243,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
   processedContent = processedContent.replace(titlePattern, '');
 
-  if (post.frontMatter.description) {
-    const descPattern = new RegExp(
-      `^${post.frontMatter.description.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\n`,
-      'gm',
-    );
-    processedContent = processedContent.replace(descPattern, '');
-  }
-
-  processedContent = processedContent.replace(/^# [^\n]*\n+/gm, '');
-
-  const lines = processedContent.split('\n');
-  const processedLines = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const currentLine = lines[i];
-    if (currentLine === undefined) continue;
-    const line = currentLine.trim();
-
-    if (processedLines.length === 0 && line === '') continue;
-
-    if (processedLines.length === 0 && line && !line.startsWith('#') && !line.startsWith('```')) {
-      continue;
-    }
-
-    processedLines.push(currentLine);
-  }
-
-  processedContent = processedLines.join('\n');
+  // Remove leading empty lines
+  processedContent = processedContent.replace(/^\n+/, '');
 
   const relatedPosts = await getRelatedPosts(slug, 3, locale);
 
@@ -304,10 +280,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <div className="bg-background min-h-screen">
         <article className="py-8">
           <Container>
-            <div className="flex justify-center gap-8">
-              <div className="max-w-2xl flex-shrink-0 pt-16">
+            <div className="mx-auto flex max-w-4xl gap-8">
+              <div className="min-w-0 flex-1 pt-16">
                 <div className="mb-8">
-                  <nav aria-label="breadcrumb" className="flex items-center space-x-2 text-sm">
+                  <nav
+                    aria-label="breadcrumb"
+                    className="flex min-w-0 items-center space-x-2 text-sm"
+                  >
                     <Link
                       href="/"
                       className="text-muted-foreground hover:text-foreground transition-colors"
@@ -322,7 +301,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       Blog
                     </Link>
                     <span className="text-border">/</span>
-                    <span className="text-foreground font-bold">{post.frontMatter.title}</span>
+                    <span className="text-foreground truncate font-bold">
+                      {post.frontMatter.title}
+                    </span>
                   </nav>
                 </div>
 
@@ -337,7 +318,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   })}
                 </time>
 
-                <h1 className="text-foreground mb-8 text-4xl font-bold">
+                <h1 className="text-foreground mb-8 text-3xl font-bold break-words">
                   {post.frontMatter.title}
                 </h1>
 
@@ -354,8 +335,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   </div>
                 )}
 
-                <div className="prose prose-lg max-w-none">
-                  <MDXRemote source={processedContent} components={mdxComponents} />
+                <div className="prose max-w-none">
+                  <MDXRemote
+                    source={processedContent}
+                    components={mdxComponents}
+                    options={{
+                      mdxOptions: {
+                        remarkPlugins: [remarkGfm],
+                        rehypePlugins: [rehypeHighlight],
+                      },
+                    }}
+                  />
                 </div>
 
                 <div className="border-border mt-8 border-t pt-6"></div>

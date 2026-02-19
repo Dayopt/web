@@ -12,6 +12,8 @@ import { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import rehypeHighlight from 'rehype-highlight';
+import remarkGfm from 'remark-gfm';
 
 interface PageParams {
   locale: string;
@@ -165,7 +167,16 @@ export default async function DocPage({ params }: DocPageProps) {
 
             {/* MDX content */}
             <article className="prose prose-gray dark:prose-invert max-w-none">
-              <MDXRemote source={mdxContent} components={mdxComponents} />
+              <MDXRemote
+                source={mdxContent}
+                components={mdxComponents}
+                options={{
+                  mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [rehypeHighlight],
+                  },
+                }}
+              />
             </article>
 
             {/* Tags section */}
