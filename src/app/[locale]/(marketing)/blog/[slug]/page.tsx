@@ -34,7 +34,7 @@ type TdProps = ComponentPropsWithoutRef<'td'>;
 // Generate metadata
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = await getBlogPost(slug);
+  const post = await getBlogPost(slug, locale);
 
   if (!post) {
     return generateSEOMetadata({
@@ -71,10 +71,10 @@ export const revalidate = 3600;
 
 // Generate static paths
 export async function generateStaticParams() {
-  const posts = await getAllBlogPostMetas();
   const params = [];
 
   for (const locale of routing.locales) {
+    const posts = await getAllBlogPostMetas(locale);
     for (const post of posts) {
       params.push({ locale, slug: post.slug });
     }
@@ -226,7 +226,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   setRequestLocale(locale);
   const t = await getTranslations('blog.share');
 
-  const post = await getBlogPost(slug);
+  const post = await getBlogPost(slug, locale);
 
   if (!post) {
     notFound();
@@ -270,7 +270,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   processedContent = processedLines.join('\n');
 
-  const relatedPosts = await getRelatedPosts(slug, 3);
+  const relatedPosts = await getRelatedPosts(slug, 3, locale);
 
   const jsonLd = {
     '@context': 'https://schema.org',

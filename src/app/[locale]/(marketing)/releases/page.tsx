@@ -40,7 +40,10 @@ export default async function ReleasesPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   // Fetch data server-side
-  const [allReleases, allTags] = await Promise.all([getAllReleaseMetas(), getAllReleaseTags()]);
+  const [allReleases, allTags] = await Promise.all([
+    getAllReleaseMetas(locale),
+    getAllReleaseTags(locale),
+  ]);
 
   // クライアントに不要なMDXコンテンツを転送しない
   const clientReleases = allReleases.map(({ content: _, ...rest }) => rest);

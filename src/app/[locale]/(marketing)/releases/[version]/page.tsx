@@ -24,15 +24,16 @@ type ThProps = ComponentPropsWithoutRef<'th'>;
 type TdProps = ComponentPropsWithoutRef<'td'>;
 
 interface ReleasePageProps {
-  params: {
+  params: Promise<{
     locale: string;
     version: string;
-  };
+  }>;
 }
 
 // Generate metadata
 export async function generateMetadata({ params }: ReleasePageProps): Promise<Metadata> {
-  const release = await getRelease(params.version);
+  const { locale, version } = await params;
+  const release = await getRelease(version, locale);
 
   if (!release) {
     return {
@@ -73,7 +74,7 @@ export async function generateMetadata({ params }: ReleasePageProps): Promise<Me
       images: frontMatter.coverImage ? [frontMatter.coverImage] : undefined,
     },
     alternates: {
-      canonical: `/releases/${params.version}`,
+      canonical: `/releases/${version}`,
     },
   };
 }
@@ -83,11 +84,11 @@ export const revalidate = 86400;
 
 // Generate static paths
 export async function generateStaticParams() {
-  const releases = await getAllReleaseMetas();
   const locales = ['en', 'ja'];
   const params = [];
 
   for (const locale of locales) {
+    const releases = await getAllReleaseMetas(locale);
     for (const release of releases) {
       params.push({ locale, version: release.frontMatter.version });
     }
@@ -266,14 +267,14 @@ const mdxComponents = {
 };
 
 export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
-  const { version } = params;
-  const release = await getRelease(version);
+  const { locale, version } = await params;
+  const release = await getRelease(version, locale);
 
   if (!release) {
     notFound();
   }
 
-  const relatedReleases = await getRelatedReleases(version, 3);
+  const relatedReleases = await getRelatedReleases(version, 3, locale);
 
   // Structured data (JSON-LD)
   const jsonLd = {
@@ -309,7 +310,7 @@ export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
 
       <div className="bg-background min-h-screen">
         {/* Release header */}
-        <ReleaseHeader frontMatter={release.frontMatter} version={params.version} />
+        <ReleaseHeader frontMatter={release.frontMatter} version={version} />
 
         {/* Cover image */}
         {release.frontMatter.coverImage && (

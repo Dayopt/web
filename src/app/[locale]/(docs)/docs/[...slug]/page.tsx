@@ -28,12 +28,11 @@ export const revalidate = 86400;
 // Generate static parameters (SEO optimization)
 export async function generateStaticParams(): Promise<PageParams[]> {
   try {
-    const allContent = await getAllContent();
     const locales = ['en', 'ja'];
-
     const params: PageParams[] = [];
 
     for (const locale of locales) {
+      const allContent = await getAllContent(locale);
       for (const content of allContent) {
         params.push({
           locale,
@@ -51,11 +50,11 @@ export async function generateStaticParams(): Promise<PageParams[]> {
 // Generate metadata
 export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
   try {
-    const { slug } = await params;
+    const { locale, slug } = await params;
     const category = slug[0];
     const contentSlug = slug.slice(1).join('/');
 
-    const content = await getMDXContentForRSC(`${category}/${contentSlug}`);
+    const content = await getMDXContentForRSC(`${category}/${contentSlug}`, locale);
 
     if (!content) {
       return {
@@ -95,12 +94,15 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
 }
 
 // Get adjacent pages
-async function getAdjacentPages(slug: string): Promise<{
+async function getAdjacentPages(
+  slug: string,
+  locale?: string,
+): Promise<{
   previousPage?: ContentData;
   nextPage?: ContentData;
 }> {
   try {
-    const allContent = await getAllContent();
+    const allContent = await getAllContent(locale);
     const currentIndex = allContent.findIndex((content) => content.slug === slug);
 
     if (currentIndex === -1) {
@@ -119,7 +121,7 @@ async function getAdjacentPages(slug: string): Promise<{
 // Main page component
 export default async function DocPage({ params }: DocPageProps) {
   try {
-    const { slug: slugArray } = await params;
+    const { locale, slug: slugArray } = await params;
     const slug = slugArray.join('/');
     const category = slugArray[0];
     const contentSlug = slugArray.slice(1).join('/');
@@ -128,17 +130,17 @@ export default async function DocPage({ params }: DocPageProps) {
     let content;
 
     // First try with complete slug
-    content = await getMDXContentForRSC(slug);
+    content = await getMDXContentForRSC(slug, locale);
 
     // If not found, try other patterns
     if (!content && contentSlug) {
       // Category/file format
-      content = await getMDXContentForRSC(`${category}/${contentSlug}`);
+      content = await getMDXContentForRSC(`${category}/${contentSlug}`, locale);
     }
 
     if (!content && !contentSlug && category) {
       // Single file format
-      content = await getMDXContentForRSC(category);
+      content = await getMDXContentForRSC(category, locale);
     }
 
     if (!content) {
@@ -149,8 +151,8 @@ export default async function DocPage({ params }: DocPageProps) {
 
     // Get adjacent pages and related content in parallel
     const [{ previousPage, nextPage }, relatedContent] = await Promise.all([
-      getAdjacentPages(slug),
-      getRelatedContent(frontMatter.category, slug, 3),
+      getAdjacentPages(slug, locale),
+      getRelatedContent(frontMatter.category, slug, 3, locale),
     ]);
 
     return (

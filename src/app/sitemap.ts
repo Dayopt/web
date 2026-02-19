@@ -105,17 +105,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Blog posts for both locales
   try {
-    const blogPosts = await getAllBlogPostMetas();
-    blogPages = blogPosts.flatMap((post) =>
-      locales.map((locale) => ({
-        url: `${baseUrl}/${locale}/blog/${post.slug}`,
-        lastModified: new Date(
-          post.frontMatter.updatedAt || post.frontMatter.publishedAt || new Date(),
-        ),
-        changeFrequency: 'monthly' as const,
-        priority: post.frontMatter.featured ? 0.8 : 0.6,
-      })),
-    );
+    for (const locale of locales) {
+      const blogPosts = await getAllBlogPostMetas(locale);
+      blogPages.push(
+        ...blogPosts.map((post) => ({
+          url: `${baseUrl}/${locale}/blog/${post.slug}`,
+          lastModified: new Date(
+            post.frontMatter.updatedAt || post.frontMatter.publishedAt || new Date(),
+          ),
+          changeFrequency: 'monthly' as const,
+          priority: post.frontMatter.featured ? 0.8 : 0.6,
+        })),
+      );
+    }
     contentStatus.blog = true;
   } catch (error) {
     console.error(
@@ -126,15 +128,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Release notes for both locales
   try {
-    const releases = await getAllReleaseMetas();
-    releasePages = releases.flatMap((release) =>
-      locales.map((locale) => ({
-        url: `${baseUrl}/${locale}/releases/${release.frontMatter.version}`,
-        lastModified: new Date(release.frontMatter.date || new Date()),
-        changeFrequency: 'yearly' as const,
-        priority: 0.7,
-      })),
-    );
+    for (const locale of locales) {
+      const releases = await getAllReleaseMetas(locale);
+      releasePages.push(
+        ...releases.map((release) => ({
+          url: `${baseUrl}/${locale}/releases/${release.frontMatter.version}`,
+          lastModified: new Date(release.frontMatter.date || new Date()),
+          changeFrequency: 'yearly' as const,
+          priority: 0.7,
+        })),
+      );
+    }
     contentStatus.releases = true;
   } catch (error) {
     console.error(
@@ -145,15 +149,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Documentation pages for both locales (dynamically from MDX files)
   try {
-    const allDocs = await getAllContent();
-    docPages = allDocs.flatMap((doc) =>
-      locales.map((locale) => ({
-        url: `${baseUrl}/${locale}/docs/${doc.slug}`,
-        lastModified: doc.frontMatter.updatedAt ? new Date(doc.frontMatter.updatedAt) : new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: doc.frontMatter.featured ? 0.8 : 0.6,
-      })),
-    );
+    for (const locale of locales) {
+      const allDocs = await getAllContent(locale);
+      docPages.push(
+        ...allDocs.map((doc) => ({
+          url: `${baseUrl}/${locale}/docs/${doc.slug}`,
+          lastModified: doc.frontMatter.updatedAt
+            ? new Date(doc.frontMatter.updatedAt)
+            : new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: doc.frontMatter.featured ? 0.8 : 0.6,
+        })),
+      );
+    }
     contentStatus.docs = true;
   } catch (error) {
     console.error('[Sitemap] Failed to load docs:', error instanceof Error ? error.message : error);

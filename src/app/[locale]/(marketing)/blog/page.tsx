@@ -38,7 +38,10 @@ export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [allPosts, allTags] = await Promise.all([getAllBlogPostMetas(), getAllTagNames()]);
+  const [allPosts, allTags] = await Promise.all([
+    getAllBlogPostMetas(locale),
+    getAllTagNames(locale),
+  ]);
 
   return (
     <div className="bg-background min-h-screen">
