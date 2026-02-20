@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return generateSEOMetadata({
     title: t('navigation.docs'),
-    description: locale === 'ja' ? 'ドキュメントとガイド' : 'Documentation and guides',
+    description: t('navigation.docsDescription'),
     url: `/${locale}/docs`,
     locale: locale,
     keywords:
@@ -37,9 +37,8 @@ export default async function DocsPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations({ locale, namespace: 'common' });
-
-  const isJa = locale === 'ja';
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
+  const tDocs = await getTranslations({ locale, namespace: 'docs' });
 
   return (
     <div className="space-y-12 px-6 py-8 lg:px-8">
@@ -47,12 +46,10 @@ export default async function DocsPage({ params }: PageProps) {
         {/* Header Section */}
         <div className="space-y-4">
           <Heading as="h1" size="4xl" className="text-foreground">
-            {t('navigation.docs')}
+            {tCommon('navigation.docs')}
           </Heading>
           <Text size="xl" variant="muted" className="max-w-3xl">
-            {isJa
-              ? 'ドキュメントとガイドでDayoptを始めましょう'
-              : 'Get started with Dayopt using our documentation and guides'}
+            {tDocs('landing.subtitle')}
           </Text>
         </div>
 
@@ -76,14 +73,14 @@ export default async function DocsPage({ params }: PageProps) {
                 </svg>
               </div>
               <Heading as="h3" size="lg">
-                {isJa ? 'クイックスタート' : 'Quick Start'}
+                {tDocs('landing.quickStart.title')}
               </Heading>
             </div>
             <Text variant="muted" className="mb-4">
-              {isJa ? '数分でDayoptを始めましょう' : 'Get started with Dayopt in minutes'}
+              {tDocs('landing.quickStart.description')}
             </Text>
             <Link href="/docs/quick-start" className="text-primary hover:text-primary/80 font-bold">
-              {isJa ? 'ガイドを読む →' : 'Read guide →'}
+              {tDocs('landing.quickStart.link')}
             </Link>
           </div>
 
@@ -105,14 +102,14 @@ export default async function DocsPage({ params }: PageProps) {
                 </svg>
               </div>
               <Heading as="h3" size="lg">
-                {isJa ? 'APIリファレンス' : 'API Reference'}
+                {tDocs('landing.apiReference.title')}
               </Heading>
             </div>
             <Text variant="muted" className="mb-4">
-              {isJa ? 'APIドキュメントを探索する' : 'Explore our API documentation'}
+              {tDocs('landing.apiReference.description')}
             </Text>
             <Link href="/docs/api" className="text-primary hover:text-primary/80 font-bold">
-              {isJa ? 'ドキュメントを見る →' : 'View docs →'}
+              {tDocs('landing.apiReference.link')}
             </Link>
           </div>
 
@@ -134,14 +131,14 @@ export default async function DocsPage({ params }: PageProps) {
                 </svg>
               </div>
               <Heading as="h3" size="lg">
-                {isJa ? 'ガイド' : 'Guides'}
+                {tDocs('landing.guides.title')}
               </Heading>
             </div>
             <Text variant="muted" className="mb-4">
-              {isJa ? 'ステップバイステップのチュートリアル' : 'Step-by-step tutorials'}
+              {tDocs('landing.guides.description')}
             </Text>
             <Link href="/docs/guides" className="text-primary hover:text-primary/80 font-bold">
-              {isJa ? 'ガイドを見る →' : 'Browse guides →'}
+              {tDocs('landing.guides.link')}
             </Link>
           </div>
         </div>

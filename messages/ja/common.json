@@ -34,7 +34,9 @@
       "share": "共有",
       "shareOn": "{platform}で共有",
       "urlCopied": "URLをコピーしました",
-      "urlCopyFailed": "URLのコピーに失敗しました"
+      "urlCopyFailed": "URLのコピーに失敗しました",
+      "copy": "コピー",
+      "copied": "コピーしました"
     },
     "states": {
       "loading": "読み込み中...",
@@ -225,6 +227,34 @@
   },
   "docs": {
     "relatedArticles": "関連記事",
+    "tags": "タグ",
+    "pageNavigation": {
+      "previous": "前へ",
+      "next": "次へ"
+    },
+    "error": {
+      "title": "エラーが発生しました",
+      "description": "ページの読み込み中にエラーが発生しました。",
+      "backToDocs": "ドキュメントに戻る"
+    },
+    "landing": {
+      "subtitle": "ドキュメントとガイドでDayoptを始めましょう",
+      "quickStart": {
+        "title": "クイックスタート",
+        "description": "数分でDayoptを始めましょう",
+        "link": "ガイドを読む →"
+      },
+      "apiReference": {
+        "title": "APIリファレンス",
+        "description": "APIドキュメントを探索する",
+        "link": "ドキュメントを見る →"
+      },
+      "guides": {
+        "title": "ガイド",
+        "description": "ステップバイステップのチュートリアル",
+        "link": "ガイドを見る →"
+      }
+    },
     "toc": {
       "onThisPage": "このページの内容",
       "loading": "読み込み中...",

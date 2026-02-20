@@ -61,7 +61,9 @@
       "share": "Share",
       "shareOn": "Share on {platform}",
       "urlCopied": "URL copied to clipboard",
-      "urlCopyFailed": "Failed to copy URL"
+      "urlCopyFailed": "Failed to copy URL",
+      "copy": "Copy",
+      "copied": "Copied!"
     },
     "aria": {
       "clearSelection": "Clear selection",
@@ -256,6 +258,34 @@
   },
   "docs": {
     "relatedArticles": "Related Articles",
+    "tags": "Tags",
+    "pageNavigation": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "We encountered an error while loading this page.",
+      "backToDocs": "Back to Documentation"
+    },
+    "landing": {
+      "subtitle": "Get started with Dayopt using our documentation and guides",
+      "quickStart": {
+        "title": "Quick Start",
+        "description": "Get started with Dayopt in minutes",
+        "link": "Read guide →"
+      },
+      "apiReference": {
+        "title": "API Reference",
+        "description": "Explore our API documentation",
+        "link": "View docs →"
+      },
+      "guides": {
+        "title": "Guides",
+        "description": "Step-by-step tutorials",
+        "link": "Browse guides →"
+      }
+    },
     "toc": {
       "onThisPage": "On This Page",
       "loading": "Loading...",

@@ -123,8 +123,10 @@ async function getAdjacentPages(
 
 // Main page component
 export default async function DocPage({ params }: DocPageProps) {
+  const { locale, slug: slugArray } = await params;
+  const tDocs = await getTranslations('docs');
+
   try {
-    const { locale, slug: slugArray } = await params;
     const slug = slugArray.join('/');
     const category = slugArray[0];
     const contentSlug = slugArray.slice(1).join('/');
@@ -151,8 +153,6 @@ export default async function DocPage({ params }: DocPageProps) {
     }
 
     const { content: mdxContent, frontMatter } = content;
-
-    const tDocs = await getTranslations('docs');
 
     // Get adjacent pages and related content in parallel
     const [{ previousPage, nextPage }, relatedContent] = await Promise.all([
@@ -187,7 +187,7 @@ export default async function DocPage({ params }: DocPageProps) {
               <aside className="border-border mt-12 border-t pt-8">
                 <div className="mb-4 flex items-center gap-2">
                   <Tag className="text-muted-foreground size-4" />
-                  <span className="text-muted-foreground text-sm font-bold">Tags</span>
+                  <span className="text-muted-foreground text-sm font-bold">{tDocs('tags')}</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {frontMatter.tags.map((tag) => (
@@ -263,16 +263,16 @@ export default async function DocPage({ params }: DocPageProps) {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <Heading as="h1" size="3xl" className="mb-4">
-            Something went wrong
+            {tDocs('error.title')}
           </Heading>
           <Text variant="muted" className="mb-6">
-            We encountered an error while loading this page.
+            {tDocs('error.description')}
           </Text>
           <Link
             href="/docs"
             className="bg-primary text-primary-foreground hover:bg-primary-hover inline-flex items-center rounded-lg px-4 py-2 transition-colors"
           >
-            Back to Documentation
+            {tDocs('error.backToDocs')}
           </Link>
         </div>
       </div>
