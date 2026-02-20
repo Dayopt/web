@@ -45,7 +45,7 @@ function Callout({
     <div className={`my-6 rounded-r-lg border-l-4 p-4 ${styles[type]}`}>
       <div className="flex items-start">
         <span className="mr-4 flex-shrink-0 text-lg">{icons[type]}</span>
-        <div className="prose prose-sm max-w-none">{children}</div>
+        <div className="flex-1">{children}</div>
       </div>
     </div>
   );
@@ -108,7 +108,8 @@ export async function generateStaticParams() {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations('blog.share');
+  const t = await getTranslations('blog');
+  const tCommon = await getTranslations('common');
 
   const post = await getBlogPost(slug, locale);
 
@@ -173,14 +174,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       href="/"
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      Home
+                      {tCommon('navigation.home')}
                     </Link>
                     <span className="text-border">/</span>
                     <Link
                       href="/blog"
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      Blog
+                      {tCommon('navigation.blog')}
                     </Link>
                     <span className="text-border">/</span>
                     <span className="text-foreground truncate font-bold">
@@ -193,7 +194,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   className="text-muted-foreground mb-2 block text-sm"
                   dateTime={post.frontMatter.publishedAt}
                 >
-                  {new Date(post.frontMatter.publishedAt).toLocaleDateString('en-US', {
+                  {new Date(post.frontMatter.publishedAt).toLocaleDateString(locale, {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -234,7 +235,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
                 <div className="mt-6 space-y-6">
                   <div>
-                    <h3 className="text-foreground mb-4 text-lg font-bold">Tags Used</h3>
+                    <h3 className="text-foreground mb-4 text-lg font-bold">
+                      {tCommon('blog.post.tagsUsed')}
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {post.frontMatter.tags.map((tag) => (
                         <Link
@@ -249,7 +252,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-foreground mb-4 text-lg font-bold">{t('title')}</h3>
+                    <h3 className="text-foreground mb-4 text-lg font-bold">{t('share.title')}</h3>
                     <ShareButton title={post.frontMatter.title} slug={slug} />
                   </div>
                 </div>

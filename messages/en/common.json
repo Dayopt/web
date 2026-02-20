@@ -180,6 +180,9 @@
       "noArticlesHint": "Try adjusting your filters or search terms",
       "clearAllFilters": "Clear All Filters"
     },
+    "post": {
+      "tagsUsed": "Tags"
+    },
     "share": {
       "title": "Share this article"
     },
@@ -252,6 +255,7 @@
     }
   },
   "docs": {
+    "relatedArticles": "Related Articles",
     "toc": {
       "onThisPage": "On This Page",
       "loading": "Loading...",

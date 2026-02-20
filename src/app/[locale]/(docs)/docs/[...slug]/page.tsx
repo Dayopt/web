@@ -9,6 +9,7 @@ import { getTagColor } from '@/lib/tags-client';
 import { ContentData } from '@/types/content';
 import { Tag } from 'lucide-react';
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -151,6 +152,8 @@ export default async function DocPage({ params }: DocPageProps) {
 
     const { content: mdxContent, frontMatter } = content;
 
+    const tDocs = await getTranslations('docs');
+
     // Get adjacent pages and related content in parallel
     const [{ previousPage, nextPage }, relatedContent] = await Promise.all([
       getAdjacentPages(slug, locale),
@@ -204,12 +207,12 @@ export default async function DocPage({ params }: DocPageProps) {
             {relatedContent.length > 0 && (
               <aside className="border-border mt-12 border-t pt-8">
                 <Heading as="h2" size="xl" className="mb-6">
-                  関連記事
+                  {tDocs('relatedArticles')}
                 </Heading>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {relatedContent.map((related) => (
                     <Link key={related.slug} href={`/docs/${related.slug}`} className="block">
-                      <Card className="h-full gap-4 py-4 transition-colors hover:bg-[var(--state-hover)]">
+                      <Card className="hover:bg-state-hover h-full gap-4 py-4 transition-colors">
                         <CardHeader className="gap-2 px-4 py-0">
                           <CardTitle className="line-clamp-2 text-sm">
                             {related.frontMatter.title}
@@ -217,9 +220,7 @@ export default async function DocPage({ params }: DocPageProps) {
                           <div className="flex items-center gap-2">
                             {related.frontMatter.updatedAt && (
                               <time className="text-muted-foreground text-xs">
-                                {new Date(related.frontMatter.updatedAt).toLocaleDateString(
-                                  'ja-JP',
-                                )}
+                                {new Date(related.frontMatter.updatedAt).toLocaleDateString(locale)}
                               </time>
                             )}
                             {related.frontMatter.tags && related.frontMatter.tags.length > 0 && (

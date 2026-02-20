@@ -16,6 +16,9 @@ type OrderedListProps = ComponentPropsWithoutRef<'ol'>;
 type ListItemProps = ComponentPropsWithoutRef<'li'>;
 type ImageProps = ComponentPropsWithoutRef<'img'> & { src?: string; alt?: string };
 type TableProps = ComponentPropsWithoutRef<'table'>;
+type TheadProps = ComponentPropsWithoutRef<'thead'>;
+type TbodyProps = ComponentPropsWithoutRef<'tbody'>;
+type TrProps = ComponentPropsWithoutRef<'tr'>;
 type ThProps = ComponentPropsWithoutRef<'th'>;
 type TdProps = ComponentPropsWithoutRef<'td'>;
 
@@ -182,6 +185,17 @@ export const contentMDXComponents: MDXComponents = {
     </div>
   ),
 
+  // Inline text formatting
+  strong: (props: ComponentPropsWithoutRef<'strong'>) => (
+    <strong className="text-foreground font-bold" {...props} />
+  ),
+  em: (props: ComponentPropsWithoutRef<'em'>) => (
+    <em className="text-foreground italic" {...props} />
+  ),
+  del: (props: ComponentPropsWithoutRef<'del'>) => (
+    <del className="text-muted-foreground line-through" {...props} />
+  ),
+
   // Tables
   table: (props: TableProps) => (
     <div className="my-6 overflow-x-auto">
@@ -191,6 +205,9 @@ export const contentMDXComponents: MDXComponents = {
       />
     </div>
   ),
+  thead: (props: TheadProps) => <thead className="bg-container" {...props} />,
+  tbody: (props: TbodyProps) => <tbody className="divide-border divide-y" {...props} />,
+  tr: (props: TrProps) => <tr className="hover:bg-state-hover transition-colors" {...props} />,
   th: (props: ThProps) => (
     <th
       className="bg-container text-muted-foreground px-6 py-4 text-left text-sm font-bold tracking-wider uppercase"
@@ -199,7 +216,7 @@ export const contentMDXComponents: MDXComponents = {
   ),
   td: (props: TdProps) => (
     <td
-      className="border-border text-foreground border-t px-6 py-4 text-base whitespace-nowrap"
+      className="text-foreground px-6 py-4 text-base whitespace-nowrap"
       {...props}
     />
   ),
