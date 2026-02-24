@@ -1,0 +1,96 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { getTagFilterColor } from '@/lib/tags-client';
+import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
+import { useState } from 'react';
+
+interface TagItem {
+  tag: string;
+  count: number;
+}
+
+interface InlineTagFilterProps {
+  tags: TagItem[];
+  selectedTags: string[];
+  onToggle: (tag: string) => void;
+  onClear: () => void;
+  maxVisible?: number;
+  showCounts?: boolean;
+  label: string;
+  showMoreLabel?: string;
+  showLessLabel?: string;
+}
+
+export function InlineTagFilter({
+  tags,
+  selectedTags,
+  onToggle,
+  onClear,
+  maxVisible = 10,
+  showCounts = true,
+  label,
+  showMoreLabel = 'Show more',
+  showLessLabel = 'Show less',
+}: InlineTagFilterProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const visibleTags = isExpanded ? tags : tags.slice(0, maxVisible);
+  const hasMore = tags.length > maxVisible;
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <span id="tag-filter-label" className="text-muted-foreground text-sm font-bold">
+          {label}
+        </span>
+        {selectedTags.length > 0 && (
+          <Button onClick={onClear} variant="ghost" size="sm" className="h-auto p-1 text-xs">
+            <X className="size-3" />
+          </Button>
+        )}
+      </div>
+
+      <div className="flex flex-wrap gap-2" role="group" aria-labelledby="tag-filter-label">
+        {visibleTags.map((tagItem) => {
+          const isSelected = selectedTags.includes(tagItem.tag);
+          return (
+            <Button
+              key={tagItem.tag}
+              onClick={() => onToggle(tagItem.tag)}
+              variant="outline"
+              size="sm"
+              className={cn(
+                'inline-flex items-center gap-2 border',
+                getTagFilterColor(tagItem.tag, isSelected),
+              )}
+            >
+              <span>#</span>
+              {tagItem.tag}
+              {showCounts && (
+                <span
+                  className={cn('text-xs', isSelected ? 'text-primary-foreground' : 'opacity-60')}
+                >
+                  ({tagItem.count})
+                </span>
+              )}
+              {isSelected && <X className="size-3" />}
+            </Button>
+          );
+        })}
+      </div>
+
+      {hasMore && (
+        <Button
+          onClick={() => setIsExpanded(!isExpanded)}
+          variant="ghost"
+          size="sm"
+          className="mt-2 h-auto p-1 text-xs"
+        >
+          {isExpanded ? showLessLabel : `${showMoreLabel} (${tags.length - maxVisible})`}
+        </Button>
+      )}
+    </div>
+  );
+}

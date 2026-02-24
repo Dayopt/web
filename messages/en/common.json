@@ -166,7 +166,9 @@
       "showingPostsAll": "all",
       "showingPostsAny": "any",
       "showingPostsMessage": "Showing posts that match {match} of the selected tags",
-      "applyFilters": "Apply Filters"
+      "applyFilters": "Apply Filters",
+      "showMore": "Show more",
+      "showLess": "Show less"
     },
     "relatedPosts": {
       "title": "Related Articles",
@@ -194,18 +196,36 @@
     }
   },
   "tags": {
+    "title": "Tags",
+    "description": "Explore content by tags. Find blog posts, releases, and documentation organized by topics.",
     "searchPlaceholder": "Search tags...",
     "clearSearch": "Clear search",
     "category": "Category",
     "all": "All",
+    "blog": "Blog",
+    "releases": "Releases",
+    "docs": "Docs",
     "popularTags": "Popular Tags",
     "noTagsFound": "No tags found",
     "noTagsHint": "Try adjusting your search or filters",
     "clearFilters": "Clear filters",
     "tagsCount": "{count} tags",
+    "tagsCountSingular": "{count} tag",
+    "filters": "Filters",
+    "filtersClearAll": "Clear all",
+    "filtersApply": "Apply Filters",
     "view": {
       "grid": "Grid",
       "list": "List"
+    },
+    "detail": {
+      "items": "{count} items",
+      "itemsSingular": "{count} item",
+      "allTags": "All Tags",
+      "searchContent": "Search content...",
+      "noContentFound": "No content found",
+      "noContentHint": "Try adjusting your search",
+      "clearSearch": "Clear search"
     }
   },
   "releases": {
