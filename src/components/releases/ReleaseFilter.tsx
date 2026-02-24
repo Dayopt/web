@@ -18,6 +18,7 @@ interface ReleaseFilterProps {
   selectedTags: string[];
   onTagToggle: (tag: string) => void;
   onClearFilters: () => void;
+  className?: string;
 }
 
 export function ReleaseFilter({
@@ -25,33 +26,31 @@ export function ReleaseFilter({
   selectedTags,
   onTagToggle,
   onClearFilters,
+  className,
 }: ReleaseFilterProps) {
   const t = useTranslations('releases.filters');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const activeFiltersCount = selectedTags.length;
 
-  // フィルターUI（デスクトップ・モバイル共有）
   const filterContent = (
-    <>
-      {tags.length > 0 && (
-        <InlineTagFilter
-          tags={tags}
-          selectedTags={selectedTags}
-          onToggle={onTagToggle}
-          onClear={onClearFilters}
-          label={t('tags')}
-          showMoreLabel={t('showMore')}
-          showLessLabel={t('showLess')}
-        />
-      )}
-    </>
+    <InlineTagFilter
+      tags={tags}
+      selectedTags={selectedTags}
+      onToggle={onTagToggle}
+      onClear={onClearFilters}
+      label={t('tags')}
+      showMoreLabel={t('showMore')}
+      showLessLabel={t('showLess')}
+    />
   );
 
   return (
     <>
       {/* デスクトップ版 */}
-      <div className={cn('border-border bg-background hidden rounded-2xl border lg:block')}>
+      <div
+        className={cn('border-border bg-background hidden rounded-2xl border lg:block', className)}
+      >
         {/* フィルターヘッダー */}
         <div className="border-border border-b p-4">
           <div className="flex items-center justify-between">

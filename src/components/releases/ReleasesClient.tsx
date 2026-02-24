@@ -1,5 +1,6 @@
 'use client';
 
+import { ContentHeader } from '@/components/content/ContentHeader';
 import { ContentPagination } from '@/components/ui/content-pagination';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PillSwitcher } from '@/components/ui/pill-switcher';
@@ -109,105 +110,110 @@ export function ReleasesClient({ initialReleases, initialTags, locale }: Release
   };
 
   return (
-    <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
-      {/* 左サイドバー: フィルター */}
-      <div className="lg:col-span-1">
-        <div className="sticky top-24">
-          <ReleaseFilter
-            tags={initialTags}
-            selectedTags={selectedTags}
-            onTagToggle={handleTagToggle}
-            onClearFilters={handleClearFilters}
-          />
-        </div>
-      </div>
+    <div>
+      <ContentHeader title={t('header.title')} />
 
-      {/* 右側: リリース一覧 */}
-      <div className="lg:col-span-3">
-        {/* 検索ボックス + ビュー切り替え */}
-        <div className="mb-8 flex items-center gap-4">
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder={t('filters.searchPlaceholder')}
-            clearLabel={t('filters.clearSearch')}
-            className="flex-1"
-          />
-
-          <PillSwitcher
-            options={[
-              { value: 'list', label: t('view.list'), icon: <List className="size-4" /> },
-              { value: 'grid', label: t('view.grid'), icon: <Grid3X3 className="size-4" /> },
-            ]}
-            value={viewMode}
-            onValueChange={setViewMode}
-          />
+      {/* 2カラム: フィルター | リスト */}
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
+        {/* 左サイドバー: フィルター */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-24">
+            <ReleaseFilter
+              tags={initialTags}
+              selectedTags={selectedTags}
+              onTagToggle={handleTagToggle}
+              onClearFilters={handleClearFilters}
+            />
+          </div>
         </div>
 
-        {/* 結果件数 */}
-        <div className="text-muted-foreground mb-6 text-sm" aria-live="polite">
-          {t('filters.resultsFound', {
-            count: totalReleases,
-            total: initialReleases.length,
-          })}
-        </div>
+        {/* 右側: リリース一覧 */}
+        <div className="lg:col-span-3">
+          {/* 検索ボックス + ビュー切り替え */}
+          <div className="mb-8 flex items-center gap-4">
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={t('filters.searchPlaceholder')}
+              clearLabel={t('filters.clearSearch')}
+              className="flex-1"
+            />
 
-        {currentReleases.length > 0 ? (
-          <>
-            {viewMode === 'list' ? (
-              <div className="divide-border divide-y">
-                {currentReleases.map((release, index) => (
-                  <ReleaseCard
-                    key={release.frontMatter.version}
-                    release={release}
-                    priority={currentPage === 1 && index < 3}
-                    layout="list"
-                    locale={locale}
+            <PillSwitcher
+              options={[
+                { value: 'list', label: t('view.list'), icon: <List className="size-4" /> },
+                { value: 'grid', label: t('view.grid'), icon: <Grid3X3 className="size-4" /> },
+              ]}
+              value={viewMode}
+              onValueChange={setViewMode}
+            />
+          </div>
+
+          {/* 結果件数 */}
+          <div className="text-muted-foreground mb-6 text-sm" aria-live="polite">
+            {t('filters.resultsFound', {
+              count: totalReleases,
+              total: initialReleases.length,
+            })}
+          </div>
+
+          {currentReleases.length > 0 ? (
+            <>
+              {viewMode === 'list' ? (
+                <div className="divide-border divide-y">
+                  {currentReleases.map((release, index) => (
+                    <ReleaseCard
+                      key={release.frontMatter.version}
+                      release={release}
+                      priority={currentPage === 1 && index < 3}
+                      layout="list"
+                      locale={locale}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {currentReleases.map((release, index) => (
+                    <ReleaseCard
+                      key={release.frontMatter.version}
+                      release={release}
+                      priority={currentPage === 1 && index < 3}
+                      layout="vertical"
+                      locale={locale}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* ページネーション */}
+              {totalPages > 1 && (
+                <div className="mt-12">
+                  <ContentPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    basePath={locale === 'ja' ? '/ja/releases' : '/releases'}
                   />
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {currentReleases.map((release, index) => (
-                  <ReleaseCard
-                    key={release.frontMatter.version}
-                    release={release}
-                    priority={currentPage === 1 && index < 3}
-                    layout="vertical"
-                    locale={locale}
-                  />
-                ))}
-              </div>
-            )}
-
-            {/* ページネーション */}
-            {totalPages > 1 && (
-              <div className="mt-12">
-                <ContentPagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  basePath={locale === 'ja' ? '/ja/releases' : '/releases'}
-                />
-              </div>
-            )}
-          </>
-        ) : initialReleases.length === 0 ? (
-          <EmptyState
-            icon={FileText}
-            title={t('emptyState.title')}
-            description={t('emptyState.description')}
-          />
-        ) : (
-          <EmptyState
-            icon={Search}
-            title={t('noResults.title')}
-            description={t('noResults.description')}
-            action={{
-              label: t('noResults.clearFilters'),
-              onClick: handleClearFilters,
-            }}
-          />
-        )}
+                </div>
+              )}
+            </>
+          ) : initialReleases.length === 0 ? (
+            <EmptyState
+              icon={FileText}
+              title={t('emptyState.title')}
+              description={t('emptyState.description')}
+            />
+          ) : (
+            <EmptyState
+              icon={Search}
+              title={t('noResults.title')}
+              description={t('noResults.description')}
+              action={{
+                label: t('noResults.clearFilters'),
+                onClick: handleClearFilters,
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

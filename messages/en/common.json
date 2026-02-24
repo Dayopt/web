@@ -149,6 +149,9 @@
     }
   },
   "blog": {
+    "header": {
+      "title": "Blog"
+    },
     "filters": {
       "title": "Filters",
       "clearAll": "Clear all",
@@ -229,6 +232,10 @@
     }
   },
   "releases": {
+    "header": {
+      "title": "Releases",
+      "subtitle": "Latest release notes and updates"
+    },
     "featured": "Featured",
     "breaking": "Breaking",
     "filters": {
@@ -236,7 +243,7 @@
       "clearAll": "Clear all",
       "tags": "Tags",
       "showLess": "Show less",
-      "showMore": "Show {count} more",
+      "showMore": "Show more",
       "resultsFound": "{count} of {total} releases",
       "featuredReleases": "Featured releases",
       "breakingChanges": "Breaking changes",
@@ -274,6 +281,13 @@
       "title": "No Releases Found",
       "description": "No releases match your current filters.",
       "clearFilters": "Clear Filters"
+    },
+    "detail": {
+      "backToReleases": "Back to Releases",
+      "readingTime": "About {minutes} min read",
+      "viewAllReleases": "View all releases",
+      "relatedReleases": "Related Releases",
+      "relatedDescription": "Other updates related to this release"
     }
   },
   "docs": {

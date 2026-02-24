@@ -2,11 +2,13 @@ import { createMDXComponents } from '@/components/content/ContentMDXComponents';
 import { ReleaseCard } from '@/components/releases/ReleaseCard';
 import { ReleaseHeader } from '@/components/releases/ReleaseHeader';
 import { Container } from '@/components/ui/container';
+import { Link } from '@/i18n/navigation';
 import { changeTypes, getAllReleaseMetas, getRelatedReleases, getRelease } from '@/lib/releases';
+import { ArrowLeft, ArrowLeftRight, Info, TriangleAlert } from 'lucide-react';
 import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { ComponentPropsWithoutRef } from 'react';
 import rehypeHighlight from 'rehype-highlight';
@@ -121,19 +123,7 @@ const mdxComponents = createMDXComponents({
   Warning: ({ children }: { children: React.ReactNode }) => (
     <div className="border-warning bg-muted my-6 rounded-lg border p-4">
       <div className="flex items-start">
-        <svg
-          className="text-warning mt-1 mr-4 size-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L5.35 16.5c-.77.833.192 2.5 1.732 2.5z"
-          />
-        </svg>
+        <TriangleAlert className="text-warning mt-1 mr-4 size-5 flex-shrink-0" />
         <div className="prose prose-sm text-warning max-w-none">{children}</div>
       </div>
     </div>
@@ -142,42 +132,18 @@ const mdxComponents = createMDXComponents({
   Info: ({ children }: { children: React.ReactNode }) => (
     <div className="border-info bg-muted my-6 rounded-lg border p-4">
       <div className="flex items-start">
-        <svg
-          className="text-info mt-1 mr-4 size-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
+        <Info className="text-info mt-1 mr-4 size-5 flex-shrink-0" />
         <div className="prose prose-sm text-info max-w-none">{children}</div>
       </div>
     </div>
   ),
 
-  Migration: ({ children }: { children: React.ReactNode }) => (
+  Migration: ({ children, title }: { children: React.ReactNode; title?: string }) => (
     <div className="border-primary bg-muted my-6 rounded-lg border p-4">
       <div className="flex items-start">
-        <svg
-          className="text-primary mt-1 mr-4 size-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-          />
-        </svg>
+        <ArrowLeftRight className="text-primary mt-1 mr-4 size-5 flex-shrink-0" />
         <div>
-          <h4 className="text-primary mb-2 font-bold">Migration Information</h4>
+          <h4 className="text-primary mb-2 font-bold">{title || 'Migration Information'}</h4>
           <div className="prose prose-sm text-primary max-w-none">{children}</div>
         </div>
       </div>
@@ -187,12 +153,15 @@ const mdxComponents = createMDXComponents({
 
 export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
   const { locale, version } = await params;
+  setRequestLocale(locale);
+
   const release = await getRelease(version, locale);
 
   if (!release) {
     notFound();
   }
 
+  const t = await getTranslations({ locale, namespace: 'releases.detail' });
   const relatedReleases = await getRelatedReleases(version, 3, locale);
 
   // Structured data (JSON-LD)
@@ -229,7 +198,7 @@ export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
 
       <div className="bg-background min-h-screen">
         {/* Release header */}
-        <ReleaseHeader frontMatter={release.frontMatter} version={version} />
+        <ReleaseHeader frontMatter={release.frontMatter} version={version} locale={locale} />
 
         {/* Cover image */}
         {release.frontMatter.coverImage && (
@@ -280,36 +249,16 @@ export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
               {/* Release information footer */}
               <div className="bg-container mt-8 rounded-2xl p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-muted-foreground mb-1 text-sm">
-                      This release takes approximately{' '}
-                      <strong>{release.readingTime} minutes</strong> to read
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                      Release date: {new Date(release.frontMatter.date).toLocaleDateString('en-US')}
-                      {release.frontMatter.author && (
-                        <span className="ml-4">Release manager: {release.frontMatter.author}</span>
-                      )}
-                    </p>
-                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    {t('readingTime', { minutes: release.readingTime })}
+                  </p>
 
-                  <div className="flex items-center gap-4">
-                    <Link
-                      href="/releases"
-                      className="text-primary hover:text-primary/80 text-sm font-bold"
-                    >
-                      View all releases
-                    </Link>
-
-                    <a
-                      href={`https://github.com/yoursaas/platform/releases/tag/v${release.frontMatter.version}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-foreground text-sm font-bold"
-                    >
-                      View on GitHub
-                    </a>
-                  </div>
+                  <Link
+                    href="/releases"
+                    className="text-primary hover:text-primary/80 text-sm font-bold"
+                  >
+                    {t('viewAllReleases')}
+                  </Link>
                 </div>
               </div>
             </div>
@@ -322,8 +271,10 @@ export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
             <Container>
               <div className="mx-auto max-w-6xl">
                 <div className="mb-8">
-                  <h2 className="text-foreground mb-4 text-2xl font-bold">Related Releases</h2>
-                  <p className="text-muted-foreground">Other updates related to this release</p>
+                  <h2 className="text-foreground mb-4 text-2xl font-bold">
+                    {t('relatedReleases')}
+                  </h2>
+                  <p className="text-muted-foreground">{t('relatedDescription')}</p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -341,81 +292,14 @@ export default async function ReleaseDetailPage({ params }: ReleasePageProps) {
                     href="/releases"
                     className="border-border bg-card text-foreground hover:bg-muted inline-flex items-center rounded-lg border px-6 py-4 text-sm font-bold transition-colors"
                   >
-                    <svg
-                      className="mr-2 size-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                    View all releases
+                    <ArrowLeft className="mr-2 size-4" />
+                    {t('viewAllReleases')}
                   </Link>
                 </div>
               </div>
             </Container>
           </section>
         )}
-
-        {/* Feedback & Support */}
-        <section className="py-16">
-          <Container>
-            <div className="mx-auto max-w-4xl text-center">
-              <h2 className="text-foreground mb-4 text-2xl font-bold">Share Your Feedback</h2>
-              <p className="text-muted-foreground mb-8">
-                If you have any questions or feedback about this new feature, please feel free to
-                share it with us.
-              </p>
-
-              <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <a
-                  href="mailto:support@yoursaas.com"
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover inline-flex items-center rounded-lg px-6 py-4 font-bold transition-colors"
-                >
-                  <svg
-                    className="mr-2 size-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Contact Support
-                </a>
-
-                <Link
-                  href="/feedback"
-                  className="border-border text-foreground hover:bg-muted inline-flex items-center rounded-lg border px-6 py-4 font-bold transition-colors"
-                >
-                  <svg
-                    className="mr-2 size-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                  </svg>
-                  Send Feedback
-                </Link>
-              </div>
-            </div>
-          </Container>
-        </section>
       </div>
     </>
   );

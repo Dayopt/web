@@ -52,7 +52,13 @@ export default async function ReleasesPage({ params }: PageProps) {
     <div className="bg-background min-h-screen">
       <section className="py-16">
         <Container>
-          <ReleasesClient initialReleases={clientReleases} initialTags={allTags} locale={locale} />
+          <div className="mx-auto max-w-6xl">
+            <ReleasesClient
+              initialReleases={clientReleases}
+              initialTags={allTags}
+              locale={locale}
+            />
+          </div>
         </Container>
       </section>
     </div>

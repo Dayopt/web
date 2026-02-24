@@ -118,6 +118,9 @@
     }
   },
   "blog": {
+    "header": {
+      "title": "ブログ"
+    },
     "filters": {
       "title": "フィルター",
       "clearAll": "すべてクリア",
@@ -198,6 +201,10 @@
     }
   },
   "releases": {
+    "header": {
+      "title": "リリース",
+      "subtitle": "最新のリリースノートと更新情報"
+    },
     "featured": "注目",
     "breaking": "破壊的変更",
     "filters": {
@@ -205,7 +212,7 @@
       "clearAll": "すべてクリア",
       "tags": "タグ",
       "showLess": "表示を減らす",
-      "showMore": "さらに{count}件表示",
+      "showMore": "さらに表示",
       "resultsFound": "{total}件中{count}件のリリース",
       "featuredReleases": "注目のリリース",
       "breakingChanges": "破壊的変更",
@@ -243,6 +250,13 @@
       "title": "リリースが見つかりません",
       "description": "現在のフィルターに一致するリリースはありません。",
       "clearFilters": "フィルターをクリア"
+    },
+    "detail": {
+      "backToReleases": "リリース一覧に戻る",
+      "readingTime": "約{minutes}分で読了",
+      "viewAllReleases": "すべてのリリースを見る",
+      "relatedReleases": "関連リリース",
+      "relatedDescription": "このリリースに関連するアップデート"
     }
   },
   "docs": {
