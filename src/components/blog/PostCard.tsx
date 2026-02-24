@@ -1,7 +1,7 @@
+import { TagPill } from '@/components/ui/tag-pill';
 import { Heading } from '@/components/ui/typography';
 import { Link } from '@/i18n/navigation';
 import { BlogPostMeta } from '@/lib/blog';
-import { getTagColor } from '@/lib/tags-client';
 import { BlogImage } from './BlogImage';
 
 interface PostCardProps {
@@ -28,44 +28,43 @@ export function PostCard({
 
   const formattedDate = formatDate(post.frontMatter.publishedAt);
 
-  // List layout (Claude blog style): date, category, title in a clean row
+  // List layout: cover image + title → tags (#付き) → date
   if (layout === 'list') {
     return (
-      <article className="group py-6 first:pt-0">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
-          {/* 日付 */}
-          <div className="text-muted-foreground w-28 flex-shrink-0 text-sm">
-            <time dateTime={post.frontMatter.publishedAt}>{formattedDate}</time>
+      <article className="relative py-6 first:pt-0">
+        <div className="hover:bg-state-hover -m-4 flex items-center gap-5 rounded-xl p-4 transition-colors">
+          {/* カバー画像（控えめサイズ） */}
+          <div className="w-56 flex-shrink-0">
+            <BlogImage
+              src={post.frontMatter.coverImage}
+              alt={post.frontMatter.title}
+              priority={priority}
+              sizes="224px"
+            />
           </div>
 
-          {/* タグ（最大3つ + 残り数） */}
-          <div className="flex w-44 flex-shrink-0 flex-wrap items-center gap-2">
-            {post.frontMatter.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-bold ${getTagColor(tag)}`}
-              >
-                {tag}
-              </span>
-            ))}
-            {post.frontMatter.tags.length > 3 && (
-              <span className="text-muted-foreground text-xs">
-                +{post.frontMatter.tags.length - 3}
-              </span>
-            )}
-          </div>
-
-          {/* タイトル */}
-          <div className="flex-1">
-            <Link href={`/blog/${post.slug}`} className="group/link">
-              <Heading
-                as="h2"
-                size="md"
-                className="text-foreground group-hover/link:text-primary font-bold transition-colors"
-              >
+          {/* コンテンツ: タイトル → タグ → 日付 */}
+          <div className="min-w-0 flex-1">
+            {/* タイトル（stretched link でカード全体をクリック可能に） */}
+            <Link href={`/blog/${post.slug}`} className="after:absolute after:inset-0">
+              <Heading as="h2" size="md" className="text-foreground font-bold">
                 {post.frontMatter.title}
               </Heading>
             </Link>
+
+            {/* タグ（#付き・全表示・個別クリック可能） */}
+            <div className="relative z-10 mt-3 flex flex-wrap items-center gap-1">
+              {post.frontMatter.tags.map((tag) => (
+                <Link key={tag} href={`/tags/${tag}`}>
+                  <TagPill tag={tag} />
+                </Link>
+              ))}
+            </div>
+
+            {/* 日付 */}
+            <div className="text-muted-foreground mt-3 text-sm">
+              <time dateTime={post.frontMatter.publishedAt}>{formattedDate}</time>
+            </div>
           </div>
         </div>
       </article>
@@ -100,14 +99,9 @@ export function PostCard({
           </Link>
 
           {/* Tags */}
-          <div className="mb-4 flex flex-wrap gap-2">
+          <div className="mb-4 flex flex-wrap gap-1">
             {post.frontMatter.tags.map((tag) => (
-              <span
-                key={tag}
-                className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-bold ${getTagColor(tag)}`}
-              >
-                #{tag}
-              </span>
+              <TagPill key={tag} tag={tag} />
             ))}
           </div>
 
@@ -149,14 +143,9 @@ export function PostCard({
             </Link>
 
             {/* Tags */}
-            <div className="mb-4 flex flex-wrap gap-2">
+            <div className="mb-4 flex flex-wrap gap-1">
               {post.frontMatter.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className={`inline-flex items-center rounded-lg px-2 py-1 text-sm font-bold ${getTagColor(tag)}`}
-                >
-                  #{tag}
-                </span>
+                <TagPill key={tag} tag={tag} />
               ))}
             </div>
 

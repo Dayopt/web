@@ -30,7 +30,7 @@ export function BlogImage({
   if (!src || imageError) {
     return (
       <div
-        className={`bg-muted flex ${aspectClass} items-center justify-center rounded-lg transition-all duration-300 hover:opacity-40`}
+        className={`bg-muted flex ${aspectClass} items-center justify-center rounded-lg transition-all duration-300`}
       >
         <ImageIcon className="text-muted-foreground size-8" />
       </div>
@@ -39,7 +39,7 @@ export function BlogImage({
 
   return (
     <div
-      className={`relative ${aspectClass} overflow-hidden rounded-lg transition-all duration-300 hover:opacity-40`}
+      className={`relative ${aspectClass} overflow-hidden rounded-lg transition-all duration-300`}
     >
       <Image
         src={src}

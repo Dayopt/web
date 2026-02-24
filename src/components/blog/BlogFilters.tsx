@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { InlineTagFilter } from '@/components/ui/inline-tag-filter';
 import { MobileFilterSheet } from '@/components/ui/mobile-filter-sheet';
 import { cn } from '@/lib/utils';
-import { Calendar, Filter, Tag } from 'lucide-react';
+import { Calendar, Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ interface BlogFiltersProps {
 export interface BlogFilterState {
   selectedTags: string[];
   searchQuery: string;
-  sortBy: 'date' | 'category';
+  sortBy: 'date';
   sortOrder: 'asc' | 'desc';
 }
 
@@ -99,11 +99,6 @@ export function BlogFilters({ tags, className, onFiltersChange, locale }: BlogFi
     updateFilters({ ...filters, selectedTags: newSelectedTags });
   };
 
-  // ソート設定の更新
-  const handleSortChange = (sortBy: BlogFilterState['sortBy']) => {
-    updateFilters({ ...filters, sortBy });
-  };
-
   // ソート順の切り替え
   const toggleSortOrder = () => {
     const newOrder = filters.sortOrder === 'asc' ? 'desc' : 'asc';
@@ -127,34 +122,13 @@ export function BlogFilters({ tags, className, onFiltersChange, locale }: BlogFi
           {t('sortBy')}
         </span>
         <div className="flex flex-wrap gap-2" role="group" aria-labelledby="sort-label">
-          {(
-            [
-              { value: 'date', label: t('date'), icon: Calendar },
-              { value: 'category', label: t('category'), icon: Tag },
-            ] as const
-          ).map(({ value, label, icon: Icon }) => (
-            <Button
-              key={value}
-              onClick={() => handleSortChange(value)}
-              variant={filters.sortBy === value ? 'primary' : 'outline'}
-              size="sm"
-              className={cn(
-                'inline-flex items-center gap-2',
-                filters.sortBy === value && 'bg-muted text-primary border-primary',
-              )}
-            >
-              <Icon className="size-4" />
-              {label}
-            </Button>
-          ))}
-
           <Button
             onClick={toggleSortOrder}
             variant="outline"
             size="sm"
-            className="inline-flex items-center gap-2"
+            className="hover:bg-state-hover inline-flex items-center gap-2 bg-transparent transition-colors"
           >
-            {filters.sortOrder === 'asc' ? '↑' : '↓'}
+            <Calendar className="size-4" />
             {filters.sortOrder === 'asc' ? t('orderAsc') : t('orderDesc')}
           </Button>
         </div>
@@ -181,26 +155,13 @@ export function BlogFilters({ tags, className, onFiltersChange, locale }: BlogFi
       >
         {/* フィルターヘッダー */}
         <div className="border-border border-b p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Filter className="text-muted-foreground size-5" />
-              <h3 className="text-foreground font-bold">{t('title')}</h3>
-              {activeFiltersCount > 0 && (
-                <span className="bg-muted text-primary border-primary rounded-full border px-2 py-1 text-xs font-bold">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </div>
-
+          <div className="flex items-center gap-2">
+            <Filter className="text-muted-foreground size-5" />
+            <h3 className="text-foreground font-bold">{t('title')}</h3>
             {activeFiltersCount > 0 && (
-              <Button
-                onClick={clearFilters}
-                variant="ghost"
-                size="sm"
-                className="h-auto p-1 text-xs"
-              >
-                {t('clearAll')}
-              </Button>
+              <span className="bg-muted text-primary border-primary rounded-full border px-2 py-1 text-xs font-bold">
+                {activeFiltersCount}
+              </span>
             )}
           </div>
         </div>

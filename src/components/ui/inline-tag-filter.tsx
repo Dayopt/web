@@ -1,8 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { getTagFilterColor } from '@/lib/tags-client';
-import { cn } from '@/lib/utils';
+import { TagPill } from '@/components/ui/tag-pill';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -52,33 +51,16 @@ export function InlineTagFilter({
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2" role="group" aria-labelledby="tag-filter-label">
-        {visibleTags.map((tagItem) => {
-          const isSelected = selectedTags.includes(tagItem.tag);
-          return (
-            <Button
-              key={tagItem.tag}
-              onClick={() => onToggle(tagItem.tag)}
-              variant="outline"
-              size="sm"
-              className={cn(
-                'inline-flex items-center gap-2 border',
-                getTagFilterColor(tagItem.tag, isSelected),
-              )}
-            >
-              <span>#</span>
-              {tagItem.tag}
-              {showCounts && (
-                <span
-                  className={cn('text-xs', isSelected ? 'text-primary-foreground' : 'opacity-60')}
-                >
-                  ({tagItem.count})
-                </span>
-              )}
-              {isSelected && <X className="size-3" />}
-            </Button>
-          );
-        })}
+      <div className="flex flex-wrap gap-1" role="group" aria-labelledby="tag-filter-label">
+        {visibleTags.map((tagItem) => (
+          <TagPill
+            key={tagItem.tag}
+            tag={tagItem.tag}
+            count={showCounts ? tagItem.count : undefined}
+            selected={selectedTags.includes(tagItem.tag)}
+            onClick={() => onToggle(tagItem.tag)}
+          />
+        ))}
       </div>
 
       {hasMore && (
