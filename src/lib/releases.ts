@@ -346,36 +346,6 @@ export function getVersionType(version: string): 'major' | 'minor' | 'patch' | '
   return 'major';
 }
 
-// 次期リリース予定の取得（モック）
-export async function getUpcomingReleases(): Promise<
-  {
-    version: string;
-    expectedDate: string;
-    features: string[];
-    status: 'planning' | 'development' | 'testing' | 'review';
-  }[]
-> {
-  // 実際のプロダクションでは外部APIやデータベースから取得
-  return [
-    {
-      version: 'v2.2.0',
-      expectedDate: '2024-02-15',
-      features: [
-        'Advanced Team Analytics',
-        'Real-time Collaboration',
-        'Enhanced Mobile Experience',
-      ],
-      status: 'testing',
-    },
-    {
-      version: 'v2.3.0',
-      expectedDate: '2024-03-20',
-      features: ['AI-Powered Insights', 'Custom Integrations API', 'Advanced Security Features'],
-      status: 'development',
-    },
-  ];
-}
-
 // リリースタイムライン生成
 export function generateReleaseTimeline(releases: ReleasePostMeta[]): {
   year: string;
