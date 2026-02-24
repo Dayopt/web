@@ -1,5 +1,6 @@
 'use client';
 
+import { ContentHeader } from '@/components/content/ContentHeader';
 import { Button } from '@/components/ui/button';
 import { ContentPagination } from '@/components/ui/content-pagination';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -130,154 +131,158 @@ export function FilteredTagsClient({ allTags, locale }: FilteredTagsClientProps)
   );
 
   return (
-    <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
-      {/* 左サイドバー */}
-      <div className="lg:col-span-1">
-        <div className="sticky top-24 space-y-8">
-          {/* デスクトップフィルター */}
-          <div className="hidden space-y-8 lg:block">{filterContent}</div>
+    <div>
+      <ContentHeader title={t('title')} />
 
-          {/* モバイルフィルター */}
-          <MobileFilterSheet
-            isOpen={isMobileOpen}
-            onOpenChange={setIsMobileOpen}
-            activeFilterCount={activeFiltersCount}
-            onClear={clearAllFilters}
-            onApply={() => {}}
-            title={t('filters')}
-            clearLabel={t('filtersClearAll')}
-            applyLabel={t('filtersApply')}
-            triggerLabel={t('filters')}
-          >
-            {filterContent}
-          </MobileFilterSheet>
-        </div>
-      </div>
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
+        {/* 左サイドバー */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-24 space-y-8">
+            {/* デスクトップフィルター */}
+            <div className="hidden space-y-8 lg:block">{filterContent}</div>
 
-      {/* 右側: タグ一覧 */}
-      <div className="lg:col-span-3">
-        {/* 検索ボックス + ビュー切り替え */}
-        <div className="mb-8 flex items-center gap-4">
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder={t('searchPlaceholder')}
-            clearLabel={t('clearSearch')}
-            className="flex-1"
-          />
-
-          <PillSwitcher
-            options={[
-              {
-                value: 'list',
-                label: t('view.list'),
-                icon: <List className="size-4" />,
-              },
-              {
-                value: 'grid',
-                label: t('view.grid'),
-                icon: <Grid3X3 className="size-4" />,
-              },
-            ]}
-            value={viewMode}
-            onValueChange={setViewMode}
-          />
+            {/* モバイルフィルター */}
+            <MobileFilterSheet
+              isOpen={isMobileOpen}
+              onOpenChange={setIsMobileOpen}
+              activeFilterCount={activeFiltersCount}
+              onClear={clearAllFilters}
+              onApply={() => {}}
+              title={t('filters')}
+              clearLabel={t('filtersClearAll')}
+              applyLabel={t('filtersApply')}
+              triggerLabel={t('filters')}
+            >
+              {filterContent}
+            </MobileFilterSheet>
+          </div>
         </div>
 
-        {/* 結果件数 */}
-        <div className="text-muted-foreground mb-6 text-sm" aria-live="polite">
-          {filteredTags.length === 1
-            ? t('tagsCountSingular', { count: filteredTags.length })
-            : t('tagsCount', { count: filteredTags.length })}
-          {categoryFilter !== 'all' && <span className="ml-2">({t(categoryFilter)})</span>}
-        </div>
+        {/* 右側: タグ一覧 */}
+        <div className="lg:col-span-3">
+          {/* 検索ボックス + ビュー切り替え */}
+          <div className="mb-8 flex items-center gap-4">
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={t('searchPlaceholder')}
+              clearLabel={t('clearSearch')}
+              className="flex-1"
+            />
 
-        {currentTags.length > 0 ? (
-          <>
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {currentTags.map((tag) => (
-                  <Link
-                    key={tag.tag}
-                    href={`/tags/${encodeURIComponent(tag.tag)}`}
-                    className={`group flex items-center justify-between rounded-lg border px-4 py-4 transition-all ${getTagColor(tag.tag)}`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Hash className="size-4" />
-                      <span className="font-bold">{tag.tag}</span>
-                    </div>
-                    <span className="text-sm opacity-75">{tag.count}</span>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="divide-border divide-y">
-                {currentTags.map((tag) => (
-                  <Link
-                    key={tag.tag}
-                    href={`/tags/${encodeURIComponent(tag.tag)}`}
-                    className="group hover:bg-state-hover flex items-center justify-between py-4 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`flex size-10 items-center justify-center rounded-lg ${getTagColor(tag.tag)}`}
-                      >
-                        <Hash className="size-5" />
+            <PillSwitcher
+              options={[
+                {
+                  value: 'list',
+                  label: t('view.list'),
+                  icon: <List className="size-4" />,
+                },
+                {
+                  value: 'grid',
+                  label: t('view.grid'),
+                  icon: <Grid3X3 className="size-4" />,
+                },
+              ]}
+              value={viewMode}
+              onValueChange={setViewMode}
+            />
+          </div>
+
+          {/* 結果件数 */}
+          <div className="text-muted-foreground mb-6 text-sm" aria-live="polite">
+            {filteredTags.length === 1
+              ? t('tagsCountSingular', { count: filteredTags.length })
+              : t('tagsCount', { count: filteredTags.length })}
+            {categoryFilter !== 'all' && <span className="ml-2">({t(categoryFilter)})</span>}
+          </div>
+
+          {currentTags.length > 0 ? (
+            <>
+              {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {currentTags.map((tag) => (
+                    <Link
+                      key={tag.tag}
+                      href={`/tags/${encodeURIComponent(tag.tag)}`}
+                      className={`group flex items-center justify-between rounded-lg border px-4 py-4 transition-all ${getTagColor(tag.tag)}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Hash className="size-4" />
+                        <span className="font-bold">{tag.tag}</span>
                       </div>
-                      <div>
-                        <div className="text-foreground font-bold">#{tag.tag}</div>
-                        <div className="text-muted-foreground flex items-center gap-4 text-sm">
-                          {tag.blogCount > 0 && (
-                            <span className="flex items-center gap-1">
-                              <FileText className="size-3" />
-                              {tag.blogCount}
-                            </span>
-                          )}
-                          {tag.releaseCount > 0 && (
-                            <span className="flex items-center gap-1">
-                              <Megaphone className="size-3" />
-                              {tag.releaseCount}
-                            </span>
-                          )}
-                          {tag.docsCount > 0 && (
-                            <span className="flex items-center gap-1">
-                              <BookOpen className="size-3" />
-                              {tag.docsCount}
-                            </span>
-                          )}
+                      <span className="text-sm opacity-75">{tag.count}</span>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="divide-border divide-y">
+                  {currentTags.map((tag) => (
+                    <Link
+                      key={tag.tag}
+                      href={`/tags/${encodeURIComponent(tag.tag)}`}
+                      className="group hover:bg-state-hover flex items-center justify-between py-4 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`flex size-10 items-center justify-center rounded-lg ${getTagColor(tag.tag)}`}
+                        >
+                          <Hash className="size-5" />
+                        </div>
+                        <div>
+                          <div className="text-foreground font-bold">#{tag.tag}</div>
+                          <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                            {tag.blogCount > 0 && (
+                              <span className="flex items-center gap-1">
+                                <FileText className="size-3" />
+                                {tag.blogCount}
+                              </span>
+                            )}
+                            {tag.releaseCount > 0 && (
+                              <span className="flex items-center gap-1">
+                                <Megaphone className="size-3" />
+                                {tag.releaseCount}
+                              </span>
+                            )}
+                            {tag.docsCount > 0 && (
+                              <span className="flex items-center gap-1">
+                                <BookOpen className="size-3" />
+                                {tag.docsCount}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="bg-muted text-foreground flex size-8 items-center justify-center rounded-lg text-sm font-bold">
-                      {tag.count}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
+                      <div className="bg-muted text-foreground flex size-8 items-center justify-center rounded-lg text-sm font-bold">
+                        {tag.count}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
 
-            {/* ページネーション */}
-            {totalPages > 1 && (
-              <div className="mt-12">
-                <ContentPagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  basePath={locale === 'ja' ? '/ja/tags' : '/tags'}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <EmptyState
-            icon={Search}
-            title={t('noTagsFound')}
-            description={t('noTagsHint')}
-            action={{
-              label: t('clearFilters'),
-              onClick: clearAllFilters,
-            }}
-          />
-        )}
+              {/* ページネーション */}
+              {totalPages > 1 && (
+                <div className="mt-12">
+                  <ContentPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    basePath={locale === 'ja' ? '/ja/tags' : '/tags'}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <EmptyState
+              icon={Search}
+              title={t('noTagsFound')}
+              description={t('noTagsHint')}
+              action={{
+                label: t('clearFilters'),
+                onClick: clearAllFilters,
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
