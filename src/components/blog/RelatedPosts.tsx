@@ -4,6 +4,7 @@ import { Container } from '@/components/ui/container';
 import { Heading, Text } from '@/components/ui/typography';
 import { Link } from '@/i18n/navigation';
 import { BlogPostMeta } from '@/lib/blog';
+import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { PostCard } from './PostCard';
 
@@ -56,14 +57,7 @@ export function RelatedPosts({
               className="border-border bg-card text-foreground hover:border-foreground hover:bg-muted inline-flex items-center rounded-lg border px-6 py-4 text-sm font-bold transition-colors"
             >
               {t('viewAll')}
-              <svg className="ml-2 size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <ArrowRight className="ml-2 size-4" />
             </Link>
           </div>
         </div>
