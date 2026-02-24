@@ -218,7 +218,11 @@
       "breakingChanges": "破壊的変更",
       "quickFilters": "クイックフィルター",
       "searchPlaceholder": "バージョン、タイトル、タグで検索...",
-      "clearSearch": "検索をクリア"
+      "clearSearch": "検索をクリア",
+      "sortBy": "並び替え",
+      "orderAsc": "古い順",
+      "orderDesc": "新しい順",
+      "applyFilters": "フィルターを適用"
     },
     "view": {
       "list": "リスト",

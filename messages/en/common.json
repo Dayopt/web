@@ -249,7 +249,11 @@
       "breakingChanges": "Breaking changes",
       "quickFilters": "Quick Filters",
       "searchPlaceholder": "Search by version, title, or tags...",
-      "clearSearch": "Clear search"
+      "clearSearch": "Clear search",
+      "sortBy": "Sort By",
+      "orderAsc": "Oldest first",
+      "orderDesc": "Newest first",
+      "applyFilters": "Apply Filters"
     },
     "view": {
       "list": "List",

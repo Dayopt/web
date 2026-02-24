@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { InlineTagFilter } from '@/components/ui/inline-tag-filter';
 import { MobileFilterSheet } from '@/components/ui/mobile-filter-sheet';
 import { cn } from '@/lib/utils';
-import { Filter } from 'lucide-react';
+import { Calendar, Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -16,16 +16,20 @@ interface TagCount {
 interface ReleaseFilterProps {
   tags: TagCount[];
   selectedTags: string[];
+  sortOrder: 'asc' | 'desc';
   onTagToggle: (tag: string) => void;
   onClearFilters: () => void;
+  onToggleSortOrder: () => void;
   className?: string;
 }
 
 export function ReleaseFilter({
   tags,
   selectedTags,
+  sortOrder,
   onTagToggle,
   onClearFilters,
+  onToggleSortOrder,
   className,
 }: ReleaseFilterProps) {
   const t = useTranslations('releases.filters');
@@ -34,15 +38,36 @@ export function ReleaseFilter({
   const activeFiltersCount = selectedTags.length;
 
   const filterContent = (
-    <InlineTagFilter
-      tags={tags}
-      selectedTags={selectedTags}
-      onToggle={onTagToggle}
-      onClear={onClearFilters}
-      label={t('tags')}
-      showMoreLabel={t('showMore')}
-      showLessLabel={t('showLess')}
-    />
+    <>
+      {/* ソート */}
+      <div>
+        <span id="sort-label" className="text-muted-foreground mb-4 block text-sm font-bold">
+          {t('sortBy')}
+        </span>
+        <div className="flex flex-wrap gap-2" role="group" aria-labelledby="sort-label">
+          <Button
+            onClick={onToggleSortOrder}
+            variant="outline"
+            size="sm"
+            className="hover:bg-state-hover inline-flex items-center gap-2 bg-transparent transition-colors"
+          >
+            <Calendar className="size-4" />
+            {sortOrder === 'asc' ? t('orderAsc') : t('orderDesc')}
+          </Button>
+        </div>
+      </div>
+
+      {/* タグフィルター */}
+      <InlineTagFilter
+        tags={tags}
+        selectedTags={selectedTags}
+        onToggle={onTagToggle}
+        onClear={onClearFilters}
+        label={t('tags')}
+        showMoreLabel={t('showMore')}
+        showLessLabel={t('showLess')}
+      />
+    </>
   );
 
   return (
@@ -53,26 +78,13 @@ export function ReleaseFilter({
       >
         {/* フィルターヘッダー */}
         <div className="border-border border-b p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Filter className="text-muted-foreground size-5" />
-              <h3 className="text-foreground font-bold">{t('title')}</h3>
-              {activeFiltersCount > 0 && (
-                <span className="bg-muted text-primary border-primary rounded-full border px-2 py-1 text-xs font-bold">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </div>
-
+          <div className="flex items-center gap-2">
+            <Filter className="text-muted-foreground size-5" />
+            <h3 className="text-foreground font-bold">{t('title')}</h3>
             {activeFiltersCount > 0 && (
-              <Button
-                onClick={onClearFilters}
-                variant="ghost"
-                size="sm"
-                className="h-auto p-1 text-xs"
-              >
-                {t('clearAll')}
-              </Button>
+              <span className="bg-muted text-primary border-primary rounded-full border px-2 py-1 text-xs font-bold">
+                {activeFiltersCount}
+              </span>
             )}
           </div>
         </div>
@@ -90,7 +102,7 @@ export function ReleaseFilter({
         onApply={() => {}}
         title={t('title')}
         clearLabel={t('clearAll')}
-        applyLabel={t('clearAll')}
+        applyLabel={t('applyFilters')}
         triggerLabel={t('title')}
       >
         {filterContent}
