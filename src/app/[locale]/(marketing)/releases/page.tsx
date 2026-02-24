@@ -50,9 +50,11 @@ export default async function ReleasesPage({ params }: PageProps) {
 
   return (
     <div className="bg-background min-h-screen">
-      <Container>
-        <ReleasesClient initialReleases={clientReleases} initialTags={allTags} locale={locale} />
-      </Container>
+      <section className="py-16">
+        <Container>
+          <ReleasesClient initialReleases={clientReleases} initialTags={allTags} locale={locale} />
+        </Container>
+      </section>
     </div>
   );
 }
