@@ -1,10 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import type { PillSwitcherOption } from '@/components/ui/pill-switcher';
+import { EmptyState } from '@/components/ui/empty-state';
 import { PillSwitcher } from '@/components/ui/pill-switcher';
-import { Heading, Text } from '@/components/ui/typography';
+import { SearchInput } from '@/components/ui/search-input';
 import { Link } from '@/i18n/navigation';
 import { getTagColor } from '@/lib/tags-client';
 import type { TaggedContent } from '@/lib/tags-server';
@@ -18,8 +17,8 @@ import {
   Megaphone,
   Search,
   TrendingUp,
-  X,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 // 統一コンテンツアイテム（TaggedContentにhrefを追加）
@@ -32,26 +31,14 @@ function getContentIcon(type: TaggedContent['type']) {
   switch (type) {
     case 'blog':
       return <FileText className="size-5" />;
-    case 'release':
-      return <Megaphone className="size-5" />;
     case 'doc':
       return <BookOpen className="size-5" />;
-  }
-}
-
-// タイプラベルを取得
-function getTypeLabel(type: TaggedContent['type'], isJa: boolean) {
-  switch (type) {
-    case 'blog':
-      return isJa ? 'ブログ' : 'Blog';
     case 'release':
-      return isJa ? 'リリース' : 'Release';
-    case 'doc':
-      return isJa ? 'ドキュメント' : 'Docs';
+    default:
+      return <Megaphone className="size-5" />;
   }
 }
 
-type CategoryFilter = 'all' | 'blog' | 'releases' | 'docs';
 type ViewMode = 'list' | 'grid';
 
 interface TagDetailClientProps {
@@ -71,11 +58,11 @@ export function TagDetailClient({
   popularTags,
   locale,
 }: TagDetailClientProps) {
+  const t = useTranslations('tags');
+  const tDetail = useTranslations('tags.detail');
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('list');
 
-  const isJa = locale === 'ja';
   const totalCount = blogContent.length + releaseContent.length + docsContent.length;
 
   // フィルタリング
@@ -92,57 +79,24 @@ export function TagDetailClient({
   const filteredReleases = filterContent(releaseContent);
   const filteredDocs = filterContent(docsContent);
 
-  // カテゴリオプションを動的に生成（コンテンツがあるもののみ）
-  const categoryOptions: PillSwitcherOption<CategoryFilter>[] = [
-    { value: 'all', label: isJa ? 'すべて' : 'All' },
-  ];
-  if (blogContent.length > 0) {
-    categoryOptions.push({
-      value: 'blog',
-      label: isJa ? `ブログ (${filteredBlog.length})` : `Blog (${filteredBlog.length})`,
-      icon: <FileText className="size-3" />,
-    });
-  }
-  if (releaseContent.length > 0) {
-    categoryOptions.push({
-      value: 'releases',
-      label: isJa
-        ? `リリース (${filteredReleases.length})`
-        : `Releases (${filteredReleases.length})`,
-      icon: <Megaphone className="size-3" />,
-    });
-  }
-  if (docsContent.length > 0) {
-    categoryOptions.push({
-      value: 'docs',
-      label: isJa ? `ドキュメント (${filteredDocs.length})` : `Docs (${filteredDocs.length})`,
-      icon: <BookOpen className="size-3" />,
-    });
-  }
-
-  // 統一コンテンツリストを作成
+  // 統一コンテンツリストを作成（blog + releases + docs を統合）
   const unifiedContent: UnifiedContentItem[] = [];
 
-  if (categoryFilter === 'all' || categoryFilter === 'blog') {
-    filteredBlog.forEach((item) => {
-      unifiedContent.push({ ...item, href: `/blog/${item.slug}` });
-    });
-  }
-  if (categoryFilter === 'all' || categoryFilter === 'releases') {
-    filteredReleases.forEach((item) => {
-      unifiedContent.push({ ...item, href: `/releases/${item.slug}` });
-    });
-  }
-  if (categoryFilter === 'all' || categoryFilter === 'docs') {
-    filteredDocs.forEach((item) => {
-      unifiedContent.push({ ...item, href: `/docs/${item.slug}` });
-    });
-  }
+  filteredBlog.forEach((item) => {
+    unifiedContent.push({ ...item, href: `/blog/${item.slug}` });
+  });
+  filteredReleases.forEach((item) => {
+    unifiedContent.push({ ...item, href: `/releases/${item.slug}` });
+  });
+  filteredDocs.forEach((item) => {
+    unifiedContent.push({ ...item, href: `/docs/${item.slug}` });
+  });
 
   // 日付でソート（新しい順）
   unifiedContent.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const hasContent = unifiedContent.length > 0;
+  const localeCode = locale === 'ja' ? 'ja-JP' : 'en-US';
 
   return (
     <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
@@ -160,7 +114,9 @@ export function TagDetailClient({
               <div>
                 <h1 className="text-foreground text-lg font-bold">#{tag}</h1>
                 <p className="text-muted-foreground text-sm">
-                  {totalCount} {isJa ? '件' : totalCount === 1 ? 'item' : 'items'}
+                  {totalCount === 1
+                    ? tDetail('itemsSingular', { count: totalCount })
+                    : tDetail('items', { count: totalCount })}
                 </p>
               </div>
             </div>
@@ -169,7 +125,7 @@ export function TagDetailClient({
               className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm transition-colors"
             >
               <ArrowLeft className="size-4" />
-              {isJa ? 'すべてのタグ' : 'All Tags'}
+              {tDetail('allTags')}
             </Link>
           </div>
 
@@ -177,22 +133,20 @@ export function TagDetailClient({
           <div className="border-border bg-card rounded-2xl border p-6">
             <div className="mb-4 flex items-center gap-2">
               <TrendingUp className="text-muted-foreground size-4" />
-              <h3 className="text-foreground text-sm font-bold">
-                {isJa ? '人気のタグ' : 'Popular Tags'}
-              </h3>
+              <h3 className="text-foreground text-sm font-bold">{t('popularTags')}</h3>
             </div>
             <div className="flex flex-wrap gap-2">
-              {popularTags.map((t) => (
+              {popularTags.map((tagItem) => (
                 <Link
-                  key={t.tag}
-                  href={`/tags/${encodeURIComponent(t.tag)}`}
+                  key={tagItem.tag}
+                  href={`/tags/${encodeURIComponent(tagItem.tag)}`}
                   className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-bold transition-colors ${
-                    t.tag.toLowerCase() === tag.toLowerCase()
+                    tagItem.tag.toLowerCase() === tag.toLowerCase()
                       ? 'bg-foreground text-background'
-                      : getTagColor(t.tag)
+                      : getTagColor(tagItem.tag)
                   }`}
                 >
-                  #{t.tag}
+                  #{tagItem.tag}
                 </Link>
               ))}
             </div>
@@ -202,48 +156,26 @@ export function TagDetailClient({
 
       {/* 右メイン */}
       <div className="lg:col-span-3">
-        {/* カテゴリスイッチャー */}
-        <div className="mb-4">
-          <PillSwitcher
-            options={categoryOptions}
-            value={categoryFilter}
-            onValueChange={setCategoryFilter}
-          />
-        </div>
-
         {/* 検索 + ビュー切り替え */}
         <div className="mb-6 flex items-center gap-4">
-          <div className="relative flex-1">
-            <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={isJa ? 'コンテンツを検索...' : 'Search content...'}
-              className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:ring-ring h-10 w-full rounded-lg border pr-12 pl-12 transition-colors focus:ring-2 focus:outline-none"
-            />
-            {searchQuery && (
-              <Button
-                onClick={() => setSearchQuery('')}
-                variant="ghost"
-                icon
-                className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
-              >
-                <X className="size-4" />
-              </Button>
-            )}
-          </div>
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={tDetail('searchContent')}
+            clearLabel={tDetail('clearSearch')}
+            className="flex-1"
+          />
 
           <PillSwitcher
             options={[
               {
                 value: 'list',
-                label: isJa ? 'リスト' : 'List',
+                label: t('view.list'),
                 icon: <List className="size-4" />,
               },
               {
                 value: 'grid',
-                label: isJa ? 'グリッド' : 'Grid',
+                label: t('view.grid'),
                 icon: <Grid3X3 className="size-4" />,
               },
             ]}
@@ -268,11 +200,13 @@ export function TagDetailClient({
                   <div className="min-w-0 flex-1">
                     <div className="mb-1 flex items-center gap-2">
                       <span className="text-muted-foreground text-xs">
-                        {getTypeLabel(item.type, isJa)}
+                        {t(
+                          item.type === 'blog' ? 'blog' : item.type === 'doc' ? 'docs' : 'releases',
+                        )}
                       </span>
                       <span className="text-muted-foreground text-xs">·</span>
                       <span className="text-muted-foreground text-xs">
-                        {new Date(item.date).toLocaleDateString(isJa ? 'ja-JP' : 'en-US', {
+                        {new Date(item.date).toLocaleDateString(localeCode, {
                           year: 'numeric',
                           month: 'short',
                           day: 'numeric',
@@ -282,12 +216,12 @@ export function TagDetailClient({
                     <h3 className="text-foreground line-clamp-1 font-bold">{item.title}</h3>
                     {item.tags.length > 0 && (
                       <div className="mt-1 flex flex-wrap gap-1">
-                        {item.tags.slice(0, 3).map((t) => (
+                        {item.tags.slice(0, 3).map((tagName) => (
                           <span
-                            key={t}
-                            className={`inline-flex items-center rounded px-2 py-1 text-xs ${getTagColor(t)}`}
+                            key={tagName}
+                            className={`inline-flex items-center rounded px-2 py-1 text-xs ${getTagColor(tagName)}`}
                           >
-                            #{t}
+                            #{tagName}
                           </span>
                         ))}
                         {item.tags.length > 3 && (
@@ -312,18 +246,24 @@ export function TagDetailClient({
                           {getContentIcon(item.type)}
                         </div>
                         <span className="text-muted-foreground text-xs">
-                          {getTypeLabel(item.type, isJa)}
+                          {t(
+                            item.type === 'blog'
+                              ? 'blog'
+                              : item.type === 'release'
+                                ? 'releases'
+                                : 'docs',
+                          )}
                         </span>
                       </div>
                       <CardTitle className="line-clamp-2 text-base">{item.title}</CardTitle>
                       {item.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          {item.tags.slice(0, 3).map((t) => (
+                          {item.tags.slice(0, 3).map((tagName) => (
                             <span
-                              key={t}
-                              className={`inline-flex items-center rounded px-2 py-1 text-xs ${getTagColor(t)}`}
+                              key={tagName}
+                              className={`inline-flex items-center rounded px-2 py-1 text-xs ${getTagColor(tagName)}`}
                             >
-                              #{t}
+                              #{tagName}
                             </span>
                           ))}
                           {item.tags.length > 3 && (
@@ -334,7 +274,7 @@ export function TagDetailClient({
                         </div>
                       )}
                       <p className="text-muted-foreground text-xs">
-                        {new Date(item.date).toLocaleDateString(isJa ? 'ja-JP' : 'en-US', {
+                        {new Date(item.date).toLocaleDateString(localeCode, {
                           year: 'numeric',
                           month: 'short',
                           day: 'numeric',
@@ -347,31 +287,17 @@ export function TagDetailClient({
             </div>
           )
         ) : (
-          <EmptyState isJa={isJa} onClear={() => setSearchQuery('')} />
+          <EmptyState
+            icon={Search}
+            title={tDetail('noContentFound')}
+            description={tDetail('noContentHint')}
+            action={{
+              label: tDetail('clearSearch'),
+              onClick: () => setSearchQuery(''),
+            }}
+          />
         )}
       </div>
-    </div>
-  );
-}
-
-function EmptyState({ isJa, onClear }: { isJa: boolean; onClear: () => void }) {
-  return (
-    <div className="py-16 text-center">
-      <div className="bg-muted mx-auto mb-6 flex size-24 items-center justify-center rounded-full">
-        <Search className="text-muted-foreground size-10" />
-      </div>
-      <Heading as="h3" size="lg" className="mb-2">
-        {isJa ? 'コンテンツが見つかりません' : 'No content found'}
-      </Heading>
-      <Text variant="muted" className="mb-4">
-        {isJa ? '検索条件を変更してみてください' : 'Try adjusting your search'}
-      </Text>
-      <button
-        onClick={onClear}
-        className="bg-muted text-primary border-primary hover:bg-state-hover inline-flex items-center rounded-lg border px-4 py-2 text-sm font-bold transition-colors"
-      >
-        {isJa ? '検索をクリア' : 'Clear search'}
-      </button>
     </div>
   );
 }

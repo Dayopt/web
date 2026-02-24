@@ -8,6 +8,9 @@ import { getAllReleaseMetas } from './releases';
 export interface TagCount {
   tag: string;
   count: number;
+  blogCount: number;
+  releaseCount: number;
+  docsCount: number;
 }
 
 export interface TaggedContent {
@@ -138,14 +141,16 @@ export async function getAllTags(): Promise<TagCount[]> {
       console.warn('[Tags] Some content sources failed:', contentErrors.join(', '));
     }
 
-    const tagCounts = new Map<string, number>();
+    const blogTagCounts = new Map<string, number>();
+    const releaseTagCounts = new Map<string, number>();
+    const docsTagCounts = new Map<string, number>();
 
     // Aggregate blog post tags
     blogPosts.forEach((post) => {
       const tags = post.frontMatter?.tags || [];
       tags.forEach((tag) => {
         if (tag && typeof tag === 'string') {
-          tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+          blogTagCounts.set(tag, (blogTagCounts.get(tag) || 0) + 1);
         }
       });
     });
@@ -155,7 +160,7 @@ export async function getAllTags(): Promise<TagCount[]> {
       const tags = release.frontMatter?.tags || [];
       tags.forEach((tag) => {
         if (tag && typeof tag === 'string') {
-          tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+          releaseTagCounts.set(tag, (releaseTagCounts.get(tag) || 0) + 1);
         }
       });
     });
@@ -165,13 +170,31 @@ export async function getAllTags(): Promise<TagCount[]> {
       const tags = doc.tags || [];
       tags.forEach((tag) => {
         if (tag && typeof tag === 'string') {
-          tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+          docsTagCounts.set(tag, (docsTagCounts.get(tag) || 0) + 1);
         }
       });
     });
 
-    return Array.from(tagCounts.entries())
-      .map(([tag, count]) => ({ tag, count }))
+    // Combine into unified tag counts
+    const allTagNames = new Set([
+      ...blogTagCounts.keys(),
+      ...releaseTagCounts.keys(),
+      ...docsTagCounts.keys(),
+    ]);
+
+    return Array.from(allTagNames)
+      .map((tag) => {
+        const blogCount = blogTagCounts.get(tag) || 0;
+        const releaseCount = releaseTagCounts.get(tag) || 0;
+        const docsCount = docsTagCounts.get(tag) || 0;
+        return {
+          tag,
+          count: blogCount + releaseCount + docsCount,
+          blogCount,
+          releaseCount,
+          docsCount,
+        };
+      })
       .sort((a, b) => b.count - a.count);
   } catch (error) {
     console.error('[Tags] Unexpected error in getAllTags:', error);
@@ -266,55 +289,4 @@ export async function getRelatedTags(currentTag: string, limit: number = 5): Pro
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
     .map(([tag]) => tag);
-}
-
-// Tag statistics by category
-export async function getTagsByCategory(): Promise<Record<string, TagCount[]>> {
-  const [blogPosts, releases, docs] = await Promise.all([
-    getAllBlogPostMetas(),
-    getAllReleaseMetas(),
-    getAllDocMetas(),
-  ]);
-
-  const blogTagsMap = new Map<string, number>();
-  const releasesTagsMap = new Map<string, number>();
-  const docsTagsMap = new Map<string, number>();
-
-  // Aggregate blog tags
-  blogPosts.forEach((post) => {
-    post.frontMatter.tags.forEach((tag) => {
-      blogTagsMap.set(tag, (blogTagsMap.get(tag) ?? 0) + 1);
-    });
-  });
-
-  // Aggregate release tags
-  releases.forEach((release) => {
-    release.frontMatter.tags.forEach((tag) => {
-      releasesTagsMap.set(tag, (releasesTagsMap.get(tag) ?? 0) + 1);
-    });
-  });
-
-  // Aggregate document tags
-  docs.forEach((doc) => {
-    doc.tags.forEach((tag) => {
-      docsTagsMap.set(tag, (docsTagsMap.get(tag) ?? 0) + 1);
-    });
-  });
-
-  const categorizedTags = {
-    blog: blogTagsMap,
-    releases: releasesTagsMap,
-    docs: docsTagsMap,
-  };
-
-  // Convert Map to TagCount[]
-  const result: Record<string, TagCount[]> = {};
-
-  Object.entries(categorizedTags).forEach(([category, tagMap]) => {
-    result[category] = Array.from(tagMap.entries())
-      .map(([tag, count]) => ({ tag, count }))
-      .sort((a, b) => b.count - a.count);
-  });
-
-  return result;
 }

@@ -1,8 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ContentPagination } from '@/components/ui/content-pagination';
+import { EmptyState } from '@/components/ui/empty-state';
+import { MobileFilterSheet } from '@/components/ui/mobile-filter-sheet';
 import { PillSwitcher } from '@/components/ui/pill-switcher';
-import { Heading, Text } from '@/components/ui/typography';
+import { SearchInput } from '@/components/ui/search-input';
 import { Link } from '@/i18n/navigation';
 import { getTagColor } from '@/lib/tags-client';
 import { cn } from '@/lib/utils';
@@ -15,12 +18,15 @@ import {
   Megaphone,
   Search,
   TrendingUp,
-  X,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 type ViewMode = 'list' | 'grid';
 type CategoryFilter = 'all' | 'blog' | 'releases' | 'docs';
+
+const TAGS_PER_PAGE = 30;
 
 interface TagData {
   tag: string;
@@ -36,93 +42,115 @@ interface FilteredTagsClientProps {
 }
 
 export function FilteredTagsClient({ allTags, locale }: FilteredTagsClientProps) {
+  const t = useTranslations('tags');
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const isJa = locale === 'ja';
+  const currentPage = Number(searchParams?.get('page')) || 1;
 
   // フィルタリング処理
   const filteredTags = allTags.filter((tag) => {
-    // 検索クエリによるフィルタリング
     if (searchQuery && !tag.tag.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
-
-    // カテゴリフィルター
     if (categoryFilter === 'blog' && tag.blogCount === 0) return false;
     if (categoryFilter === 'releases' && tag.releaseCount === 0) return false;
     if (categoryFilter === 'docs' && tag.docsCount === 0) return false;
-
     return true;
   });
+
+  // ページネーション
+  const totalPages = Math.ceil(filteredTags.length / TAGS_PER_PAGE);
+  const startIndex = (currentPage - 1) * TAGS_PER_PAGE;
+  const currentTags = filteredTags.slice(startIndex, startIndex + TAGS_PER_PAGE);
 
   const popularTags = allTags.slice(0, 10);
 
   const categoryOptions: { value: CategoryFilter; label: string; icon: React.ReactNode }[] = [
-    { value: 'all', label: isJa ? 'すべて' : 'All', icon: null },
-    { value: 'blog', label: isJa ? 'ブログ' : 'Blog', icon: <FileText className="size-3" /> },
-    {
-      value: 'releases',
-      label: isJa ? 'リリース' : 'Releases',
-      icon: <Megaphone className="size-3" />,
-    },
-    {
-      value: 'docs',
-      label: isJa ? 'ドキュメント' : 'Docs',
-      icon: <BookOpen className="size-3" />,
-    },
+    { value: 'all', label: t('all'), icon: null },
+    { value: 'blog', label: t('blog'), icon: <FileText className="size-3" /> },
+    { value: 'releases', label: t('releases'), icon: <Megaphone className="size-3" /> },
+    { value: 'docs', label: t('docs'), icon: <BookOpen className="size-3" /> },
   ];
+
+  const activeFiltersCount = (searchQuery ? 1 : 0) + (categoryFilter !== 'all' ? 1 : 0);
+
+  const clearAllFilters = () => {
+    setSearchQuery('');
+    setCategoryFilter('all');
+  };
+
+  // サイドバーのフィルターUI（デスクトップ・モバイル共有）
+  const filterContent = (
+    <>
+      {/* カテゴリフィルター */}
+      <div>
+        <span className="text-muted-foreground mb-4 block text-sm font-bold">{t('category')}</span>
+        <div className="space-y-2">
+          {categoryOptions.map((option) => (
+            <Button
+              key={option.value}
+              onClick={() => setCategoryFilter(option.value)}
+              variant="ghost"
+              size="sm"
+              className={cn(
+                'w-full justify-start gap-2',
+                categoryFilter === option.value && 'bg-muted text-foreground',
+              )}
+            >
+              {option.icon}
+              {option.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* 人気のタグ */}
+      <div>
+        <div className="mb-4 flex items-center gap-2">
+          <TrendingUp className="text-muted-foreground size-4" />
+          <span className="text-muted-foreground text-sm font-bold">{t('popularTags')}</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {popularTags.map((tag) => (
+            <Link
+              key={tag.tag}
+              href={`/tags/${encodeURIComponent(tag.tag)}`}
+              className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-bold transition-colors ${getTagColor(tag.tag)}`}
+            >
+              #{tag.tag}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
       {/* 左サイドバー */}
       <div className="lg:col-span-1">
         <div className="sticky top-24 space-y-8">
-          {/* カテゴリフィルター */}
-          <div className="border-border bg-card rounded-2xl border p-6">
-            <h3 className="text-foreground mb-4 text-sm font-bold">
-              {isJa ? 'カテゴリ' : 'Category'}
-            </h3>
-            <div className="space-y-2">
-              {categoryOptions.map((option) => (
-                <Button
-                  key={option.value}
-                  onClick={() => setCategoryFilter(option.value)}
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    'w-full justify-start gap-2',
-                    categoryFilter === option.value && 'bg-muted text-foreground',
-                  )}
-                >
-                  {option.icon}
-                  {option.label}
-                </Button>
-              ))}
-            </div>
-          </div>
+          {/* デスクトップフィルター */}
+          <div className="hidden space-y-8 lg:block">{filterContent}</div>
 
-          {/* 人気のタグ */}
-          <div className="border-border bg-card rounded-2xl border p-6">
-            <div className="mb-4 flex items-center gap-2">
-              <TrendingUp className="text-muted-foreground size-4" />
-              <h3 className="text-foreground text-sm font-bold">
-                {isJa ? '人気のタグ' : 'Popular Tags'}
-              </h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {popularTags.map((tag) => (
-                <Link
-                  key={tag.tag}
-                  href={`/tags/${encodeURIComponent(tag.tag)}`}
-                  className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-bold transition-colors ${getTagColor(tag.tag)}`}
-                >
-                  #{tag.tag}
-                </Link>
-              ))}
-            </div>
-          </div>
+          {/* モバイルフィルター */}
+          <MobileFilterSheet
+            isOpen={isMobileOpen}
+            onOpenChange={setIsMobileOpen}
+            activeFilterCount={activeFiltersCount}
+            onClear={clearAllFilters}
+            onApply={() => {}}
+            title={t('filters')}
+            clearLabel={t('filtersClearAll')}
+            applyLabel={t('filtersApply')}
+            triggerLabel={t('filters')}
+          >
+            {filterContent}
+          </MobileFilterSheet>
         </div>
       </div>
 
@@ -130,39 +158,25 @@ export function FilteredTagsClient({ allTags, locale }: FilteredTagsClientProps)
       <div className="lg:col-span-3">
         {/* 検索ボックス + ビュー切り替え */}
         <div className="mb-8 flex items-center gap-4">
-          <div className="relative flex-1">
-            <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={isJa ? 'タグを検索...' : 'Search tags...'}
-              className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:ring-ring h-10 w-full rounded-lg border pr-12 pl-12 transition-colors focus:ring-2 focus:outline-none"
-            />
-            {searchQuery && (
-              <Button
-                onClick={() => setSearchQuery('')}
-                variant="ghost"
-                icon
-                className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
-                aria-label={isJa ? '検索をクリア' : 'Clear search'}
-              >
-                <X className="size-4" />
-              </Button>
-            )}
-          </div>
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={t('searchPlaceholder')}
+            clearLabel={t('clearSearch')}
+            className="flex-1"
+          />
 
           <PillSwitcher
             options={[
               {
-                value: 'grid',
-                label: isJa ? 'グリッド' : 'Grid',
-                icon: <Grid3X3 className="size-4" />,
+                value: 'list',
+                label: t('view.list'),
+                icon: <List className="size-4" />,
               },
               {
-                value: 'list',
-                label: isJa ? 'リスト' : 'List',
-                icon: <List className="size-4" />,
+                value: 'grid',
+                label: t('view.grid'),
+                icon: <Grid3X3 className="size-4" />,
               },
             ]}
             value={viewMode}
@@ -171,110 +185,98 @@ export function FilteredTagsClient({ allTags, locale }: FilteredTagsClientProps)
         </div>
 
         {/* 結果件数 */}
-        <div className="text-muted-foreground mb-6 text-sm">
-          {filteredTags.length} {isJa ? '件のタグ' : filteredTags.length === 1 ? 'tag' : 'tags'}
-          {categoryFilter !== 'all' && (
-            <span className="ml-2">
-              (
-              {categoryFilter === 'blog'
-                ? isJa
-                  ? 'ブログ'
-                  : 'Blog'
-                : categoryFilter === 'releases'
-                  ? isJa
-                    ? 'リリース'
-                    : 'Releases'
-                  : isJa
-                    ? 'ドキュメント'
-                    : 'Docs'}
-              )
-            </span>
-          )}
+        <div className="text-muted-foreground mb-6 text-sm" aria-live="polite">
+          {filteredTags.length === 1
+            ? t('tagsCountSingular', { count: filteredTags.length })
+            : t('tagsCount', { count: filteredTags.length })}
+          {categoryFilter !== 'all' && <span className="ml-2">({t(categoryFilter)})</span>}
         </div>
 
-        {filteredTags.length > 0 ? (
-          viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredTags.map((tag) => (
-                <Link
-                  key={tag.tag}
-                  href={`/tags/${encodeURIComponent(tag.tag)}`}
-                  className={`group flex items-center justify-between rounded-lg border px-4 py-4 transition-all ${getTagColor(tag.tag)}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Hash className="size-4" />
-                    <span className="font-bold">{tag.tag}</span>
-                  </div>
-                  <span className="text-sm opacity-75">{tag.count}</span>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="divide-border divide-y">
-              {filteredTags.map((tag) => (
-                <Link
-                  key={tag.tag}
-                  href={`/tags/${encodeURIComponent(tag.tag)}`}
-                  className="group hover:bg-state-hover flex items-center justify-between py-4 transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`flex size-10 items-center justify-center rounded-lg ${getTagColor(tag.tag)}`}
-                    >
-                      <Hash className="size-5" />
+        {currentTags.length > 0 ? (
+          <>
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {currentTags.map((tag) => (
+                  <Link
+                    key={tag.tag}
+                    href={`/tags/${encodeURIComponent(tag.tag)}`}
+                    className={`group flex items-center justify-between rounded-lg border px-4 py-4 transition-all ${getTagColor(tag.tag)}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Hash className="size-4" />
+                      <span className="font-bold">{tag.tag}</span>
                     </div>
-                    <div>
-                      <div className="text-foreground font-bold">#{tag.tag}</div>
-                      <div className="text-muted-foreground flex items-center gap-4 text-sm">
-                        {tag.blogCount > 0 && (
-                          <span className="flex items-center gap-1">
-                            <FileText className="size-3" />
-                            {tag.blogCount}
-                          </span>
-                        )}
-                        {tag.releaseCount > 0 && (
-                          <span className="flex items-center gap-1">
-                            <Megaphone className="size-3" />
-                            {tag.releaseCount}
-                          </span>
-                        )}
-                        {tag.docsCount > 0 && (
-                          <span className="flex items-center gap-1">
-                            <BookOpen className="size-3" />
-                            {tag.docsCount}
-                          </span>
-                        )}
+                    <span className="text-sm opacity-75">{tag.count}</span>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="divide-border divide-y">
+                {currentTags.map((tag) => (
+                  <Link
+                    key={tag.tag}
+                    href={`/tags/${encodeURIComponent(tag.tag)}`}
+                    className="group hover:bg-state-hover flex items-center justify-between py-4 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`flex size-10 items-center justify-center rounded-lg ${getTagColor(tag.tag)}`}
+                      >
+                        <Hash className="size-5" />
+                      </div>
+                      <div>
+                        <div className="text-foreground font-bold">#{tag.tag}</div>
+                        <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                          {tag.blogCount > 0 && (
+                            <span className="flex items-center gap-1">
+                              <FileText className="size-3" />
+                              {tag.blogCount}
+                            </span>
+                          )}
+                          {tag.releaseCount > 0 && (
+                            <span className="flex items-center gap-1">
+                              <Megaphone className="size-3" />
+                              {tag.releaseCount}
+                            </span>
+                          )}
+                          {tag.docsCount > 0 && (
+                            <span className="flex items-center gap-1">
+                              <BookOpen className="size-3" />
+                              {tag.docsCount}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="bg-muted text-foreground flex size-8 items-center justify-center rounded-lg text-sm font-bold">
-                    {tag.count}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )
+                    <div className="bg-muted text-foreground flex size-8 items-center justify-center rounded-lg text-sm font-bold">
+                      {tag.count}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {/* ページネーション */}
+            {totalPages > 1 && (
+              <div className="mt-12">
+                <ContentPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  basePath={locale === 'ja' ? '/ja/tags' : '/tags'}
+                />
+              </div>
+            )}
+          </>
         ) : (
-          <div className="py-16 text-center">
-            <div className="bg-muted mx-auto mb-6 flex size-24 items-center justify-center rounded-full">
-              <Search className="text-muted-foreground size-10" />
-            </div>
-            <Heading as="h3" size="lg" className="mb-2">
-              {isJa ? 'タグが見つかりません' : 'No tags found'}
-            </Heading>
-            <Text variant="muted" className="mb-4">
-              {isJa ? '検索条件を変更してみてください' : 'Try adjusting your search or filters'}
-            </Text>
-            <button
-              onClick={() => {
-                setSearchQuery('');
-                setCategoryFilter('all');
-              }}
-              className="bg-muted text-primary border-primary hover:bg-state-hover inline-flex items-center rounded-lg border px-4 py-2 text-sm font-bold transition-colors"
-            >
-              {isJa ? 'フィルターをクリア' : 'Clear filters'}
-            </button>
-          </div>
+          <EmptyState
+            icon={Search}
+            title={t('noTagsFound')}
+            description={t('noTagsHint')}
+            action={{
+              label: t('clearFilters'),
+              onClick: clearAllFilters,
+            }}
+          />
         )}
       </div>
     </div>
