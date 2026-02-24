@@ -9,16 +9,7 @@ import { Heading } from '@/components/ui/typography';
 import { Link } from '@/i18n/navigation';
 import { getTagColor } from '@/lib/tags-client';
 import type { TaggedContent } from '@/lib/tags-server';
-import {
-  ArrowLeft,
-  BookOpen,
-  FileText,
-  Grid3X3,
-  List,
-  Megaphone,
-  Search,
-  TrendingUp,
-} from 'lucide-react';
+import { BookOpen, FileText, Grid3X3, List, Megaphone, Search, TrendingUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -109,18 +100,11 @@ export function TagDetailClient({
           <div className="sticky top-24 space-y-6">
             {/* タグ情報 */}
             <div className="border-border bg-card rounded-2xl border p-6">
-              <p className="text-muted-foreground mb-4 text-sm">
+              <p className="text-muted-foreground text-sm">
                 {totalCount === 1
                   ? tDetail('itemsSingular', { count: totalCount })
                   : tDetail('items', { count: totalCount })}
               </p>
-              <Link
-                href="/tags"
-                className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm transition-colors"
-              >
-                <ArrowLeft className="size-4" />
-                {tDetail('allTags')}
-              </Link>
             </div>
 
             {/* 人気のタグ */}

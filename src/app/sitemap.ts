@@ -82,12 +82,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.4,
     }),
-    // Tags pages
-    ...createLocalizedPages('/tags', {
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    }),
   ];
 
   // Track which content types were successfully loaded
