@@ -1,5 +1,5 @@
+import { TagPill } from '@/components/ui/tag-pill';
 import { Link } from '@/i18n/navigation';
-import { getTagColor } from '@/lib/tags-client';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
@@ -100,12 +100,8 @@ export async function ReleaseHeader({ frontMatter, locale }: ReleaseHeaderProps)
       {frontMatter.tags.length > 0 && (
         <div className="mb-8 flex flex-wrap gap-2">
           {frontMatter.tags.map((tag) => (
-            <Link
-              key={tag}
-              href={`/tags/${encodeURIComponent(tag)}`}
-              className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-bold transition-colors ${getTagColor(tag)}`}
-            >
-              #{tag}
+            <Link key={tag} href={`/tags/${encodeURIComponent(tag)}`}>
+              <TagPill tag={tag} />
             </Link>
           ))}
         </div>

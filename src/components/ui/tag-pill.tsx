@@ -18,7 +18,7 @@ export function TagPill({ tag, count, selected, onClick, className }: TagPillPro
       className={cn(
         'border-border inline-flex items-center gap-1 rounded-lg border bg-transparent px-2 py-1 text-xs font-bold transition-colors',
         selected
-          ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90'
+          ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover'
           : 'text-muted-foreground hover:bg-state-hover',
         onClick && 'cursor-pointer',
         className,

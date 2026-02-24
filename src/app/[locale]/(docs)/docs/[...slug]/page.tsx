@@ -3,15 +3,15 @@ import { ClientTableOfContents } from '@/components/docs/ClientTableOfContents';
 import { mdxComponents } from '@/components/docs/MDXComponents';
 import { PageNavigation } from '@/components/docs/PageNavigation';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { TagPill } from '@/components/ui/tag-pill';
 import { Heading, Text } from '@/components/ui/typography';
+import { Link } from '@/i18n/navigation';
 import { getAllContent, getMDXContentForRSC, getRelatedContent } from '@/lib/mdx';
-import { getTagColor } from '@/lib/tags-client';
 import { ContentData } from '@/types/content';
 import { Tag } from 'lucide-react';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import rehypeHighlight from 'rehype-highlight';
 import remarkGfm from 'remark-gfm';
@@ -191,12 +191,8 @@ export default async function DocPage({ params }: DocPageProps) {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {frontMatter.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      href={`/tags/${encodeURIComponent(tag)}`}
-                      className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-bold transition-colors ${getTagColor(tag)}`}
-                    >
-                      #{tag}
+                    <Link key={tag} href={`/tags/${encodeURIComponent(tag)}`}>
+                      <TagPill tag={tag} />
                     </Link>
                   ))}
                 </div>
@@ -226,12 +222,7 @@ export default async function DocPage({ params }: DocPageProps) {
                             {related.frontMatter.tags && related.frontMatter.tags.length > 0 && (
                               <div className="flex flex-wrap gap-1">
                                 {related.frontMatter.tags.slice(0, 2).map((tag) => (
-                                  <span
-                                    key={tag}
-                                    className="bg-muted text-muted-foreground rounded-full px-2 py-1 text-xs"
-                                  >
-                                    {tag}
-                                  </span>
+                                  <TagPill key={tag} tag={tag} />
                                 ))}
                               </div>
                             )}

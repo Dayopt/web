@@ -4,8 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { TagPill } from '@/components/ui/tag-pill';
 import { Highlight } from '@/lib/highlight';
-import { getTagColor } from '@/lib/tags-client';
 import type { PopularTag, SearchResponse, TagResponse } from '@/types/api';
 import { Clock, Edit, FileText, Package, Search, Tag, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -279,17 +279,12 @@ export function SearchDialog({ open, onOpenChange, locale }: SearchDialogProps) 
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {popularTags.map((tag, index) => (
-                    <Button
+                    <TagPill
                       key={index}
+                      tag={tag.name}
+                      count={tag.count}
                       onClick={() => handleTagClick(tag.name)}
-                      variant="ghost"
-                      size="sm"
-                      className={`inline-flex items-center gap-2 rounded-full ${getTagColor(tag.name)}`}
-                    >
-                      <Tag className="size-3" />
-                      <span>{tag.name}</span>
-                      <span className="text-xs opacity-75">({tag.count})</span>
-                    </Button>
+                    />
                   ))}
                 </div>
               </div>

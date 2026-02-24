@@ -3,6 +3,7 @@ import { ShareButton } from '@/components/blog/ShareButton';
 import { createMDXComponents } from '@/components/content/ContentMDXComponents';
 import { ClientTableOfContents } from '@/components/docs/ClientTableOfContents';
 import { Container } from '@/components/ui/container';
+import { TagPill } from '@/components/ui/tag-pill';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { getAllBlogPostMetas, getBlogPost, getRelatedPosts } from '@/lib/blog';
@@ -240,12 +241,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {post.frontMatter.tags.map((tag) => (
-                        <Link
-                          key={tag}
-                          href={`/tags/${encodeURIComponent(tag)}`}
-                          className="bg-muted text-muted-foreground hover:bg-secondary-hover inline-flex items-center rounded-full px-4 py-1 text-sm font-bold transition-colors"
-                        >
-                          #{tag}
+                        <Link key={tag} href={`/tags/${encodeURIComponent(tag)}`}>
+                          <TagPill tag={tag} />
                         </Link>
                       ))}
                     </div>
