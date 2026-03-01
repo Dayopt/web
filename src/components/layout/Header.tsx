@@ -22,7 +22,7 @@ export function Header() {
   const navigation = {
     main: [
       { name: t('navigation.features'), href: '/features' },
-      { name: t('navigation.pricing'), href: '/pricing' },
+      { name: t('navigation.pricing'), href: '/#pricing' },
       {
         name: t('navigation.resources'),
         items: [

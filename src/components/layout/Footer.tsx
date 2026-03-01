@@ -39,7 +39,7 @@ export function Footer() {
   const navigation = {
     product: [
       { name: t('common.navigation.features'), href: '/features' },
-      { name: t('common.navigation.pricing'), href: '/pricing' },
+      { name: t('common.navigation.pricing'), href: '/#pricing' },
     ],
     resources: [
       { name: t('common.navigation.blog'), href: '/blog' },

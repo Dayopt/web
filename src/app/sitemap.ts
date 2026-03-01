@@ -40,12 +40,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     }),
-    // Pricing pages
-    ...createLocalizedPages('/pricing', {
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    }),
     // About pages
     ...createLocalizedPages('/about', {
       lastModified: new Date(),

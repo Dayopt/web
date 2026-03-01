@@ -145,10 +145,10 @@ export default async function FeaturesPage({ params }: PageProps) {
         <Container>
           <div className="bg-primary mx-auto max-w-4xl rounded-2xl px-8 py-16 text-center">
             <Heading as="h2" size="3xl" className="text-primary-foreground mb-4">
-              {t('pricing.cta.title')}
+              {t('features.headline')}
             </Heading>
             <Text size="lg" className="text-primary-foreground/80 mx-auto mb-8 max-w-2xl">
-              {t('pricing.cta.description')}
+              {t('features.description')}
             </Text>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button
@@ -157,7 +157,7 @@ export default async function FeaturesPage({ params }: PageProps) {
                 className="border-primary-foreground/20 text-primary bg-background hover:bg-state-hover"
                 asChild
               >
-                <Link href="/contact">{t('pricing.cta.startButton')}</Link>
+                <Link href="/signup">{t('features.startTrial')}</Link>
               </Button>
               <Button
                 size="lg"
@@ -165,7 +165,7 @@ export default async function FeaturesPage({ params }: PageProps) {
                 className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-state-hover"
                 asChild
               >
-                <Link href="/pricing">{t('pricing.cta.salesButton')}</Link>
+                <Link href="/#pricing">{t('features.scheduleDemo')}</Link>
               </Button>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { PricingSection } from '@/components/marketing/PricingSection';
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
 import { Link } from '@/i18n/navigation';
@@ -76,6 +77,9 @@ export default async function Home({ params }: PageProps) {
             </div>
           </Container>
         </section>
+
+        {/* Pricing Section */}
+        <PricingSection locale={locale} />
       </div>
     </div>
   );

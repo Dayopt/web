@@ -114,6 +114,22 @@ const nextConfig = {
     ]
   },
 
+  // /pricing → /#pricing へ301リダイレクト（旧ページ統合）
+  async redirects() {
+    return [
+      {
+        source: '/pricing',
+        destination: '/#pricing',
+        permanent: true,
+      },
+      {
+        source: '/:locale/pricing',
+        destination: '/:locale/#pricing',
+        permanent: true,
+      },
+    ]
+  },
+
   // Multi-zones設定: LP（web）とアプリ（app）を同一ドメインで運用
   // web側にないパスはapp側（dayopt-app）にフォールバック
   // @see https://nextjs.org/docs/app/building-your-application/deploying/multi-zones
