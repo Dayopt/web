@@ -114,7 +114,7 @@ const nextConfig = {
     ]
   },
 
-  // /pricing → /#pricing へ301リダイレクト（旧ページ統合）
+  // 旧ページ → ホームページセクションへ301リダイレクト
   async redirects() {
     return [
       {
@@ -125,6 +125,26 @@ const nextConfig = {
       {
         source: '/:locale/pricing',
         destination: '/:locale/#pricing',
+        permanent: true,
+      },
+      {
+        source: '/features',
+        destination: '/#features',
+        permanent: true,
+      },
+      {
+        source: '/:locale/features',
+        destination: '/:locale/#features',
+        permanent: true,
+      },
+      {
+        source: '/about',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/:locale/about',
+        destination: '/:locale',
         permanent: true,
       },
     ]

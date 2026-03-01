@@ -38,7 +38,7 @@ export function Footer() {
 
   const navigation = {
     product: [
-      { name: t('common.navigation.features'), href: '/features' },
+      { name: t('common.navigation.features'), href: '/#features' },
       { name: t('common.navigation.pricing'), href: '/#pricing' },
     ],
     resources: [
@@ -46,10 +46,7 @@ export function Footer() {
       { name: t('common.navigation.docs'), href: '/docs' },
       { name: t('common.navigation.releases'), href: '/releases' },
     ],
-    company: [
-      { name: t('common.navigation.about'), href: '/about' },
-      { name: t('common.navigation.contact'), href: '/contact' },
-    ],
+    company: [{ name: t('common.navigation.contact'), href: '/contact' }],
     legal: [
       { name: t('footer.legal.termsOfService'), href: '/legal/terms' },
       { name: t('footer.legal.privacyPolicy'), href: '/legal/privacy' },

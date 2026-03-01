@@ -34,18 +34,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 1,
     }),
-    // Features pages
-    ...createLocalizedPages('/features', {
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    }),
-    // About pages
-    ...createLocalizedPages('/about', {
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    }),
     // Contact pages
     ...createLocalizedPages('/contact', {
       lastModified: new Date(),

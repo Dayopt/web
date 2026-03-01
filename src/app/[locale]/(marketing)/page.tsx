@@ -1,3 +1,4 @@
+import { FeaturesSection } from '@/components/marketing/FeaturesSection';
 import { PricingSection } from '@/components/marketing/PricingSection';
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
@@ -58,7 +59,7 @@ export default async function Home({ params }: PageProps) {
                   <Link href="/contact">{t('hero.cta')}</Link>
                 </Button>
                 <Button variant="ghost" size="lg" asChild>
-                  <Link href="/about">
+                  <Link href="/#features">
                     {tCommon('actions.learnMore')} <span aria-hidden="true">→</span>
                   </Link>
                 </Button>
@@ -77,6 +78,9 @@ export default async function Home({ params }: PageProps) {
             </div>
           </Container>
         </section>
+
+        {/* Features Section */}
+        <FeaturesSection locale={locale} />
 
         {/* Pricing Section */}
         <PricingSection locale={locale} />
