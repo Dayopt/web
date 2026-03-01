@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'highlight.js/styles/github.css';
 
 /* Tailwind Plugins */
 @plugin '@tailwindcss/typography';
@@ -302,17 +303,17 @@
    * Tailwindの text-* クラスにマッピング
    * ============================================ */
 
-  /* フォントサイズ（8pxグリッド準拠）→ text-xs, text-sm 等で使用可能 */
-  --text-xs: 0.75rem; /* 12px - 例外: 最小サイズ */
-  --text-sm: 0.875rem; /* 14px - 例外: 視認性確保 */
+  /* フォントサイズ（Tailwind v4 デフォルト）→ text-xs, text-sm 等で使用可能 */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
   --text-base: 1rem; /* 16px */
   --text-lg: 1.125rem; /* 18px */
   --text-xl: 1.25rem; /* 20px */
   --text-2xl: 1.5rem; /* 24px */
-  --text-3xl: 2rem; /* 32px */
-  --text-4xl: 2.5rem; /* 40px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
   --text-5xl: 3rem; /* 48px */
-  --text-6xl: 4rem; /* 64px */
+  --text-6xl: 3.75rem; /* 60px */
 
   /* セマンティックエイリアス（参照用） */
   --font-size-xs: var(--text-xs);
@@ -326,7 +327,7 @@
 
   /* 見出し用エイリアス */
   --font-size-heading-h1: var(--text-5xl); /* 48px */
-  --font-size-heading-h2: var(--text-3xl); /* 32px */
+  --font-size-heading-h2: var(--text-3xl); /* 30px */
   --font-size-heading-h3: var(--text-2xl); /* 24px */
   --font-size-heading-h4: var(--text-xl); /* 20px */
 
@@ -575,4 +576,113 @@ button:focus-visible {
 
 .animate-shake {
   animation: shake 0.4s ease-in-out;
+}
+
+/* ============================================
+ * Syntax Highlighting（highlight.js GitHub theme）
+ * github.css をベーステーマとして使用。
+ * background は MDX の bg-muted に委譲するため transparent に上書き。
+ * ============================================ */
+
+/* ベース: 背景・パディングは MDX コンポーネント側で管理 */
+.hljs {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+pre code.hljs {
+  padding: 0;
+}
+
+/* ダークモード: github-dark.css のトークンカラーを .dark 下で適用 */
+.dark .hljs {
+  color: #c9d1d9;
+}
+
+.dark .hljs-doctag,
+.dark .hljs-keyword,
+.dark .hljs-meta .hljs-keyword,
+.dark .hljs-template-tag,
+.dark .hljs-template-variable,
+.dark .hljs-type,
+.dark .hljs-variable.language_ {
+  color: #ff7b72;
+}
+
+.dark .hljs-title,
+.dark .hljs-title.class_,
+.dark .hljs-title.class_.inherited__,
+.dark .hljs-title.function_ {
+  color: #d2a8ff;
+}
+
+.dark .hljs-attr,
+.dark .hljs-attribute,
+.dark .hljs-literal,
+.dark .hljs-meta,
+.dark .hljs-number,
+.dark .hljs-operator,
+.dark .hljs-variable,
+.dark .hljs-selector-attr,
+.dark .hljs-selector-class,
+.dark .hljs-selector-id {
+  color: #79c0ff;
+}
+
+.dark .hljs-regexp,
+.dark .hljs-string,
+.dark .hljs-meta .hljs-string {
+  color: #a5d6ff;
+}
+
+.dark .hljs-built_in,
+.dark .hljs-symbol {
+  color: #ffa657;
+}
+
+.dark .hljs-comment,
+.dark .hljs-code,
+.dark .hljs-formula {
+  color: #8b949e;
+}
+
+.dark .hljs-name,
+.dark .hljs-quote,
+.dark .hljs-selector-tag,
+.dark .hljs-selector-pseudo {
+  color: #7ee787;
+}
+
+.dark .hljs-subst {
+  color: #c9d1d9;
+}
+
+.dark .hljs-section {
+  color: #1f6feb;
+  font-weight: bold;
+}
+
+.dark .hljs-bullet {
+  color: #f2cc60;
+}
+
+.dark .hljs-emphasis {
+  color: #c9d1d9;
+  font-style: italic;
+}
+
+.dark .hljs-strong {
+  color: #c9d1d9;
+  font-weight: bold;
+}
+
+.dark .hljs-addition {
+  color: #aff5b4;
+  background-color: #033a16;
+}
+
+.dark .hljs-deletion {
+  color: #ffdcd7;
+  background-color: #67060c;
 }

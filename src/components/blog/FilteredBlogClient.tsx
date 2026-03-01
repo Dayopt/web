@@ -1,19 +1,17 @@
 'use client';
 
 import { BlogFilters, type BlogFilterState } from '@/components/blog/BlogFilters';
-import { BlogPagination } from '@/components/blog/BlogPagination';
 import { BlogSkeleton } from '@/components/blog/BlogSkeleton';
 import { PostCard } from '@/components/blog/PostCard';
-import { Button } from '@/components/ui/button';
-import { PillSwitcher } from '@/components/ui/pill-switcher';
-import { Heading, Text } from '@/components/ui/typography';
+import { ContentHeader } from '@/components/content/ContentHeader';
+import { ContentPagination } from '@/components/ui/content-pagination';
+import { EmptyState } from '@/components/ui/empty-state';
+import { SearchInput } from '@/components/ui/search-input';
 import type { BlogPostMeta } from '@/lib/blog';
-import { Grid3X3, List, Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-type ViewMode = 'list' | 'grid';
+import { useEffect, useMemo, useState } from 'react';
 
 const POSTS_PER_PAGE = 12;
 
@@ -29,14 +27,23 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
   const [filteredAndSortedPosts, setFilteredAndSortedPosts] =
     useState<BlogPostMeta[]>(initialPosts);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [filters, setFilters] = useState<BlogFilterState>({
     selectedTags: [],
     searchQuery: '',
     sortBy: 'date',
     sortOrder: 'desc',
-    tagOperator: 'OR',
   });
+
+  // タグごとの記事数を計算
+  const tagCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    initialPosts.forEach((post) => {
+      post.frontMatter.tags.forEach((tag) => {
+        counts.set(tag, (counts.get(tag) || 0) + 1);
+      });
+    });
+    return tags.map((tag) => ({ tag, count: counts.get(tag) || 0 }));
+  }, [initialPosts, tags]);
 
   const currentPage = Number(searchParams?.get('page')) || 1;
 
@@ -46,14 +53,12 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
     const searchParam = searchParams?.get('search');
     const sortParam = searchParams?.get('sort');
     const orderParam = searchParams?.get('order');
-    const operatorParam = searchParams?.get('operator');
 
     const initialFilters: BlogFilterState = {
       selectedTags: tagsParam ? tagsParam.split(',') : [],
       searchQuery: searchParam || '',
       sortBy: (sortParam as BlogFilterState['sortBy']) || 'date',
       sortOrder: (orderParam as BlogFilterState['sortOrder']) || 'desc',
-      tagOperator: (operatorParam as BlogFilterState['tagOperator']) || 'OR',
     };
 
     setFilters(initialFilters);
@@ -66,7 +71,7 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
       try {
         let filtered = [...initialPosts];
 
-        // 検索クエリによるフィルタリング（クライアント側実装）
+        // 検索クエリによるフィルタリング
         if (filters.searchQuery) {
           const searchTerm = filters.searchQuery.toLowerCase();
           filtered = filtered.filter((post) => {
@@ -84,40 +89,18 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
           });
         }
 
-        // タグによるフィルタリング
+        // タグによるフィルタリング（OR 固定）
         if (filters.selectedTags.length > 0) {
-          if (filters.tagOperator === 'AND') {
-            // すべてのタグが含まれる記事のみ
-            filtered = filtered.filter((post) =>
-              filters.selectedTags.every((tag) => post.frontMatter.tags?.includes(tag)),
-            );
-          } else {
-            // いずれかのタグが含まれる記事
-            filtered = filtered.filter((post) =>
-              filters.selectedTags.some((tag) => post.frontMatter.tags?.includes(tag)),
-            );
-          }
+          filtered = filtered.filter((post) =>
+            filters.selectedTags.some((tag) => post.frontMatter.tags?.includes(tag)),
+          );
         }
 
-        // ソート処理
+        // ソート処理（日付順）
         filtered.sort((a, b) => {
-          let comparison = 0;
-
-          switch (filters.sortBy) {
-            case 'date':
-              comparison =
-                new Date(a.frontMatter.publishedAt).getTime() -
-                new Date(b.frontMatter.publishedAt).getTime();
-              break;
-            case 'popularity':
-              // タグ数でポピュラリティを判定（タグが多い = より多くのトピックに関連）
-              comparison = (a.frontMatter.tags?.length || 0) - (b.frontMatter.tags?.length || 0);
-              break;
-            case 'category':
-              comparison = a.frontMatter.category.localeCompare(b.frontMatter.category);
-              break;
-          }
-
+          const comparison =
+            new Date(a.frontMatter.publishedAt).getTime() -
+            new Date(b.frontMatter.publishedAt).getTime();
           return filters.sortOrder === 'asc' ? comparison : -comparison;
         });
 
@@ -146,49 +129,36 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
     setFilters((prev) => ({ ...prev, searchQuery: query }));
   };
 
+  const clearAllFilters = () => {
+    setFilters({
+      selectedTags: [],
+      searchQuery: '',
+      sortBy: 'date',
+      sortOrder: 'desc',
+    });
+  };
+
   return (
-    <>
+    <div>
+      <ContentHeader title={t('header.title')} />
+
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
         {/* 左サイドバー: フィルター */}
         <div className="lg:col-span-1">
           <div className="sticky top-24">
-            <BlogFilters tags={tags} onFiltersChange={handleFiltersChange} locale={locale} />
+            <BlogFilters tags={tagCounts} onFiltersChange={handleFiltersChange} locale={locale} />
           </div>
         </div>
 
         {/* 右側: 記事一覧 */}
         <div className="lg:col-span-3">
-          {/* 検索ボックス + ビュー切り替え */}
-          <div className="mb-8 flex items-center gap-4">
-            <div className="relative flex-1">
-              <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-              <input
-                type="text"
-                value={filters.searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                placeholder={t('filters.searchPlaceholder')}
-                className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:ring-ring h-10 w-full rounded-lg border pr-12 pl-12 transition-colors focus:ring-2 focus:outline-none"
-              />
-              {filters.searchQuery && (
-                <Button
-                  onClick={() => handleSearchChange('')}
-                  variant="ghost"
-                  icon
-                  className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
-                  aria-label={t('filters.clearSearch')}
-                >
-                  <X className="size-4" />
-                </Button>
-              )}
-            </div>
-
-            <PillSwitcher
-              options={[
-                { value: 'list', label: t('view.list'), icon: <List className="size-4" /> },
-                { value: 'grid', label: t('view.grid'), icon: <Grid3X3 className="size-4" /> },
-              ]}
-              value={viewMode}
-              onValueChange={setViewMode}
+          {/* 検索ボックス */}
+          <div className="mb-8">
+            <SearchInput
+              value={filters.searchQuery}
+              onChange={handleSearchChange}
+              placeholder={t('filters.searchPlaceholder')}
+              clearLabel={t('filters.clearSearch')}
             />
           </div>
 
@@ -196,36 +166,22 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
             <BlogSkeleton />
           ) : currentPosts.length > 0 ? (
             <>
-              {viewMode === 'list' ? (
-                <div className="divide-border divide-y">
-                  {currentPosts.map((post, index) => (
-                    <PostCard
-                      key={post.slug}
-                      post={post}
-                      priority={currentPage === 1 && index < 3}
-                      layout="list"
-                      locale={locale}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {currentPosts.map((post, index) => (
-                    <PostCard
-                      key={post.slug}
-                      post={post}
-                      priority={currentPage === 1 && index < 3}
-                      layout="vertical"
-                      locale={locale}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="divide-border divide-y">
+                {currentPosts.map((post, index) => (
+                  <PostCard
+                    key={post.slug}
+                    post={post}
+                    priority={currentPage === 1 && index < 3}
+                    layout="list"
+                    locale={locale}
+                  />
+                ))}
+              </div>
 
               {/* ページネーション */}
               {totalPages > 1 && (
                 <div className="mt-12">
-                  <BlogPagination
+                  <ContentPagination
                     currentPage={currentPage}
                     totalPages={totalPages}
                     basePath={locale === 'ja' ? '/ja/blog' : '/blog'}
@@ -234,46 +190,18 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
               )}
             </>
           ) : (
-            <div className="py-16 text-center">
-              <div className="bg-muted mx-auto mb-6 flex size-24 items-center justify-center rounded-full">
-                <svg
-                  className="text-muted-foreground size-10"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <Heading as="h3" size="lg" className="mb-2">
-                {t('list.noArticles')}
-              </Heading>
-              <Text variant="muted" className="mb-4">
-                {t('list.noArticlesHint')}
-              </Text>
-              <button
-                onClick={() =>
-                  setFilters({
-                    selectedTags: [],
-                    searchQuery: '',
-                    sortBy: 'date',
-                    sortOrder: 'desc',
-                    tagOperator: 'OR',
-                  })
-                }
-                className="bg-muted text-primary border-primary hover:bg-state-hover inline-flex items-center rounded-lg border px-4 py-2 text-sm font-bold transition-colors"
-              >
-                {t('list.clearAllFilters')}
-              </button>
-            </div>
+            <EmptyState
+              icon={Search}
+              title={t('list.noArticles')}
+              description={t('list.noArticlesHint')}
+              action={{
+                label: t('list.clearAllFilters'),
+                onClick: clearAllFilters,
+              }}
+            />
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

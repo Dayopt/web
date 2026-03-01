@@ -40,16 +40,27 @@ export default async function ReleasesPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   // Fetch data server-side
-  const [allReleases, allTags] = await Promise.all([getAllReleaseMetas(), getAllReleaseTags()]);
+  const [allReleases, allTags] = await Promise.all([
+    getAllReleaseMetas(locale),
+    getAllReleaseTags(locale),
+  ]);
 
   // クライアントに不要なMDXコンテンツを転送しない
   const clientReleases = allReleases.map(({ content: _, ...rest }) => rest);
 
   return (
     <div className="bg-background min-h-screen">
-      <Container>
-        <ReleasesClient initialReleases={clientReleases} initialTags={allTags} locale={locale} />
-      </Container>
+      <section className="py-16">
+        <Container>
+          <div className="mx-auto max-w-6xl">
+            <ReleasesClient
+              initialReleases={clientReleases}
+              initialTags={allTags}
+              locale={locale}
+            />
+          </div>
+        </Container>
+      </section>
     </div>
   );
 }

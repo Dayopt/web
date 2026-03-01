@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { ContentData } from '@/types/content';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 interface PageNavigationProps {
@@ -8,10 +9,12 @@ interface PageNavigationProps {
   nextPage?: ContentData;
 }
 
-export function PageNavigation({ previousPage, nextPage }: PageNavigationProps) {
+export async function PageNavigation({ previousPage, nextPage }: PageNavigationProps) {
   if (!previousPage && !nextPage) {
     return null;
   }
+
+  const t = await getTranslations('docs.pageNavigation');
 
   return (
     <div className="border-border mt-12 border-t pt-8">
@@ -28,7 +31,7 @@ export function PageNavigation({ previousPage, nextPage }: PageNavigationProps) 
               <Link href={`/docs/${previousPage.slug}`}>
                 <ChevronLeft className="mr-2 size-4 shrink-0" />
                 <div className="text-left">
-                  <div className="text-muted-foreground text-xs">Previous</div>
+                  <div className="text-muted-foreground text-xs">{t('previous')}</div>
                   <div className="text-foreground text-sm font-bold">
                     {previousPage.frontMatter.title}
                   </div>
@@ -49,7 +52,7 @@ export function PageNavigation({ previousPage, nextPage }: PageNavigationProps) 
             >
               <Link href={`/docs/${nextPage.slug}`}>
                 <div className="text-right">
-                  <div className="text-muted-foreground text-xs">Next</div>
+                  <div className="text-muted-foreground text-xs">{t('next')}</div>
                   <div className="text-foreground text-sm font-bold">
                     {nextPage.frontMatter.title}
                   </div>

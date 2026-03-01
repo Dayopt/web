@@ -83,6 +83,18 @@ export const changeTypes: ChangeType[] = [
   },
 ];
 
+const RELEASES_BASE_DIR = path.join(process.cwd(), 'content', 'releases');
+
+/**
+ * ロケールを考慮したリリースディレクトリパスを取得
+ */
+function getReleasesDir(locale?: string): string {
+  if (locale) {
+    return path.join(RELEASES_BASE_DIR, locale);
+  }
+  return RELEASES_BASE_DIR;
+}
+
 // セマンティックバージョニングでソート
 export function sortVersions(versions: string[]): string[] {
   return versions.sort((a, b) => {
@@ -115,10 +127,10 @@ export function calculateReleaseTime(content: string): number {
 }
 
 // 全てのリリースノートメタデータを取得（cache()で同一リクエスト内の重複呼び出しを排除）
-export const getAllReleaseMetas = cache(async function getAllReleaseMetasImpl(): Promise<
-  ReleasePostMeta[]
-> {
-  const releasesDirectory = path.join(process.cwd(), 'content', 'releases');
+export const getAllReleaseMetas = cache(async function getAllReleaseMetasImpl(
+  locale?: string,
+): Promise<ReleasePostMeta[]> {
+  const releasesDirectory = getReleasesDir(locale);
 
   try {
     if (!fs.existsSync(releasesDirectory)) {
@@ -193,14 +205,14 @@ export const getAllReleaseMetas = cache(async function getAllReleaseMetasImpl():
 });
 
 // 個別リリースノート取得
-export async function getRelease(version: string): Promise<ReleasePost | null> {
+export async function getRelease(version: string, locale?: string): Promise<ReleasePost | null> {
   // Validate version to prevent path traversal
   if (!version || version.includes('..') || version.includes('/')) {
     console.warn(`[Releases] Invalid version provided: ${version}`);
     return null;
   }
 
-  const releasesDirectory = path.join(process.cwd(), 'content', 'releases');
+  const releasesDirectory = getReleasesDir(locale);
   const filePath = path.join(releasesDirectory, `${version}.mdx`);
 
   try {
@@ -230,14 +242,14 @@ export async function getRelease(version: string): Promise<ReleasePost | null> {
 }
 
 // タグ別リリースノート取得
-export async function getReleasesByTag(tag: string): Promise<ReleasePostMeta[]> {
-  const allReleases = await getAllReleaseMetas();
+export async function getReleasesByTag(tag: string, locale?: string): Promise<ReleasePostMeta[]> {
+  const allReleases = await getAllReleaseMetas(locale);
   return allReleases.filter((release) => release.frontMatter.tags.includes(tag));
 }
 
 // 全タグとその数を取得
-export async function getAllReleaseTags(): Promise<TagCount[]> {
-  const allReleases = await getAllReleaseMetas();
+export async function getAllReleaseTags(locale?: string): Promise<TagCount[]> {
+  const allReleases = await getAllReleaseMetas(locale);
   const tagCounts = new Map<string, number>();
 
   allReleases.forEach((release) => {
@@ -252,8 +264,8 @@ export async function getAllReleaseTags(): Promise<TagCount[]> {
 }
 
 // 注目リリース取得
-export async function getFeaturedReleases(): Promise<ReleasePostMeta[]> {
-  const allReleases = await getAllReleaseMetas();
+export async function getFeaturedReleases(locale?: string): Promise<ReleasePostMeta[]> {
+  const allReleases = await getAllReleaseMetas(locale);
   return allReleases.filter((release) => release.frontMatter.featured);
 }
 
@@ -261,8 +273,9 @@ export async function getFeaturedReleases(): Promise<ReleasePostMeta[]> {
 export async function getRelatedReleases(
   currentVersion: string,
   limit: number = 3,
+  locale?: string,
 ): Promise<ReleasePostMeta[]> {
-  const allReleases = await getAllReleaseMetas();
+  const allReleases = await getAllReleaseMetas(locale);
   const currentRelease = allReleases.find((r) => r.frontMatter.version === currentVersion);
 
   if (!currentRelease) {
@@ -290,8 +303,8 @@ export async function getRelatedReleases(
 }
 
 // リリースノート検索
-export async function searchReleases(query: string): Promise<ReleasePostMeta[]> {
-  const allReleases = await getAllReleaseMetas();
+export async function searchReleases(query: string, locale?: string): Promise<ReleasePostMeta[]> {
+  const allReleases = await getAllReleaseMetas(locale);
   const lowercaseQuery = query.toLowerCase();
 
   return allReleases.filter((release) => {
@@ -331,36 +344,6 @@ export function getVersionType(version: string): 'major' | 'minor' | 'patch' | '
   if ((parts[2] ?? 0) > 0) return 'patch';
   if ((parts[1] ?? 0) > 0) return 'minor';
   return 'major';
-}
-
-// 次期リリース予定の取得（モック）
-export async function getUpcomingReleases(): Promise<
-  {
-    version: string;
-    expectedDate: string;
-    features: string[];
-    status: 'planning' | 'development' | 'testing' | 'review';
-  }[]
-> {
-  // 実際のプロダクションでは外部APIやデータベースから取得
-  return [
-    {
-      version: 'v2.2.0',
-      expectedDate: '2024-02-15',
-      features: [
-        'Advanced Team Analytics',
-        'Real-time Collaboration',
-        'Enhanced Mobile Experience',
-      ],
-      status: 'testing',
-    },
-    {
-      version: 'v2.3.0',
-      expectedDate: '2024-03-20',
-      features: ['AI-Powered Insights', 'Custom Integrations API', 'Advanced Security Features'],
-      status: 'development',
-    },
-  ];
 }
 
 // リリースタイムライン生成

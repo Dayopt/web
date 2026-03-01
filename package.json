@@ -48,7 +48,8 @@
     "license:check": "npx license-checker --production --excludePackages \"dayopt-marketing@$(node -p 'require(\"./package.json\").version')\" --onlyAllow \"$(cat .licensrc.json | jq -r .onlyAllow)\"",
     "license:check-risks": "tsx scripts/check-license-risks.ts",
     "license:audit": "npx license-checker --production --summary",
-    "generate-licenses": "tsx scripts/generate-licenses.ts"
+    "generate-licenses": "tsx scripts/generate-licenses.ts",
+    "validate:content": "node scripts/validate-content.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

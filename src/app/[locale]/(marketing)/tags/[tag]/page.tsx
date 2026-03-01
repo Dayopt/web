@@ -1,9 +1,10 @@
 import { TagDetailClient } from '@/components/tags/TagDetailClient';
 import { Container } from '@/components/ui/container';
 import { routing } from '@/i18n/routing';
+import { generateSEOMetadata } from '@/lib/metadata';
 import { getAllTags, getContentByTag } from '@/lib/tags-server';
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 interface TagPageProps {
@@ -11,26 +12,35 @@ interface TagPageProps {
 }
 
 export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
-  const { tag } = await params;
+  const { tag, locale } = await params;
   const decodedTag = decodeURIComponent(tag);
-  const tagData = await getContentByTag(decodedTag);
+  const [tagData, t] = await Promise.all([
+    getContentByTag(decodedTag),
+    getTranslations({ locale, namespace: 'tags' }),
+  ]);
 
   if (tagData.totalCount === 0) {
     return {
-      title: 'Tag not found',
-      description: 'The tag you are looking for could not be found.',
+      title: locale === 'ja' ? 'タグが見つかりません' : 'Tag not found',
+      description:
+        locale === 'ja'
+          ? 'お探しのタグは見つかりませんでした。'
+          : 'The tag you are looking for could not be found.',
     };
   }
 
-  return {
-    title: `#${tagData.tag} - Tagged Content`,
-    description: `Browse all content tagged with "${tagData.tag}". ${tagData.blog.length} blog posts, ${tagData.releases.length} releases, ${tagData.docs.length} docs.`,
-    openGraph: {
-      title: `#${tagData.tag} - Tagged Content | Dayopt`,
-      description: `Browse all content tagged with "${tagData.tag}". ${tagData.blog.length} blog posts, ${tagData.releases.length} releases, ${tagData.docs.length} docs.`,
-      type: 'website',
-    },
-  };
+  const description =
+    locale === 'ja'
+      ? `「${tagData.tag}」タグのコンテンツ一覧。ブログ記事 ${tagData.blog.length}件、リリース ${tagData.releases.length}件、ドキュメント ${tagData.docs.length}件。`
+      : `Browse all content tagged with "${tagData.tag}". ${tagData.blog.length} blog posts, ${tagData.releases.length} releases, ${tagData.docs.length} docs.`;
+
+  return generateSEOMetadata({
+    title: `#${tagData.tag} - ${t('title')}`,
+    description,
+    url: `/${locale}/tags/${encodeURIComponent(tagData.tag)}`,
+    locale,
+    type: 'website',
+  });
 }
 
 // ISR: タグ詳細は1時間ごとに再検証

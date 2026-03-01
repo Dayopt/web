@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 interface CopyCodeButtonProps {
@@ -9,6 +10,7 @@ interface CopyCodeButtonProps {
 
 export function CopyCodeButton({ code }: CopyCodeButtonProps) {
   const [copied, setCopied] = useState(false);
+  const t = useTranslations('common.actions');
 
   const handleCopy = async () => {
     try {
@@ -27,7 +29,7 @@ export function CopyCodeButton({ code }: CopyCodeButtonProps) {
       className="bg-container text-muted-foreground hover:bg-overlay hover:text-foreground h-auto rounded px-2 py-1 text-xs"
       onClick={handleCopy}
     >
-      {copied ? 'Copied!' : 'Copy'}
+      {copied ? t('copied') : t('copy')}
     </Button>
   );
 }

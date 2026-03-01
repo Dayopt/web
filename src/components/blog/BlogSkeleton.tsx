@@ -7,7 +7,7 @@ interface BlogSkeletonProps {
 
 export function BlogSkeleton({ className }: BlogSkeletonProps) {
   return (
-    <div className={cn('space-y-8', className)}>
+    <div className={cn('divide-border divide-y', className)}>
       {[...Array(6)].map((_, i) => (
         <BlogCardSkeleton key={i} />
       ))}
@@ -17,118 +17,24 @@ export function BlogSkeleton({ className }: BlogSkeletonProps) {
 
 export function BlogCardSkeleton() {
   return (
-    <div className="border-border bg-card rounded-2xl border p-6">
-      <div className="flex flex-col gap-6 md:flex-row">
-        {/* 画像スケルトン */}
-        <Skeleton className="h-32 w-full flex-shrink-0 rounded-lg md:w-48" />
-
-        {/* コンテンツスケルトン */}
-        <div className="flex-1 space-y-4">
-          {/* タイトル */}
-          <Skeleton className="h-6 w-3/4" />
-
-          {/* 説明 */}
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-          </div>
-
-          {/* メタデータ */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-16" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-
-          {/* タグ */}
-          <div className="flex flex-wrap gap-2 pt-2">
-            {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-6 w-16 rounded-full" />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function BlogGridSkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {[...Array(6)].map((_, i) => (
-        <BlogVerticalCardSkeleton key={i} />
-      ))}
-    </div>
-  );
-}
-
-export function BlogVerticalCardSkeleton() {
-  return (
-    <div className="border-border bg-card overflow-hidden rounded-2xl border">
-      {/* 画像スケルトン */}
-      <Skeleton className="h-48 w-full" />
+    <div className="flex items-center gap-5 py-6 first:pt-0">
+      {/* カバー画像スケルトン */}
+      <Skeleton className="h-32 w-56 flex-shrink-0 rounded-xl" />
 
       {/* コンテンツスケルトン */}
-      <div className="space-y-4 p-6">
+      <div className="min-w-0 flex-1 space-y-3">
         {/* タイトル */}
-        <Skeleton className="h-6 w-4/5" />
-
-        {/* 説明 */}
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-        </div>
-
-        {/* メタデータ */}
-        <div className="flex items-center justify-between pt-2">
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-16" />
-        </div>
+        <Skeleton className="h-5 w-3/4" />
 
         {/* タグ */}
-        <div className="flex flex-wrap gap-2">
-          {[...Array(2)].map((_, i) => (
-            <Skeleton key={i} className="h-5 w-12 rounded-full" />
+        <div className="flex gap-1">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-6 w-16 rounded-lg" />
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
 
-export function FiltersSkeleton() {
-  return (
-    <div className="border-border bg-card rounded-2xl border p-6">
-      {/* ヘッダー */}
-      <div className="mb-6 flex items-center justify-between">
-        <Skeleton className="h-5 w-16" />
-        <Skeleton className="size-4" />
-      </div>
-
-      {/* 検索バー */}
-      <div className="space-y-4">
+        {/* 日付 */}
         <Skeleton className="h-4 w-24" />
-        <Skeleton className="h-10 rounded-lg" />
-      </div>
-
-      {/* ソートオプション */}
-      <div className="mt-6 space-y-4">
-        <Skeleton className="h-4 w-16" />
-        <div className="flex flex-wrap gap-2">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-8 w-20 rounded-lg" />
-          ))}
-        </div>
-      </div>
-
-      {/* タグリスト */}
-      <div className="mt-6 space-y-4">
-        <Skeleton className="h-4 w-24" />
-        <div className="flex flex-wrap gap-2">
-          {[...Array(8)].map((_, i) => (
-            <Skeleton key={i} className="h-8 w-16 rounded-lg" />
-          ))}
-        </div>
       </div>
     </div>
   );

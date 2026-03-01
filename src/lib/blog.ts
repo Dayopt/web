@@ -38,7 +38,17 @@ export interface BlogPostMeta {
   readingTime: number;
 }
 
-const BLOG_DIR = path.join(process.cwd(), 'content', 'blog');
+const BLOG_BASE_DIR = path.join(process.cwd(), 'content', 'blog');
+
+/**
+ * ロケールを考慮したブログディレクトリパスを取得
+ */
+function getBlogDir(locale?: string): string {
+  if (locale) {
+    return path.join(BLOG_BASE_DIR, locale);
+  }
+  return BLOG_BASE_DIR;
+}
 
 // Generate article excerpt
 export function generateExcerpt(content: string, maxLength: number = 160): string {
@@ -62,22 +72,24 @@ export function generateExcerpt(content: string, maxLength: number = 160): strin
 }
 
 // Get all blog post metadata（cache()で同一リクエスト内の重複呼び出しを排除）
-export const getAllBlogPostMetas = cache(async function getAllBlogPostMetasImpl(): Promise<
-  BlogPostMeta[]
-> {
+export const getAllBlogPostMetas = cache(async function getAllBlogPostMetasImpl(
+  locale?: string,
+): Promise<BlogPostMeta[]> {
+  const blogDir = getBlogDir(locale);
+
   try {
-    if (!fs.existsSync(BLOG_DIR)) {
-      console.warn(`[Blog] Blog directory not found: ${BLOG_DIR}`);
+    if (!fs.existsSync(blogDir)) {
+      console.warn(`[Blog] Blog directory not found: ${blogDir}`);
       return [];
     }
 
     let files: string[];
     try {
-      files = fs.readdirSync(BLOG_DIR);
+      files = fs.readdirSync(blogDir);
     } catch (error) {
       logError(
         createStructuredError(
-          `Failed to read blog directory: ${BLOG_DIR}`,
+          `Failed to read blog directory: ${blogDir}`,
           ErrorCategory.FILESYSTEM,
           ErrorLevel.ERROR,
           'getAllBlogPostMetas',
@@ -93,7 +105,7 @@ export const getAllBlogPostMetas = cache(async function getAllBlogPostMetasImpl(
 
     await Promise.all(
       mdxFiles.map(async (file) => {
-        const filePath = path.join(BLOG_DIR, file);
+        const filePath = path.join(blogDir, file);
         try {
           const slug = file.replace('.mdx', '');
           const fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -173,14 +185,15 @@ export const getAllBlogPostMetas = cache(async function getAllBlogPostMetasImpl(
 });
 
 // Get individual article
-export async function getBlogPost(slug: string): Promise<BlogPost | null> {
+export async function getBlogPost(slug: string, locale?: string): Promise<BlogPost | null> {
   // Validate slug to prevent path traversal
   if (!slug || slug.includes('..') || slug.includes('/')) {
     console.warn(`[Blog] Invalid slug provided: ${slug}`);
     return null;
   }
 
-  const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
+  const blogDir = getBlogDir(locale);
+  const filePath = path.join(blogDir, `${slug}.mdx`);
 
   try {
     if (!fs.existsSync(filePath)) {
@@ -220,16 +233,19 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 }
 
 // Get articles by tag
-export async function getBlogPostsByTag(tag: string): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllBlogPostMetas();
+export async function getBlogPostsByTag(tag: string, locale?: string): Promise<BlogPostMeta[]> {
+  const allPosts = await getAllBlogPostMetas(locale);
   return allPosts.filter((post) =>
     post.frontMatter.tags.some((postTag) => postTag.toLowerCase() === tag.toLowerCase()),
   );
 }
 
 // Get articles by category
-export async function getBlogPostsByCategory(category: string): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllBlogPostMetas();
+export async function getBlogPostsByCategory(
+  category: string,
+  locale?: string,
+): Promise<BlogPostMeta[]> {
+  const allPosts = await getAllBlogPostMetas(locale);
   return allPosts.filter(
     (post) => post.frontMatter.category.toLowerCase() === category.toLowerCase(),
   );
@@ -239,8 +255,9 @@ export async function getBlogPostsByCategory(category: string): Promise<BlogPost
 export async function getRelatedPosts(
   currentSlug: string,
   maxPosts: number = 3,
+  locale?: string,
 ): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllBlogPostMetas();
+  const allPosts = await getAllBlogPostMetas(locale);
   const currentPost = allPosts.find((post) => post.slug === currentSlug);
 
   if (!currentPost) {
@@ -275,8 +292,8 @@ export async function getRelatedPosts(
 }
 
 // Get all tags
-export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
-  const allPosts = await getAllBlogPostMetas();
+export async function getAllTags(locale?: string): Promise<{ tag: string; count: number }[]> {
+  const allPosts = await getAllBlogPostMetas(locale);
   const tagCounts: Record<string, number> = {};
 
   allPosts.forEach((post) => {
@@ -291,14 +308,16 @@ export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
 }
 
 // Get all tags as simple string array
-export async function getAllTagNames(): Promise<string[]> {
-  const tagsWithCounts = await getAllTags();
+export async function getAllTagNames(locale?: string): Promise<string[]> {
+  const tagsWithCounts = await getAllTags(locale);
   return tagsWithCounts.map(({ tag }) => tag);
 }
 
 // Get all categories
-export async function getAllCategories(): Promise<{ category: string; count: number }[]> {
-  const allPosts = await getAllBlogPostMetas();
+export async function getAllCategories(
+  locale?: string,
+): Promise<{ category: string; count: number }[]> {
+  const allPosts = await getAllBlogPostMetas(locale);
   const categoryCounts: Record<string, number> = {};
 
   allPosts.forEach((post) => {
@@ -312,24 +331,24 @@ export async function getAllCategories(): Promise<{ category: string; count: num
 }
 
 // Search articles
-export async function searchBlogPosts(query: string): Promise<BlogPostMeta[]>;
+export async function searchBlogPosts(query: string, locale?: string): Promise<BlogPostMeta[]>;
 export async function searchBlogPosts(
   posts: BlogPostMeta[],
   query: string,
 ): Promise<BlogPostMeta[]>;
 export async function searchBlogPosts(
   queryOrPosts: string | BlogPostMeta[],
-  query?: string,
+  queryOrLocale?: string,
 ): Promise<BlogPostMeta[]> {
   let allPosts: BlogPostMeta[];
   let searchTerm: string;
 
   if (typeof queryOrPosts === 'string') {
-    allPosts = await getAllBlogPostMetas();
+    allPosts = await getAllBlogPostMetas(queryOrLocale);
     searchTerm = queryOrPosts.toLowerCase();
   } else {
     allPosts = queryOrPosts;
-    searchTerm = (query || '').toLowerCase();
+    searchTerm = (queryOrLocale || '').toLowerCase();
   }
 
   if (!searchTerm) {
@@ -348,13 +367,13 @@ export async function searchBlogPosts(
 }
 
 // Get featured articles
-export async function getFeaturedPosts(): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllBlogPostMetas();
+export async function getFeaturedPosts(locale?: string): Promise<BlogPostMeta[]> {
+  const allPosts = await getAllBlogPostMetas(locale);
   return allPosts.filter((post) => post.frontMatter.featured);
 }
 
 // Get latest articles
-export async function getRecentPosts(limit: number = 5): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllBlogPostMetas();
+export async function getRecentPosts(limit: number = 5, locale?: string): Promise<BlogPostMeta[]> {
+  const allPosts = await getAllBlogPostMetas(locale);
   return allPosts.slice(0, limit);
 }

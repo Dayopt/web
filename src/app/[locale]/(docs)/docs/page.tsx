@@ -2,6 +2,8 @@ import { Heading, Text } from '@/components/ui/typography';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { generateSEOMetadata } from '@/lib/metadata';
+import { generateDocsNavigation } from '@/lib/navigation';
+import { BookOpen, Code, FileText, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
@@ -22,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return generateSEOMetadata({
     title: t('navigation.docs'),
-    description: locale === 'ja' ? 'ドキュメントとガイド' : 'Documentation and guides',
+    description: t('navigation.docsDescription'),
     url: `/${locale}/docs`,
     locale: locale,
     keywords:
@@ -37,9 +39,34 @@ export default async function DocsPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations({ locale, namespace: 'common' });
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
+  const tDocs = await getTranslations({ locale, namespace: 'docs' });
 
-  const isJa = locale === 'ja';
+  const navigation = generateDocsNavigation();
+
+  const quickStartCards = [
+    {
+      icon: <Zap className="text-primary size-6" />,
+      title: tDocs('landing.quickStart.title'),
+      description: tDocs('landing.quickStart.description'),
+      link: tDocs('landing.quickStart.link'),
+      href: '/docs/getting-started/quick-start',
+    },
+    {
+      icon: <Code className="text-success size-6" />,
+      title: tDocs('landing.apiReference.title'),
+      description: tDocs('landing.apiReference.description'),
+      link: tDocs('landing.apiReference.link'),
+      href: '/docs/api',
+    },
+    {
+      icon: <BookOpen className="text-info size-6" />,
+      title: tDocs('landing.guides.title'),
+      description: tDocs('landing.guides.description'),
+      link: tDocs('landing.guides.link'),
+      href: '/docs/guides',
+    },
+  ];
 
   return (
     <div className="space-y-12 px-6 py-8 lg:px-8">
@@ -47,103 +74,61 @@ export default async function DocsPage({ params }: PageProps) {
         {/* Header Section */}
         <div className="space-y-4">
           <Heading as="h1" size="4xl" className="text-foreground">
-            {t('navigation.docs')}
+            {tCommon('navigation.docs')}
           </Heading>
           <Text size="xl" variant="muted" className="max-w-3xl">
-            {isJa
-              ? 'ドキュメントとガイドでDayoptを始めましょう'
-              : 'Get started with Dayopt using our documentation and guides'}
+            {tDocs('landing.subtitle')}
           </Text>
         </div>
 
         {/* Quick Start Cards */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div className="border-border bg-card hover:border-foreground rounded-lg border p-6 transition-colors">
-            <div className="mb-4 flex items-center space-x-4">
-              <div className="bg-muted flex size-10 items-center justify-center rounded-lg">
-                <svg
-                  className="text-primary size-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
+          {quickStartCards.map((card) => (
+            <div
+              key={card.href}
+              className="border-border bg-card hover:border-foreground rounded-lg border p-6 transition-colors"
+            >
+              <div className="mb-4 flex items-center space-x-4">
+                <div className="bg-muted flex size-10 items-center justify-center rounded-lg">
+                  {card.icon}
+                </div>
+                <Heading as="h3" size="lg">
+                  {card.title}
+                </Heading>
               </div>
-              <Heading as="h3" size="lg">
-                {isJa ? 'クイックスタート' : 'Quick Start'}
-              </Heading>
+              <Text variant="muted" className="mb-4">
+                {card.description}
+              </Text>
+              <Link href={card.href} className="text-primary hover:text-primary/80 font-bold">
+                {card.link}
+              </Link>
             </div>
-            <Text variant="muted" className="mb-4">
-              {isJa ? '数分でDayoptを始めましょう' : 'Get started with Dayopt in minutes'}
-            </Text>
-            <Link href="/docs/quick-start" className="text-primary hover:text-primary/80 font-bold">
-              {isJa ? 'ガイドを読む →' : 'Read guide →'}
-            </Link>
-          </div>
+          ))}
+        </div>
 
-          <div className="border-border bg-card hover:border-foreground rounded-lg border p-6 transition-colors">
-            <div className="mb-4 flex items-center space-x-4">
-              <div className="bg-muted flex size-10 items-center justify-center rounded-lg">
-                <svg
-                  className="text-success size-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                  />
-                </svg>
-              </div>
-              <Heading as="h3" size="lg">
-                {isJa ? 'APIリファレンス' : 'API Reference'}
+        {/* ドキュメント一覧 */}
+        <div className="space-y-8">
+          {navigation.map((section) => (
+            <div key={section.title}>
+              <Heading as="h2" size="xl" className="text-foreground mb-4">
+                {section.title}
               </Heading>
-            </div>
-            <Text variant="muted" className="mb-4">
-              {isJa ? 'APIドキュメントを探索する' : 'Explore our API documentation'}
-            </Text>
-            <Link href="/docs/api" className="text-primary hover:text-primary/80 font-bold">
-              {isJa ? 'ドキュメントを見る →' : 'View docs →'}
-            </Link>
-          </div>
-
-          <div className="border-border bg-card hover:border-foreground rounded-lg border p-6 transition-colors">
-            <div className="mb-4 flex items-center space-x-4">
-              <div className="bg-muted flex size-10 items-center justify-center rounded-lg">
-                <svg
-                  className="text-info size-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
+              <div className="divide-border divide-y">
+                {section.items.map((item) =>
+                  item.href ? (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="hover:bg-state-hover flex items-center gap-4 py-3 transition-colors"
+                    >
+                      <FileText className="text-muted-foreground size-4 shrink-0" />
+                      <span className="text-foreground text-sm">{item.title}</span>
+                    </Link>
+                  ) : null,
+                )}
               </div>
-              <Heading as="h3" size="lg">
-                {isJa ? 'ガイド' : 'Guides'}
-              </Heading>
             </div>
-            <Text variant="muted" className="mb-4">
-              {isJa ? 'ステップバイステップのチュートリアル' : 'Step-by-step tutorials'}
-            </Text>
-            <Link href="/docs/guides" className="text-primary hover:text-primary/80 font-bold">
-              {isJa ? 'ガイドを見る →' : 'Browse guides →'}
-            </Link>
-          </div>
+          ))}
         </div>
       </div>
     </div>

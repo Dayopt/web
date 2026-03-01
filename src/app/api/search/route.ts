@@ -18,8 +18,10 @@ interface DocMeta {
 }
 
 // Get document metadata
-async function getAllDocMetas(): Promise<DocMeta[]> {
-  const docsDirectory = path.join(process.cwd(), 'content/docs');
+async function getAllDocMetas(locale?: string): Promise<DocMeta[]> {
+  const docsDirectory = locale
+    ? path.join(process.cwd(), 'content/docs', locale)
+    : path.join(process.cwd(), 'content/docs');
 
   try {
     if (!fs.existsSync(docsDirectory)) {
@@ -124,17 +126,19 @@ export async function GET(request: NextRequest) {
       return apiError('Search query too long', 400, { code: ErrorCode.QUERY_TOO_LONG });
     }
 
+    const locale = searchParams.get('locale') || undefined;
+
     const contentErrors: string[] = [];
     const [blogPosts, releases, docs] = await Promise.all([
-      getAllBlogPostMetas().catch((error) => {
+      getAllBlogPostMetas(locale).catch((error) => {
         contentErrors.push(`blog: ${error instanceof Error ? error.message : String(error)}`);
         return [];
       }),
-      getAllReleaseMetas().catch((error) => {
+      getAllReleaseMetas(locale).catch((error) => {
         contentErrors.push(`releases: ${error instanceof Error ? error.message : String(error)}`);
         return [];
       }),
-      getAllDocMetas().catch((error) => {
+      getAllDocMetas(locale).catch((error) => {
         contentErrors.push(`docs: ${error instanceof Error ? error.message : String(error)}`);
         return [];
       }),

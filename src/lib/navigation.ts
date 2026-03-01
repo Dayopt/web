@@ -32,32 +32,43 @@ export function generateDocsNavigation(): NavigationSection[] {
       items: [
         { title: 'Introduction', href: '/docs' },
         { title: 'Quick Start', href: '/docs/getting-started/quick-start' },
-        { title: 'Installation', href: '/docs/getting-started/installation' },
+        { title: 'UI Overview', href: '/docs/getting-started/ui-overview' },
+      ],
+    },
+    {
+      title: 'Features',
+      items: [
+        { title: 'Plans', href: '/docs/features/plans' },
+        { title: 'Records', href: '/docs/features/records' },
+        { title: 'Calendar', href: '/docs/features/calendar' },
+        { title: 'Tags', href: '/docs/features/tags' },
+        { title: 'Stats', href: '/docs/features/stats' },
+        { title: 'Search', href: '/docs/features/search' },
+        { title: 'Keyboard Shortcuts', href: '/docs/features/shortcuts' },
       ],
     },
     {
       title: 'Guides',
       items: [
-        { title: 'Calendar Basics', href: '/docs/guides/calendar-basics' },
-        { title: 'Best Practices', href: '/docs/guides/best-practices' },
+        { title: 'Timeboxing', href: '/docs/guides/timeboxing' },
+        { title: 'Weekly Review', href: '/docs/guides/weekly-review' },
+        { title: 'Data Export', href: '/docs/guides/data-export' },
       ],
     },
     {
-      title: 'API Reference',
+      title: 'Troubleshooting',
       items: [
-        { title: 'REST API', href: '/docs/api/rest' },
-        { title: 'Authentication', href: '/docs/api/rest/authentication' },
+        { title: 'Overview', href: '/docs/troubleshooting' },
+        { title: 'Account & Login', href: '/docs/troubleshooting/account' },
+        { title: 'App Issues', href: '/docs/troubleshooting/app' },
+        { title: 'Sync Issues', href: '/docs/troubleshooting/sync' },
       ],
-    },
-    {
-      title: 'SDKs',
-      items: [{ title: 'JavaScript SDK', href: '/docs/sdks/javascript' }],
     },
     {
       title: 'Account',
       items: [
         { title: 'Profile', href: '/docs/account/profile' },
-        { title: 'Billing', href: '/docs/account/billing' },
+        { title: 'Notifications', href: '/docs/account/notifications' },
       ],
     },
   ];

@@ -41,11 +41,6 @@ export function Header() {
             href: '/releases',
             description: t('navigation.releasesDescription'),
           },
-          {
-            name: t('navigation.tags'),
-            href: '/tags',
-            description: t('navigation.tagsDescription'),
-          },
         ],
       },
       { name: t('navigation.about'), href: '/about' },

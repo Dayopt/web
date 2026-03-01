@@ -30,17 +30,28 @@
 ```
 content/
 ├── blog/                  # ブログ記事
-│   ├── nextjs-saas-development-guide.mdx
-│   ├── database-design-saas-applications.mdx
-│   └── react-hooks-advanced-patterns.mdx
+│   ├── en/
+│   │   └── timeboxing-with-dayopt.mdx
+│   └── ja/
+│       └── timeboxing-with-dayopt.mdx
 ├── docs/                  # ドキュメント
-│   ├── getting-started/
-│   ├── api-reference/
-│   └── guides/
+│   ├── en/
+│   │   ├── getting-started/
+│   │   ├── features/
+│   │   ├── guides/
+│   │   ├── troubleshooting/
+│   │   └── account/
+│   └── ja/
+│       ├── getting-started/
+│       ├── features/
+│       ├── guides/
+│       ├── troubleshooting/
+│       └── account/
 └── releases/              # リリースノート
-    ├── v1.0.0.mdx
-    ├── v1.1.0.mdx
-    └── v2.0.0.mdx
+    ├── en/
+    │   └── v0.16.0.mdx
+    └── ja/
+        └── v0.16.0.mdx
 ```
 
 ---
@@ -131,7 +142,7 @@ ai:
 
 ## MDXファイル作成ガイド
 
-### ブログ記事（content/blog/*.mdx）
+### ブログ記事（content/blog/{en,ja}/*.mdx）
 
 #### Frontmatter構造（AI メタデータ含む）
 
@@ -173,7 +184,7 @@ ai:
 | `category` | string | ✅ | カテゴリー（Technology, Business, Design等） |
 | `author` | string | ✅ | 著者名 |
 | `authorAvatar` | string | ❌ | 著者アバター画像パス（`/avatars/*`） |
-| `coverImage` | string | ✅ | カバー画像パス（`/images/blog/*`） |
+| `coverImage` | string | ❌ | カバー画像パス（`/images/blog/*`） |
 | `featured` | boolean | ❌ | トップページに表示するか（デフォルト: `false`） |
 | `draft` | boolean | ❌ | 下書きか（デフォルト: `false`、`true`の場合非公開） |
 
@@ -232,7 +243,7 @@ title: "ドキュメントタイトル"
 description: "ドキュメントの説明（AI要約として流用）"
 category: "Getting Started"
 order: 1
-lastUpdated: "2025-01-23"
+updatedAt: "2025-01-23"
 tags: ["setup", "configuration"]  # ← RAGキーワードとして流用
 
 # === AI/RAG用メタデータ（簡略版） ===
@@ -254,14 +265,16 @@ ai:
 | `title` | string | ✅ | ドキュメントタイトル |
 | `description` | string | ✅ | ドキュメントの説明 |
 | `category` | string | ✅ | カテゴリー（Getting Started, API Reference等） |
-| `order` | number | ✅ | 表示順序（昇順） |
-| `lastUpdated` | string | ✅ | 最終更新日（ISO 8601形式） |
+| `order` | number | ❌ | 表示順序（昇順） |
+| `updatedAt` | string | ❌ | 更新日（ISO 8601形式） |
 | `tags` | string[] | ❌ | タグ |
-| `ai` | AIMetadata | ✅ | AI/RAGメタデータ（上記参照） |
+| `draft` | boolean | ❌ | 下書き（`true` で非公開） |
+| `featured` | boolean | ❌ | 注目コンテンツか |
+| `ai` | AIMetadata | ❌ | AI/RAGメタデータ（上記参照） |
 
 ---
 
-### リリースノート（content/releases/*.mdx）
+### リリースノート（content/releases/{en,ja}/*.mdx）
 
 #### Frontmatter構造（AI メタデータ含む）
 
@@ -303,7 +316,8 @@ ai:
 | `tags` | string[] | ✅ | タグ（frontend, backend, security, breaking等） |
 | `author` | string | ❌ | 著者名 |
 | `authorAvatar` | string | ❌ | 著者アバター画像パス |
-| `ai` | AIMetadata | ✅ | AI/RAGメタデータ（上記参照） |
+| `coverImage` | string | ❌ | カバー画像パス |
+| `ai` | AIMetadata | ❌ | AI/RAGメタデータ（上記参照） |
 
 #### 完全な例
 
@@ -521,20 +535,22 @@ public/
 content/
 ├── blog/
 │   ├── en/              # 英語版
-│   │   └── nextjs-guide.mdx
-│   └── jp/              # 日本語版
-│       └── nextjs-guide.mdx
+│   │   └── timeboxing-with-dayopt.mdx
+│   └── ja/              # 日本語版
+│       └── timeboxing-with-dayopt.mdx
+├── docs/
+│   ├── en/              # 英語版
+│   │   └── features/plans.mdx
+│   └── ja/              # 日本語版
+│       └── features/plans.mdx
+└── releases/
+    ├── en/              # 英語版
+    │   └── v0.16.0.mdx
+    └── ja/              # 日本語版
+        └── v0.16.0.mdx
 ```
 
-### Frontmatter言語指定
-
-```yaml
----
-title: "Next.js 14でSaaSアプリを構築する完全ガイド"
-description: "Next.js 14の最新機能を使ってスケーラブルなSaaSアプリケーションを構築する方法を学びます。"
-lang: "jp"
----
-```
+ロケールはディレクトリで分離しており、frontmatter での `lang` 指定は不要。
 
 ---
 

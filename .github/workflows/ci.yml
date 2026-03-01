@@ -97,6 +97,29 @@ jobs:
       - name: Run TypeScript
         run: npm run type-check
 
+  validate-content:
+    name: Content Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.2.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_optional: false
+          npm_config_audit: false
+
+      - name: Validate content frontmatter
+        run: npm run validate:content
+
   # =====================================
   # Phase 2: Build Check (並列実行に変更)
   # =====================================
@@ -153,7 +176,7 @@ jobs:
   quality-gate:
     name: Quality Gate
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, build]
+    needs: [lint, typecheck, build, validate-content]
     if: always()
     steps:
       - name: Check results
@@ -168,6 +191,10 @@ jobs:
           fi
           if [[ "${{ needs.build.result }}" != "success" ]]; then
             echo "❌ Build failed"
+            exit 1
+          fi
+          if [[ "${{ needs.validate-content.result }}" != "success" ]]; then
+            echo "❌ Content validation failed"
             exit 1
           fi
           echo "✅ All checks passed!"
@@ -190,13 +217,15 @@ jobs:
             | ${getEmoji('${{ needs.lint.result }}')} **Lint** | ${{ needs.lint.result }} |
             | ${getEmoji('${{ needs.typecheck.result }}')} **TypeScript** | ${{ needs.typecheck.result }} |
             | ${getEmoji('${{ needs.build.result }}')} **Build** | ${{ needs.build.result }} |
+            | ${getEmoji('${{ needs.validate-content.result }}')} **Content** | ${{ needs.validate-content.result }} |
 
             ---
 
             ${(() => {
               const allPassed = '${{ needs.lint.result }}' === 'success' &&
                                '${{ needs.typecheck.result }}' === 'success' &&
-                               '${{ needs.build.result }}' === 'success';
+                               '${{ needs.build.result }}' === 'success' &&
+                               '${{ needs.validate-content.result }}' === 'success';
               return allPassed
                 ? '**All checks passed! ✨ Ready to merge.**'
                 : '**Please fix the issues above.**';

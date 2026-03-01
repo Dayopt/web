@@ -3,15 +3,18 @@ import { ClientTableOfContents } from '@/components/docs/ClientTableOfContents';
 import { mdxComponents } from '@/components/docs/MDXComponents';
 import { PageNavigation } from '@/components/docs/PageNavigation';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { TagPill } from '@/components/ui/tag-pill';
 import { Heading, Text } from '@/components/ui/typography';
+import { Link } from '@/i18n/navigation';
 import { getAllContent, getMDXContentForRSC, getRelatedContent } from '@/lib/mdx';
-import { getTagColor } from '@/lib/tags-client';
 import { ContentData } from '@/types/content';
 import { Tag } from 'lucide-react';
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import rehypeHighlight from 'rehype-highlight';
+import remarkGfm from 'remark-gfm';
 
 interface PageParams {
   locale: string;
@@ -28,12 +31,11 @@ export const revalidate = 86400;
 // Generate static parameters (SEO optimization)
 export async function generateStaticParams(): Promise<PageParams[]> {
   try {
-    const allContent = await getAllContent();
     const locales = ['en', 'ja'];
-
     const params: PageParams[] = [];
 
     for (const locale of locales) {
+      const allContent = await getAllContent(locale);
       for (const content of allContent) {
         params.push({
           locale,
@@ -51,11 +53,11 @@ export async function generateStaticParams(): Promise<PageParams[]> {
 // Generate metadata
 export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
   try {
-    const { slug } = await params;
+    const { locale, slug } = await params;
     const category = slug[0];
     const contentSlug = slug.slice(1).join('/');
 
-    const content = await getMDXContentForRSC(`${category}/${contentSlug}`);
+    const content = await getMDXContentForRSC(`${category}/${contentSlug}`, locale);
 
     if (!content) {
       return {
@@ -95,12 +97,15 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
 }
 
 // Get adjacent pages
-async function getAdjacentPages(slug: string): Promise<{
+async function getAdjacentPages(
+  slug: string,
+  locale?: string,
+): Promise<{
   previousPage?: ContentData;
   nextPage?: ContentData;
 }> {
   try {
-    const allContent = await getAllContent();
+    const allContent = await getAllContent(locale);
     const currentIndex = allContent.findIndex((content) => content.slug === slug);
 
     if (currentIndex === -1) {
@@ -118,8 +123,10 @@ async function getAdjacentPages(slug: string): Promise<{
 
 // Main page component
 export default async function DocPage({ params }: DocPageProps) {
+  const { locale, slug: slugArray } = await params;
+  const tDocs = await getTranslations('docs');
+
   try {
-    const { slug: slugArray } = await params;
     const slug = slugArray.join('/');
     const category = slugArray[0];
     const contentSlug = slugArray.slice(1).join('/');
@@ -128,17 +135,17 @@ export default async function DocPage({ params }: DocPageProps) {
     let content;
 
     // First try with complete slug
-    content = await getMDXContentForRSC(slug);
+    content = await getMDXContentForRSC(slug, locale);
 
     // If not found, try other patterns
     if (!content && contentSlug) {
       // Category/file format
-      content = await getMDXContentForRSC(`${category}/${contentSlug}`);
+      content = await getMDXContentForRSC(`${category}/${contentSlug}`, locale);
     }
 
     if (!content && !contentSlug && category) {
       // Single file format
-      content = await getMDXContentForRSC(category);
+      content = await getMDXContentForRSC(category, locale);
     }
 
     if (!content) {
@@ -149,8 +156,8 @@ export default async function DocPage({ params }: DocPageProps) {
 
     // Get adjacent pages and related content in parallel
     const [{ previousPage, nextPage }, relatedContent] = await Promise.all([
-      getAdjacentPages(slug),
-      getRelatedContent(frontMatter.category, slug, 3),
+      getAdjacentPages(slug, locale),
+      getRelatedContent(frontMatter.category, slug, 3, locale),
     ]);
 
     return (
@@ -162,8 +169,17 @@ export default async function DocPage({ params }: DocPageProps) {
             <Breadcrumbs slug={slug} title={frontMatter.title} />
 
             {/* MDX content */}
-            <article className="prose prose-gray dark:prose-invert max-w-none">
-              <MDXRemote source={mdxContent} components={mdxComponents} />
+            <article>
+              <MDXRemote
+                source={mdxContent}
+                components={mdxComponents}
+                options={{
+                  mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [rehypeHighlight],
+                  },
+                }}
+              />
             </article>
 
             {/* Tags section */}
@@ -171,16 +187,12 @@ export default async function DocPage({ params }: DocPageProps) {
               <aside className="border-border mt-12 border-t pt-8">
                 <div className="mb-4 flex items-center gap-2">
                   <Tag className="text-muted-foreground size-4" />
-                  <span className="text-muted-foreground text-sm font-bold">Tags</span>
+                  <span className="text-muted-foreground text-sm font-bold">{tDocs('tags')}</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {frontMatter.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      href={`/tags/${encodeURIComponent(tag)}`}
-                      className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-bold transition-colors ${getTagColor(tag)}`}
-                    >
-                      #{tag}
+                    <Link key={tag} href={`/tags/${encodeURIComponent(tag)}`}>
+                      <TagPill tag={tag} />
                     </Link>
                   ))}
                 </div>
@@ -191,12 +203,12 @@ export default async function DocPage({ params }: DocPageProps) {
             {relatedContent.length > 0 && (
               <aside className="border-border mt-12 border-t pt-8">
                 <Heading as="h2" size="xl" className="mb-6">
-                  関連記事
+                  {tDocs('relatedArticles')}
                 </Heading>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {relatedContent.map((related) => (
                     <Link key={related.slug} href={`/docs/${related.slug}`} className="block">
-                      <Card className="h-full gap-4 py-4 transition-colors hover:bg-[var(--state-hover)]">
+                      <Card className="hover:bg-state-hover h-full gap-4 py-4 transition-colors">
                         <CardHeader className="gap-2 px-4 py-0">
                           <CardTitle className="line-clamp-2 text-sm">
                             {related.frontMatter.title}
@@ -204,20 +216,13 @@ export default async function DocPage({ params }: DocPageProps) {
                           <div className="flex items-center gap-2">
                             {related.frontMatter.updatedAt && (
                               <time className="text-muted-foreground text-xs">
-                                {new Date(related.frontMatter.updatedAt).toLocaleDateString(
-                                  'ja-JP',
-                                )}
+                                {new Date(related.frontMatter.updatedAt).toLocaleDateString(locale)}
                               </time>
                             )}
                             {related.frontMatter.tags && related.frontMatter.tags.length > 0 && (
                               <div className="flex flex-wrap gap-1">
                                 {related.frontMatter.tags.slice(0, 2).map((tag) => (
-                                  <span
-                                    key={tag}
-                                    className="bg-muted text-muted-foreground rounded-full px-2 py-1 text-xs"
-                                  >
-                                    {tag}
-                                  </span>
+                                  <TagPill key={tag} tag={tag} />
                                 ))}
                               </div>
                             )}
@@ -249,16 +254,16 @@ export default async function DocPage({ params }: DocPageProps) {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <Heading as="h1" size="3xl" className="mb-4">
-            Something went wrong
+            {tDocs('error.title')}
           </Heading>
           <Text variant="muted" className="mb-6">
-            We encountered an error while loading this page.
+            {tDocs('error.description')}
           </Text>
           <Link
             href="/docs"
             className="bg-primary text-primary-foreground hover:bg-primary-hover inline-flex items-center rounded-lg px-4 py-2 transition-colors"
           >
-            Back to Documentation
+            {tDocs('error.backToDocs')}
           </Link>
         </div>
       </div>

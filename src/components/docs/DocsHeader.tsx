@@ -29,7 +29,6 @@ export function DocsHeader({ onMobileMenuToggle, mobileMenuOpen }: DocsHeaderPro
       href: '/releases',
       description: t('navigation.releasesDescription'),
     },
-    { name: t('navigation.tags'), href: '/tags', description: t('navigation.tagsDescription') },
   ];
 
   return (

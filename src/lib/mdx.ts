@@ -15,11 +15,25 @@ import remarkGfm from 'remark-gfm';
 
 const CONTENT_PATH = path.join(process.cwd(), 'content/docs');
 
+/** ロケールディレクトリ名（スキャン時に除外用） */
+const LOCALE_DIRS = ['en', 'ja'];
+
+/**
+ * ロケールを考慮したコンテンツベースパスを取得
+ */
+function getLocalizedContentPath(locale?: string): string {
+  if (locale) {
+    return path.join(CONTENT_PATH, locale);
+  }
+  return CONTENT_PATH;
+}
+
 /**
  * 指定されたディレクトリからMDXファイルを取得
  */
-export async function getMDXFiles(dir: string): Promise<string[]> {
-  const fullPath = path.join(CONTENT_PATH, dir);
+export async function getMDXFiles(dir: string, locale?: string): Promise<string[]> {
+  const basePath = getLocalizedContentPath(locale);
+  const fullPath = path.join(basePath, dir);
 
   try {
     if (!fs.existsSync(fullPath)) {
@@ -41,14 +55,18 @@ export async function getMDXFiles(dir: string): Promise<string[]> {
 /**
  * MDXファイルを読み込んでフロントマターとコンテンツを解析
  */
-export async function getMDXContent(filePath: string): Promise<ContentData | null> {
+export async function getMDXContent(
+  filePath: string,
+  locale?: string,
+): Promise<ContentData | null> {
   // Validate filePath to prevent path traversal
   if (!filePath || filePath.includes('..')) {
     console.warn(`[MDX] Invalid file path provided: ${filePath}`);
     return null;
   }
 
-  const fullPath = path.join(CONTENT_PATH, filePath);
+  const basePath = getLocalizedContentPath(locale);
+  const fullPath = path.join(basePath, filePath);
 
   try {
     if (!fs.existsSync(fullPath)) {
@@ -70,7 +88,7 @@ export async function getMDXContent(filePath: string): Promise<ContentData | nul
 
     const { data, content } = parsedMatter;
 
-    // スラッグを生成（ファイルパスから）
+    // スラッグを生成（ファイルパスから、ロケールプレフィックスは含まない）
     const slug = filePath.replace(/\.mdx$/, '').replace(/\\/g, '/');
 
     // カテゴリーをパスから抽出
@@ -135,9 +153,12 @@ export async function serializeMDX(content: string) {
 /**
  * 指定されたスラッグのMDXコンテンツを取得してシリアライズ
  */
-export async function getSerializedContent(slug: string): Promise<SerializedContent | null> {
+export async function getSerializedContent(
+  slug: string,
+  locale?: string,
+): Promise<SerializedContent | null> {
   const filePath = `${slug}.mdx`;
-  const content = await getMDXContent(filePath);
+  const content = await getMDXContent(filePath, locale);
 
   if (!content) {
     return null;
@@ -156,9 +177,10 @@ export async function getSerializedContent(slug: string): Promise<SerializedCont
  */
 export async function getMDXContentForRSC(
   slug: string,
+  locale?: string,
 ): Promise<{ content: string; frontMatter: FrontMatter } | null> {
   const filePath = `${slug}.mdx`;
-  const content = await getMDXContent(filePath);
+  const content = await getMDXContent(filePath, locale);
 
   if (!content) {
     return null;
@@ -172,13 +194,17 @@ export async function getMDXContentForRSC(
 
 /**
  * すべてのMDXファイルを取得（cache()で同一リクエスト内の重複呼び出しを排除）
+ * locale が指定された場合、content/docs/{locale}/ ディレクトリをスキャン
  */
-export const getAllContent = cache(async function getAllContentImpl(): Promise<ContentData[]> {
+export const getAllContent = cache(async function getAllContentImpl(
+  locale?: string,
+): Promise<ContentData[]> {
   const allContent: ContentData[] = [];
   const errors: { path: string; error: unknown }[] = [];
+  const basePath = getLocalizedContentPath(locale);
 
   async function scanDirectory(dir: string): Promise<void> {
-    const fullPath = path.join(CONTENT_PATH, dir);
+    const fullPath = path.join(basePath, dir);
 
     try {
       if (!fs.existsSync(fullPath)) {
@@ -204,9 +230,13 @@ export const getAllContent = cache(async function getAllContentImpl(): Promise<C
 
         try {
           if (item.isDirectory()) {
+            // ロケール指定なしの場合、ロケールディレクトリをスキップ
+            if (!locale && LOCALE_DIRS.includes(item.name)) {
+              continue;
+            }
             await scanDirectory(itemPath);
           } else if (item.name.endsWith('.mdx')) {
-            const content = await getMDXContent(itemPath);
+            const content = await getMDXContent(itemPath, locale);
             if (content && !content.frontMatter.draft) {
               allContent.push(content);
             }
@@ -247,8 +277,8 @@ export const getAllContent = cache(async function getAllContentImpl(): Promise<C
 /**
  * カテゴリー別にコンテンツを取得
  */
-export async function getContentByCategory(): Promise<ContentCollection> {
-  const allContent = await getAllContent();
+export async function getContentByCategory(locale?: string): Promise<ContentCollection> {
+  const allContent = await getAllContent(locale);
   const collection: ContentCollection = {};
 
   for (const content of allContent) {
@@ -268,9 +298,10 @@ export async function getContentByCategory(): Promise<ContentCollection> {
 export async function getContentBySlug(
   category: ContentCategory,
   slug: string,
+  locale?: string,
 ): Promise<SerializedContent | null> {
   const filePath = `${category}/${slug}.mdx`;
-  return await getSerializedContent(filePath);
+  return await getSerializedContent(filePath, locale);
 }
 
 /**
@@ -309,8 +340,9 @@ export async function getRelatedContent(
   _category: string, // 後方互換性のため引数は残す
   currentSlug: string,
   limit: number = 3,
+  locale?: string,
 ): Promise<ContentData[]> {
-  const allContent = await getAllContent();
+  const allContent = await getAllContent(locale);
 
   // 現在の記事を取得
   const currentContent = allContent.find((content) => content.slug === currentSlug);
@@ -335,8 +367,8 @@ export async function getRelatedContent(
 /**
  * 検索機能（タイトル、説明、タグで検索）
  */
-export async function searchContent(query: string): Promise<ContentData[]> {
-  const allContent = await getAllContent();
+export async function searchContent(query: string, locale?: string): Promise<ContentData[]> {
+  const allContent = await getAllContent(locale);
   const lowercaseQuery = query.toLowerCase();
 
   return allContent.filter((content) => {

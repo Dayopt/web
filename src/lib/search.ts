@@ -25,9 +25,9 @@ let searchIndex: SearchIndexItem[] = [];
 /**
  * 検索インデックスを生成
  */
-export async function generateSearchIndex(): Promise<SearchIndexItem[]> {
+export async function generateSearchIndex(locale?: string): Promise<SearchIndexItem[]> {
   try {
-    const allContent = await getAllContent();
+    const allContent = await getAllContent(locale);
 
     if (!allContent || allContent.length === 0) {
       console.warn('[Search] No content found for search index generation');
