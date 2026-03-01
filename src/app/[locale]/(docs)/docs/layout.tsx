@@ -1,5 +1,6 @@
 import { ClientSidebar } from '@/components/docs/ClientSidebar';
 import { DocsHeader } from '@/components/docs/DocsHeader';
+import { Footer } from '@/components/layout/Footer';
 import { generateDocsNavigation } from '@/lib/navigation';
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
@@ -19,9 +20,10 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           </div>
         </aside>
 
-        {/* Main Content */}
+        {/* Main Content + Footer */}
         <main id="main-content" role="main" className="min-w-0 flex-1 overflow-y-auto">
           {children}
+          <Footer />
         </main>
       </div>
     </div>
