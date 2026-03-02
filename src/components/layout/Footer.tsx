@@ -37,22 +37,23 @@ export function Footer() {
   const tFooter = useTranslations('footer');
 
   const navigation = {
-    product: [
-      { name: t('common.navigation.features'), href: '/#features' },
-      { name: t('common.navigation.pricing'), href: '/#pricing' },
-      { name: t('common.navigation.contact'), href: '/contact' },
-    ],
     resources: [
       { name: t('common.navigation.blog'), href: '/blog' },
       { name: t('common.navigation.docs'), href: '/docs' },
       { name: t('common.navigation.releases'), href: '/releases' },
     ],
+    support: [
+      { name: t('common.navigation.contact'), href: '/contact' },
+      {
+        name: tFooter('support.reportIssue'),
+        href: 'https://github.com/dayopt/dayopt-web/issues/new',
+        external: true,
+      },
+    ],
     legal: [
-      { name: t('footer.legal.termsOfService'), href: '/legal/terms' },
-      { name: t('footer.legal.privacyPolicy'), href: '/legal/privacy' },
-      { name: t('footer.legal.security'), href: '/legal/security' },
-      { name: t('footer.legal.tokushoho'), href: '/legal/tokushoho' },
-      { name: t('footer.legal.ossCredits'), href: '/legal/oss-credits' },
+      { name: tFooter('legal.termsOfService'), href: '/legal/terms' },
+      { name: tFooter('legal.privacyPolicy'), href: '/legal/privacy' },
+      { name: tFooter('legal.tokushoho'), href: '/legal/tokushoho' },
     ],
   };
 
@@ -88,22 +89,6 @@ export function Footer() {
 
           {/* Links Grid (3 columns) */}
           <div className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-3 xl:col-span-2 xl:mt-0">
-            {/* Product */}
-            <div>
-              <h3 className="text-foreground text-base font-bold">{tFooter('sections.product')}</h3>
-              <ul role="list" className="mt-6 space-y-4">
-                {navigation.product.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-muted-foreground hover:text-foreground text-sm transition-colors hover:underline"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
             {/* Resources */}
             <div>
               <h3 className="text-foreground text-base font-bold">
@@ -120,6 +105,35 @@ export function Footer() {
                     </Link>
                   </li>
                 ))}
+              </ul>
+            </div>
+            {/* Support */}
+            <div>
+              <h3 className="text-foreground text-base font-bold">{tFooter('sections.support')}</h3>
+              <ul role="list" className="mt-6 space-y-4">
+                {navigation.support.map((item) =>
+                  'external' in item && item.external ? (
+                    <li key={item.name}>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-foreground text-sm transition-colors hover:underline"
+                      >
+                        {item.name}
+                      </a>
+                    </li>
+                  ) : (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        className="text-muted-foreground hover:text-foreground text-sm transition-colors hover:underline"
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ),
+                )}
               </ul>
             </div>
             {/* Legal */}
