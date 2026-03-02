@@ -1,104 +1,53 @@
 import { apiError, ErrorCode } from '@/lib/api-response';
-import { getAllBlogPostMetas } from '@/lib/blog';
 import { getClientIp, searchRateLimit } from '@/lib/rate-limit';
-import { getAllReleaseMetas } from '@/lib/releases';
 import fs from 'fs';
-import matter from 'gray-matter';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
-interface DocMeta {
-  slug: string;
+interface SearchIndexEntry {
+  id: string;
   title: string;
   description: string;
-  date: string;
+  url: string;
+  type: 'blog' | 'docs' | 'release';
   tags: string[];
-  category: string | undefined;
-  featured: boolean;
+  category: string;
+  date: string;
 }
 
-// Get document metadata
-async function getAllDocMetas(locale?: string): Promise<DocMeta[]> {
-  const docsDirectory = locale
-    ? path.join(process.cwd(), 'content/docs', locale)
-    : path.join(process.cwd(), 'content/docs');
+// ビルド時に生成された検索インデックスをキャッシュ
+let indexCache: Record<string, SearchIndexEntry[]> | null = null;
+
+function loadSearchIndex(): Record<string, SearchIndexEntry[]> {
+  if (indexCache) return indexCache;
+
+  const indexPath = path.join(process.cwd(), 'public', 'search-index.json');
+
+  if (!fs.existsSync(indexPath)) {
+    console.warn('[Search API] search-index.json not found. Run `npm run generate:search-index`.');
+    return {};
+  }
 
   try {
-    if (!fs.existsSync(docsDirectory)) {
-      console.warn(`[Search API] Docs directory not found: ${docsDirectory}`);
+    const raw = fs.readFileSync(indexPath, 'utf-8');
+    indexCache = JSON.parse(raw) as Record<string, SearchIndexEntry[]>;
+    return indexCache;
+  } catch (err) {
+    console.error('[Search API] Failed to load search-index.json:', err);
+    return {};
+  }
+}
+
+function getBreadcrumbs(entry: SearchIndexEntry): string[] {
+  switch (entry.type) {
+    case 'blog':
+      return ['Blog', entry.category || 'Uncategorized'];
+    case 'release':
+      return ['Releases', entry.id];
+    case 'docs':
+      return ['Documentation', entry.category || 'Uncategorized'];
+    default:
       return [];
-    }
-
-    const getAllMdxFiles = (dir: string): string[] => {
-      const files: string[] = [];
-      try {
-        const items = fs.readdirSync(dir);
-
-        for (const item of items) {
-          const fullPath = path.join(dir, item);
-          try {
-            const stat = fs.statSync(fullPath);
-
-            if (stat.isDirectory()) {
-              files.push(...getAllMdxFiles(fullPath));
-            } else if (item.endsWith('.mdx') || item.endsWith('.md')) {
-              files.push(fullPath);
-            }
-          } catch (statError) {
-            console.error(`[Search API] Failed to stat file: ${fullPath}`, statError);
-          }
-        }
-      } catch (readError) {
-        console.error(`[Search API] Failed to read directory: ${dir}`, readError);
-      }
-
-      return files;
-    };
-
-    const mdxFiles = getAllMdxFiles(docsDirectory);
-    const docMetas: DocMeta[] = [];
-    const errors: { file: string; error: unknown }[] = [];
-
-    for (const filePath of mdxFiles) {
-      try {
-        const fileContents = fs.readFileSync(filePath, 'utf8');
-        const { data: frontMatter } = matter(fileContents);
-
-        // Skip draft content
-        if (frontMatter.draft) continue;
-
-        // Generate slug from file path
-        const relativePath = path.relative(docsDirectory, filePath);
-        const slug = relativePath.replace(/\.(mdx?|md)$/, '').replace(/\\/g, '/');
-
-        docMetas.push({
-          slug: slug,
-          title: (frontMatter.title as string) || 'Untitled',
-          description: (frontMatter.description as string) || '',
-          date:
-            (frontMatter.publishedAt as string) ||
-            (frontMatter.updatedAt as string) ||
-            new Date().toISOString(),
-          tags: (frontMatter.tags as string[]) || [],
-          category: frontMatter.category as string | undefined,
-          featured: (frontMatter.featured as boolean) || false,
-        });
-      } catch (err) {
-        errors.push({ file: filePath, error: err });
-      }
-    }
-
-    if (errors.length > 0) {
-      console.error(`[Search API] Failed to process ${errors.length} document(s):`);
-      errors.forEach(({ file, error }) => {
-        console.error(`  - ${file}:`, error instanceof Error ? error.message : error);
-      });
-    }
-
-    return docMetas.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  } catch (error) {
-    console.error('[Search API] Unexpected error in getAllDocMetas:', error);
-    return [];
   }
 }
 
@@ -126,92 +75,30 @@ export async function GET(request: NextRequest) {
       return apiError('Search query too long', 400, { code: ErrorCode.QUERY_TOO_LONG });
     }
 
-    const locale = searchParams.get('locale') || undefined;
+    const locale = searchParams.get('locale') || 'en';
 
-    const contentErrors: string[] = [];
-    const [blogPosts, releases, docs] = await Promise.all([
-      getAllBlogPostMetas(locale).catch((error) => {
-        contentErrors.push(`blog: ${error instanceof Error ? error.message : String(error)}`);
-        return [];
-      }),
-      getAllReleaseMetas(locale).catch((error) => {
-        contentErrors.push(`releases: ${error instanceof Error ? error.message : String(error)}`);
-        return [];
-      }),
-      getAllDocMetas(locale).catch((error) => {
-        contentErrors.push(`docs: ${error instanceof Error ? error.message : String(error)}`);
-        return [];
-      }),
-    ]);
-
-    if (contentErrors.length > 0) {
-      console.warn('[Search API] Some content sources failed:', contentErrors.join(', '));
-    }
+    // ビルド時に生成された静的インデックスを使用
+    const index = loadSearchIndex();
+    const entries = index[locale] || [];
 
     const searchTerm = query.toLowerCase();
     const results = [];
 
-    // Search blog posts
-    for (const post of blogPosts) {
-      const titleMatch = post.frontMatter.title.toLowerCase().includes(searchTerm);
-      const descriptionMatch =
-        post.frontMatter.description?.toLowerCase().includes(searchTerm) || false;
-      const tagMatch =
-        post.frontMatter.tags?.some((tag) => tag.toLowerCase().includes(searchTerm)) || false;
+    for (const entry of entries) {
+      const titleMatch = entry.title.toLowerCase().includes(searchTerm);
+      const descriptionMatch = entry.description.toLowerCase().includes(searchTerm);
+      const tagMatch = entry.tags.some((tag) => tag.toLowerCase().includes(searchTerm));
 
       if (titleMatch || descriptionMatch || tagMatch) {
         results.push({
-          id: post.slug,
-          title: post.frontMatter.title,
-          description: post.frontMatter.description || '',
-          url: `/blog/${post.slug}`,
-          type: 'blog',
-          breadcrumbs: ['Blog', post.frontMatter.category || 'Uncategorized'],
-          lastModified: post.frontMatter.publishedAt,
-          tags: post.frontMatter.tags || [],
-        });
-      }
-    }
-
-    // Search releases
-    for (const release of releases) {
-      const titleMatch = release.frontMatter.title.toLowerCase().includes(searchTerm);
-      const descriptionMatch =
-        release.frontMatter.description?.toLowerCase().includes(searchTerm) || false;
-      const tagMatch =
-        release.frontMatter.tags?.some((tag) => tag.toLowerCase().includes(searchTerm)) || false;
-
-      if (titleMatch || descriptionMatch || tagMatch) {
-        results.push({
-          id: release.frontMatter.version || release.slug,
-          title: release.frontMatter.title,
-          description: release.frontMatter.description || '',
-          url: `/releases/${release.frontMatter.version || release.slug}`,
-          type: 'release',
-          breadcrumbs: ['Releases', release.frontMatter.version || release.slug],
-          lastModified: release.frontMatter.date,
-          tags: release.frontMatter.tags || [],
-        });
-      }
-    }
-
-    // Search documents
-    for (const doc of docs) {
-      const titleMatch = doc.title.toLowerCase().includes(searchTerm);
-      const descriptionMatch = doc.description?.toLowerCase().includes(searchTerm) || false;
-      const tagMatch =
-        doc.tags?.some((tag: string) => tag.toLowerCase().includes(searchTerm)) || false;
-
-      if (titleMatch || descriptionMatch || tagMatch) {
-        results.push({
-          id: doc.slug,
-          title: doc.title,
-          description: doc.description || '',
-          url: `/docs/${doc.slug}`,
-          type: 'docs',
-          breadcrumbs: ['Documentation', doc.category || 'Uncategorized'],
-          lastModified: doc.date,
-          tags: doc.tags || [],
+          id: entry.id,
+          title: entry.title,
+          description: entry.description,
+          url: entry.url,
+          type: entry.type,
+          breadcrumbs: getBreadcrumbs(entry),
+          lastModified: entry.date,
+          tags: entry.tags,
         });
       }
     }

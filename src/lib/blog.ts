@@ -1,27 +1,16 @@
 import { createStructuredError, ErrorCategory, ErrorLevel, logError } from '@/lib/error-utils';
-import type { AIMetadata } from '@/types/content';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 import { cache } from 'react';
+import {
+  type BlogFrontMatter,
+  blogFrontMatterSchema,
+  parseFrontMatter,
+} from './content-schemas';
 import { calculateReadingTime } from './utils';
 
-export interface BlogPostFrontMatter {
-  title: string;
-  description: string;
-  publishedAt: string;
-  updatedAt?: string;
-  tags: string[];
-  category: string;
-  author: string;
-  authorAvatar?: string;
-  coverImage?: string;
-  draft?: boolean;
-  featured?: boolean;
-  readingTime?: number;
-  // AI/RAG用メタデータ
-  ai?: AIMetadata;
-}
+export type BlogPostFrontMatter = BlogFrontMatter;
 
 export interface BlogPost {
   slug: string;
@@ -53,14 +42,15 @@ function getBlogDir(locale?: string): string {
 // Generate article excerpt
 export function generateExcerpt(content: string, maxLength: number = 160): string {
   // Remove Markdown syntax and HTML tags
+  // 順序が重要: コードブロック→インラインコード、画像→リンクの順で処理
   const cleanContent = content
+    .replace(/```[\s\S]*?```/g, '') // Code blocks（インラインコードより先に処理）
     .replace(/#{1,6}\s+/g, '') // Headers
     .replace(/\*\*(.+?)\*\*/g, '$1') // Bold
     .replace(/\*(.+?)\*/g, '$1') // Italic
-    .replace(/`(.+?)`/g, '$1') // Code
+    .replace(/`(.+?)`/g, '$1') // Inline code
+    .replace(/!\[.*?\]\(.+?\)/g, '') // Images（リンクより先に処理）
     .replace(/\[(.+?)\]\(.+?\)/g, '$1') // Links
-    .replace(/!\[.*?\]\(.+?\)/g, '') // Images
-    .replace(/```[\s\S]*?```/g, '') // Code blocks
     .replace(/\n+/g, ' ') // Line breaks
     .trim();
 
@@ -111,7 +101,7 @@ export const getAllBlogPostMetas = cache(async function getAllBlogPostMetasImpl(
           const fileContent = fs.readFileSync(filePath, 'utf-8');
           const { data, content } = matter(fileContent);
 
-          const frontMatter = data as BlogPostFrontMatter;
+          const frontMatter = parseFrontMatter(blogFrontMatterSchema, data, filePath);
 
           // Validate required frontmatter fields
           if (!frontMatter.title) {
@@ -203,7 +193,7 @@ export async function getBlogPost(slug: string, locale?: string): Promise<BlogPo
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const { data, content } = matter(fileContent);
 
-    const frontMatter = data as BlogPostFrontMatter;
+    const frontMatter = parseFrontMatter(blogFrontMatterSchema, data, filePath);
 
     // Return null for drafts
     if (frontMatter.draft) {

@@ -1,25 +1,15 @@
-import type { AIMetadata } from '@/types/content';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 import { cache } from 'react';
+import {
+  type ReleaseFrontMatter as ReleaseFrontMatterType,
+  parseFrontMatter,
+  releaseFrontMatterSchema,
+} from './content-schemas';
 import { calculateReadingTime } from './utils';
 
-export interface ReleaseFrontMatter {
-  version: string;
-  date: string;
-  title: string;
-  description: string;
-  tags: string[];
-  breaking: boolean;
-  featured: boolean;
-  prerelease?: boolean;
-  author?: string;
-  authorAvatar?: string;
-  coverImage?: string;
-  // AI/RAG用メタデータ
-  ai?: AIMetadata;
-}
+export type ReleaseFrontMatter = ReleaseFrontMatterType;
 
 export interface ReleasePostMeta {
   frontMatter: ReleaseFrontMatter;
@@ -156,15 +146,7 @@ export const getAllReleaseMetas = cache(async function getAllReleaseMetasImpl(
         const fileContents = fs.readFileSync(filePath, 'utf8');
         const { data, content } = matter(fileContents);
 
-        const frontMatter = data as ReleaseFrontMatter;
-
-        // Validate required frontmatter fields
-        if (!frontMatter.version) {
-          console.warn(`[Releases] Missing required 'version' in frontmatter: ${filePath}`);
-        }
-        if (!frontMatter.date) {
-          console.warn(`[Releases] Missing required 'date' in frontmatter: ${filePath}`);
-        }
+        const frontMatter = parseFrontMatter(releaseFrontMatterSchema, data, filePath);
 
         const slug = filename.replace(/\.mdx$/, '');
         const readingTime = calculateReleaseTime(content);
@@ -223,7 +205,7 @@ export async function getRelease(version: string, locale?: string): Promise<Rele
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const { data, content } = matter(fileContents);
 
-    const frontMatter = data as ReleaseFrontMatter;
+    const frontMatter = parseFrontMatter(releaseFrontMatterSchema, data, filePath);
     const readingTime = calculateReleaseTime(content);
 
     return {

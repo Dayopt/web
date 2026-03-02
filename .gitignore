@@ -157,5 +157,8 @@ temp/
 .op/
 op-session-*
 
+# Build-time generated search index
+public/search-index.json
+
 # Project specific
 memo/
