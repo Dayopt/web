@@ -1,3 +1,7 @@
+import { FeaturesSection } from '@/components/marketing/FeaturesSection';
+import { PricingSection } from '@/components/marketing/PricingSection';
+import { ProblemSection } from '@/components/marketing/ProblemSection';
+import { SolutionSection } from '@/components/marketing/SolutionSection';
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
 import { Link } from '@/i18n/navigation';
@@ -28,8 +32,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     locale: locale,
     keywords:
       locale === 'ja'
-        ? ['SaaS', 'プラットフォーム', 'ビジネス', '生産性', '自動化', 'Next.js', 'TypeScript']
-        : ['SaaS', 'platform', 'business', 'productivity', 'automation', 'Next.js', 'TypeScript'],
+        ? ['タイムボクシング', '時間管理', '生産性', '振り返り', 'カレンダー']
+        : ['timeboxing', 'time management', 'productivity', 'reflection', 'calendar'],
     type: 'website',
   });
 }
@@ -53,11 +57,11 @@ export default async function Home({ params }: PageProps) {
               </h1>
               <p className="text-muted-foreground mt-6 text-lg sm:text-xl">{t('hero.subtitle')}</p>
               <div className="mt-12 flex items-center justify-center gap-x-6">
-                <Button size="lg" asChild>
-                  <Link href="/contact">{t('hero.cta')}</Link>
+                <Button variant="primary" size="lg" asChild>
+                  <Link href="/signup">{t('hero.cta')}</Link>
                 </Button>
                 <Button variant="ghost" size="lg" asChild>
-                  <Link href="/about">
+                  <Link href="/#solution">
                     {tCommon('actions.learnMore')} <span aria-hidden="true">→</span>
                   </Link>
                 </Button>
@@ -76,6 +80,18 @@ export default async function Home({ params }: PageProps) {
             </div>
           </Container>
         </section>
+
+        {/* Problem Section */}
+        <ProblemSection locale={locale} />
+
+        {/* Solution Section */}
+        <SolutionSection locale={locale} />
+
+        {/* Features Section */}
+        <FeaturesSection locale={locale} />
+
+        {/* Pricing Section */}
+        <PricingSection locale={locale} />
       </div>
     </div>
   );

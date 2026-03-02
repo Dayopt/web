@@ -242,7 +242,7 @@ export default async function DocPage({ params }: DocPageProps) {
 
         {/* Right Sidebar - Table of Contents (xl以上で表示、固定位置) */}
         <aside className="hidden w-60 flex-shrink-0 xl:block">
-          <div className="sticky top-0 max-h-screen overflow-y-auto px-4 py-8">
+          <div className="sticky top-0 max-h-[calc(100vh-3.5rem)] overflow-y-auto px-4 py-8">
             <ClientTableOfContents content={mdxContent} />
           </div>
         </aside>

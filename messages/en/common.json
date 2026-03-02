@@ -123,9 +123,8 @@
       "secondaryButton": "Learn more"
     },
     "sections": {
-      "product": "Product",
-      "company": "Company",
       "resources": "Resources",
+      "support": "Support",
       "legal": "Legal"
     },
     "links": {
@@ -139,13 +138,14 @@
       "security": "Security",
       "api": "API"
     },
+    "support": {
+      "reportIssue": "Report an issue"
+    },
     "legal": {
       "copyright": "All rights reserved.",
       "privacyPolicy": "Privacy Policy",
       "termsOfService": "Terms of Service",
-      "security": "Security",
-      "tokushoho": "Commercial Transaction Act",
-      "ossCredits": "OSS Credits"
+      "tokushoho": "Commercial Transaction Act"
     }
   },
   "blog": {

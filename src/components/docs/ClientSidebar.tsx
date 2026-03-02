@@ -1,6 +1,5 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
 import { type NavigationItem, type NavigationSection } from '@/lib/navigation';
 import {
   BarChart3,
@@ -22,7 +21,6 @@ import {
   Shield,
   User,
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -167,19 +165,12 @@ interface ClientSidebarProps {
 }
 
 export function ClientSidebar({ navigation }: ClientSidebarProps) {
-  const t = useTranslations('docs.sidebar');
   const pathname = usePathname();
 
   return (
     <div className="flex h-full flex-col">
-      {/* Search */}
-      <div className="relative mb-4">
-        <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-        <Input type="search" placeholder={t('searchPlaceholder')} size="sm" className="pl-8" />
-      </div>
-
       {/* Navigation */}
-      <nav className="flex-1 space-y-6 overflow-y-auto">
+      <nav className="flex-1 space-y-6">
         {navigation.map((section) => (
           <div key={section.title}>
             <div className="text-muted-foreground cursor-default py-2 pr-4 pl-2 text-xs font-bold tracking-wider uppercase">

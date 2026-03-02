@@ -114,6 +114,42 @@ const nextConfig = {
     ]
   },
 
+  // 旧ページ → ホームページセクションへ301リダイレクト
+  async redirects() {
+    return [
+      {
+        source: '/pricing',
+        destination: '/#pricing',
+        permanent: true,
+      },
+      {
+        source: '/:locale/pricing',
+        destination: '/:locale/#pricing',
+        permanent: true,
+      },
+      {
+        source: '/features',
+        destination: '/#features',
+        permanent: true,
+      },
+      {
+        source: '/:locale/features',
+        destination: '/:locale/#features',
+        permanent: true,
+      },
+      {
+        source: '/about',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/:locale/about',
+        destination: '/:locale',
+        permanent: true,
+      },
+    ]
+  },
+
   // Multi-zones設定: LP（web）とアプリ（app）を同一ドメインで運用
   // web側にないパスはapp側（dayopt-app）にフォールバック
   // @see https://nextjs.org/docs/app/building-your-application/deploying/multi-zones

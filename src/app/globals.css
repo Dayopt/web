@@ -386,10 +386,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-main {
-  min-height: calc(100vh - 64px);
-}
-
 img,
 picture,
 video,

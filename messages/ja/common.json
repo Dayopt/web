@@ -78,9 +78,8 @@
       "secondaryButton": "詳細を見る"
     },
     "sections": {
-      "product": "製品",
-      "company": "会社",
       "resources": "リソース",
+      "support": "サポート",
       "legal": "法的事項"
     },
     "links": {
@@ -94,13 +93,14 @@
       "security": "セキュリティ",
       "api": "API"
     },
+    "support": {
+      "reportIssue": "問題を報告"
+    },
     "legal": {
       "copyright": "すべての権利を保有しています。",
       "privacyPolicy": "プライバシーポリシー",
       "termsOfService": "利用規約",
-      "security": "セキュリティ",
-      "tokushoho": "特定商取引法に基づく表記",
-      "ossCredits": "OSSライセンス"
+      "tokushoho": "特定商取引法に基づく表記"
     }
   },
   "errors": {
