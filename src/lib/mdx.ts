@@ -12,6 +12,7 @@ import path from 'path';
 import { cache } from 'react';
 import rehypeHighlight from 'rehype-highlight';
 import remarkGfm from 'remark-gfm';
+import { docFrontMatterSchema, parseFrontMatter } from './content-schemas';
 
 const CONTENT_PATH = path.join(process.cwd(), 'content/docs');
 
@@ -95,21 +96,8 @@ export async function getMDXContent(
     const pathParts = filePath.split('/');
     const category = pathParts[0] || 'general';
 
-    const frontMatter: FrontMatter = {
-      title: (data.title as string) || 'Untitled',
-      description: (data.description as string) || '',
-      tags: (data.tags as string[]) || [],
-      author: data.author as string | undefined,
-      publishedAt: data.publishedAt as string | undefined,
-      updatedAt: data.updatedAt as string | undefined,
-      slug,
-      category,
-      order: (data.order as number) || 0,
-      draft: (data.draft as boolean) || false,
-      featured: (data.featured as boolean) || false,
-      // AI/RAG用メタデータ
-      ai: data.ai as FrontMatter['ai'] | undefined,
-    };
+    const parsed = parseFrontMatter(docFrontMatterSchema, { ...data, slug, category }, filePath);
+    const frontMatter: FrontMatter = parsed;
 
     return {
       frontMatter,
