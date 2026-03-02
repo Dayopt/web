@@ -52,8 +52,7 @@
     "license:audit": "npx license-checker --production --summary",
     "generate-licenses": "tsx scripts/generate-licenses.ts",
     "validate:content": "node scripts/validate-content.js",
-    "generate:search-index": "tsx scripts/generate-search-index.ts",
-    "prebuild": "tsx scripts/generate-search-index.ts"
+    "generate:search-index": "tsx scripts/generate-search-index.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
