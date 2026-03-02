@@ -179,7 +179,7 @@ export function ClientSidebar({ navigation }: ClientSidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-6 overflow-y-auto">
+      <nav className="flex-1 space-y-6">
         {navigation.map((section) => (
           <div key={section.title}>
             <div className="text-muted-foreground cursor-default py-2 pr-4 pl-2 text-xs font-bold tracking-wider uppercase">
