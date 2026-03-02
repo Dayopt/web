@@ -3,11 +3,7 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 import { cache } from 'react';
-import {
-  type BlogFrontMatter,
-  blogFrontMatterSchema,
-  parseFrontMatter,
-} from './content-schemas';
+import { type BlogFrontMatter, blogFrontMatterSchema, parseFrontMatter } from './content-schemas';
 import { calculateReadingTime } from './utils';
 
 export type BlogPostFrontMatter = BlogFrontMatter;
