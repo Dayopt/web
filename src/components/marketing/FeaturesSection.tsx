@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Container } from '@/components/ui/container';
-import { BarChart3, Lock, Plug, Smartphone, Users, Zap } from 'lucide-react';
+import { Brain, Flame, Target } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 
 interface FeaturesSectionProps {
@@ -8,22 +8,12 @@ interface FeaturesSectionProps {
 }
 
 const featureIcons = {
-  apiIntegration: Plug,
-  realTimeAnalytics: BarChart3,
-  advancedSecurity: Lock,
-  workflowAutomation: Zap,
-  teamCollaboration: Users,
-  mobileOptimized: Smartphone,
+  accuracyScore: Target,
+  energyMapping: Flame,
+  aiReflection: Brain,
 };
 
-const featureKeys = [
-  'apiIntegration',
-  'realTimeAnalytics',
-  'advancedSecurity',
-  'workflowAutomation',
-  'teamCollaboration',
-  'mobileOptimized',
-] as const;
+const featureKeys = ['accuracyScore', 'energyMapping', 'aiReflection'] as const;
 
 export async function FeaturesSection({ locale }: FeaturesSectionProps) {
   const t = await getTranslations({ locale, namespace: 'marketing' });
@@ -38,7 +28,7 @@ export async function FeaturesSection({ locale }: FeaturesSectionProps) {
           <p className="text-muted-foreground mt-4 mb-16 text-lg">{t('features.grid.subtitle')}</p>
         </div>
 
-        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3">
           {featureKeys.map((key) => {
             const Icon = featureIcons[key];
             return (

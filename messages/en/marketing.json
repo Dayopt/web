@@ -1,95 +1,66 @@
 {
   "marketing": {
     "hero": {
-      "title": "Modern SaaS Platform for Scalable Applications",
-      "subtitle": "Build, deploy, and scale your SaaS applications with Dayopt.",
-      "cta": "Start Building Today"
+      "title": "Timeboxing, made simple",
+      "subtitle": "Plan your day in blocks, execute with focus, and reflect to improve — all in one app.",
+      "cta": "Get Started Free"
     },
-    "features": {
-      "title": "Powerful Features for Modern SaaS",
-      "subtitle": "Everything you need to build and scale your SaaS application",
-      "badge": "Features",
-      "headline": "Everything you need to scale your business",
-      "description": "From powerful APIs to advanced analytics, Dayopt provides all the tools you need to build, deploy, and scale your applications with confidence.",
-      "startTrial": "Start Free Trial",
-      "scheduleDemo": "Schedule Demo",
-      "grid": {
-        "title": "Powerful features for modern teams",
-        "subtitle": "Everything you need to build, deploy, and scale your applications in one integrated platform."
-      },
+    "problem": {
+      "title": "Sound familiar?",
       "items": {
-        "apiIntegration": {
-          "title": "API Integration",
-          "description": "Connect with 100+ third-party services and build custom integrations with our powerful REST API."
+        "separateApps": {
+          "title": "Calendar and tasks live in separate apps",
+          "description": "You switch between tools to plan, but nothing stays in sync."
         },
-        "realTimeAnalytics": {
-          "title": "Real-time Analytics",
-          "description": "Get detailed insights into your application performance with comprehensive analytics and reporting."
+        "plansFallApart": {
+          "title": "Plans fall apart by midday",
+          "description": "You start the day with good intentions, but distractions take over."
         },
-        "advancedSecurity": {
-          "title": "Advanced Security",
-          "description": "Enterprise-grade security with SSL encryption, two-factor authentication, and compliance certifications."
-        },
-        "workflowAutomation": {
-          "title": "Workflow Automation",
-          "description": "Streamline your processes with powerful automation tools and custom workflow builders."
-        },
-        "teamCollaboration": {
-          "title": "Team Collaboration",
-          "description": "Work together seamlessly with real-time collaboration, comments, and team management features."
-        },
-        "mobileOptimized": {
-          "title": "Mobile Optimized",
-          "description": "Fully responsive design that works perfectly on all devices and screen sizes."
+        "noReview": {
+          "title": "No easy way to review how time was spent",
+          "description": "The day ends and you can't tell where the hours went."
         }
       }
     },
-    "about": {
-      "title": "About Us",
-      "subtitle": "Learn about our mission, team, and values. We create technology that empowers everyone to build a better future.",
-      "hero": {
-        "title": "About Us",
-        "description": "Dayopt is an innovative SaaS platform that supports corporate growth through the power of technology. Our mission is to realize a world where everyone can create a better future.",
-        "contactButton": "Contact Us",
-        "teamButton": "Meet the Team"
-      },
-      "mission": {
-        "title": "Our Mission",
-        "content": "Empowering Innovation Through Technology",
-        "description": "We believe that technology should be accessible, powerful, and intuitive. Our mission is to create tools that empower businesses to innovate, grow, and succeed in the digital age."
-      },
-      "vision": {
-        "title": "Our Vision",
-        "content": "A World Where Everyone Can Create",
-        "description": "We envision a future where advanced technology is within everyone's reach, enabling individuals and organizations to build solutions that make a positive impact on the world."
-      },
-      "values": {
-        "title": "Our Values",
-        "subtitle": "These values guide our decision-making and actions",
-        "items": {
-          "customerFirst": {
-            "title": "Customer First",
-            "description": "Our customers' success is our success. We always develop products and provide services from the customer's perspective."
-          },
-          "innovation": {
-            "title": "Innovation",
-            "description": "We continue to follow the latest technology trends and provide innovative solutions that lead the industry."
-          },
-          "transparency": {
-            "title": "Transparency",
-            "description": "We value open and transparent communication and build trust relationships."
-          },
-          "excellence": {
-            "title": "Excellence",
-            "description": "We continuously improve and learn to provide high-quality products and services."
-          }
+    "solution": {
+      "title": "How Dayopt works",
+      "subtitle": "Three steps to take control of your day.",
+      "steps": {
+        "plan": {
+          "number": "01",
+          "title": "Plan",
+          "description": "Drag tasks onto your calendar as timeboxes. Set how long each block should take."
+        },
+        "execute": {
+          "number": "02",
+          "title": "Execute",
+          "description": "Work through your blocks one at a time. Track actual time as you go."
+        },
+        "reflect": {
+          "number": "03",
+          "title": "Reflect",
+          "description": "See planned vs actual. Identify patterns and improve your next day."
         }
+      }
+    },
+    "features": {
+      "grid": {
+        "title": "What makes Dayopt different",
+        "subtitle": "Features you won't find in a regular calendar or to-do app."
       },
-      "cta": {
-        "title": "Let's Create the Future Together",
-        "description": "Unlock your business potential with our platform. Start today and take the first step toward digital transformation.",
-        "startButton": "Start Free",
-        "featuresButton": "View Features"
+      "items": {
+        "accuracyScore": {
+          "title": "Accuracy Score",
+          "description": "See how closely your day matched your plan. A simple metric that drives continuous improvement."
+        },
+        "energyMapping": {
+          "title": "Energy Mapping",
+          "description": "Log your focus and energy levels throughout the day. Discover when you do your best work."
+        },
+        "aiReflection": {
+          "title": "AI Reflection",
+          "description": "Get personalized insights and suggestions based on your patterns. Improve without the guesswork."
+        }
       }
     },
     "pricing": {
