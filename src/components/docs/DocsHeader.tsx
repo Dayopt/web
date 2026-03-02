@@ -1,10 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Link } from '@/i18n/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface DocsHeaderProps {
@@ -18,11 +19,11 @@ export function DocsHeader({ onMobileMenuToggle, mobileMenuOpen }: DocsHeaderPro
   return (
     <header className="bg-background border-border z-dropdown w-full flex-shrink-0 border-b">
       <nav
-        className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 lg:px-6"
+        className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 lg:px-6"
         aria-label={t('aria.docsNavigation')}
       >
         {/* Left: Mobile menu toggle + Logo */}
-        <div className="flex items-center gap-4 lg:flex-1">
+        <div className="flex shrink-0 items-center gap-4">
           {/* Mobile menu toggle */}
           <Button
             variant="ghost"
@@ -48,23 +49,24 @@ export function DocsHeader({ onMobileMenuToggle, mobileMenuOpen }: DocsHeaderPro
           </div>
         </div>
 
-        {/* Center: Navigation (Desktop only) */}
-        <div className="hidden lg:flex lg:items-center lg:gap-x-1">
-          <Link
-            href="/blog"
-            className="text-muted-foreground hover:bg-state-hover hover:text-foreground rounded-lg px-4 py-2 text-base font-bold transition-colors"
-          >
-            {t('navigation.blog')}
-          </Link>
+        {/* Center: Search */}
+        <div className="relative hidden max-w-80 min-w-0 flex-1 lg:block">
+          <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+          <Input type="search" placeholder={t('actions.search')} size="sm" className="pl-8" />
         </div>
 
         {/* Right: Actions */}
-        <div className="flex flex-1 items-center justify-end gap-0">
+        <div className="ml-auto flex shrink-0 items-center gap-0">
           <ThemeToggle />
           <LanguageSwitcher />
-          <Button variant="outline" size="default" asChild className="ml-2 hidden sm:inline-flex">
-            <Link href="/login">{t('actions.login')}</Link>
-          </Button>
+          <div className="ml-2 hidden items-center gap-x-2 sm:flex">
+            <Button variant="ghost" size="default" asChild>
+              <Link href="/login">{t('actions.login')}</Link>
+            </Button>
+            <Button variant="primary" size="default" asChild>
+              <Link href="/signup">{t('actions.signup')}</Link>
+            </Button>
+          </div>
         </div>
       </nav>
     </header>
