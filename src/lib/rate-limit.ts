@@ -6,54 +6,85 @@ import { Redis } from '@upstash/redis';
  * レート制限設定
  *
  * Upstash Redis を使用したレート制限。
- * 環境変数が設定されていない場合はメモリベースのストアを使用（開発環境用）
+ * 環境変数が設定されていない場合はレート制限をスキップ（開発環境用）
  */
 
-// Redis クライアント（本番環境）
-const redis =
-  env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
-    ? new Redis({
-        url: env.UPSTASH_REDIS_REST_URL,
-        token: env.UPSTASH_REDIS_REST_TOKEN,
-      })
-    : undefined;
+const hasRedis = !!(env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN);
+
+// Redis クライアント（Upstash 設定時のみ）
+const redis = hasRedis
+  ? new Redis({
+      url: env.UPSTASH_REDIS_REST_URL!,
+      token: env.UPSTASH_REDIS_REST_TOKEN!,
+    })
+  : undefined;
+
+/**
+ * レート制限の結果型（Ratelimit.limit() の戻り値と互換）
+ */
+type RatelimitResponse = Awaited<ReturnType<Ratelimit['limit']>>;
+
+/**
+ * Redis 未設定時のパススルー結果
+ */
+const passthroughResult: RatelimitResponse = {
+  success: true,
+  limit: 0,
+  remaining: 0,
+  reset: 0,
+  pending: Promise.resolve(),
+  reason: undefined,
+};
+
+/**
+ * Ratelimit または Redis 未設定時のパススルーラッパー
+ */
+function createRateLimiter(
+  limiter: ReturnType<typeof Ratelimit.slidingWindow>,
+  prefix: string,
+): { limit: (identifier: string) => Promise<RatelimitResponse> } {
+  if (!redis) {
+    return { limit: async () => passthroughResult };
+  }
+
+  return new Ratelimit({
+    redis,
+    limiter,
+    analytics: false,
+    prefix,
+  });
+}
 
 /**
  * コンタクトフォーム用レート制限
  *
  * - 同一IPから5分間に3回まで
- * - 本番環境では Redis、開発環境ではメモリベース
+ * - Upstash 未設定時はレート制限なし
  */
-export const contactRateLimit = new Ratelimit({
-  redis: redis as Redis,
-  limiter: Ratelimit.slidingWindow(3, '5 m'),
-  analytics: true,
-  prefix: 'ratelimit:contact',
-});
+export const contactRateLimit = createRateLimiter(
+  Ratelimit.slidingWindow(3, '5 m'),
+  'ratelimit:contact',
+);
 
 /**
  * 検索API用レート制限
  *
  * - 同一IPから1分間に30回まで
  */
-export const searchRateLimit = new Ratelimit({
-  redis: redis as Redis,
-  limiter: Ratelimit.slidingWindow(30, '1 m'),
-  analytics: true,
-  prefix: 'ratelimit:search',
-});
+export const searchRateLimit = createRateLimiter(
+  Ratelimit.slidingWindow(30, '1 m'),
+  'ratelimit:search',
+);
 
 /**
  * タグAPI用レート制限
  *
  * - 同一IPから1分間に60回まで
  */
-export const tagsRateLimit = new Ratelimit({
-  redis: redis as Redis,
-  limiter: Ratelimit.slidingWindow(60, '1 m'),
-  analytics: true,
-  prefix: 'ratelimit:tags',
-});
+export const tagsRateLimit = createRateLimiter(
+  Ratelimit.slidingWindow(60, '1 m'),
+  'ratelimit:tags',
+);
 
 /**
  * IP アドレスの取得
