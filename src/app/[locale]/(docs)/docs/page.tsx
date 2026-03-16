@@ -1,8 +1,8 @@
 import { Heading, Text } from '@/components/ui/typography';
-import { Link } from '@/i18n/navigation';
-import { routing } from '@/i18n/routing';
-import { generateSEOMetadata } from '@/lib/metadata';
-import { generateDocsNavigation } from '@/lib/navigation';
+import { Link } from '@/platform/i18n/navigation';
+import { routing } from '@/platform/i18n/routing';
+import { generateSEOMetadata } from '@/platform/seo/metadata';
+import { generateDocsNavigation } from '@/shell/navigation';
 import { BookOpen, Code, FileText, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';

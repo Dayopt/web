@@ -1,12 +1,14 @@
-import { FeaturesSection } from '@/components/marketing/FeaturesSection';
-import { PricingSection } from '@/components/marketing/PricingSection';
-import { ProblemSection } from '@/components/marketing/ProblemSection';
-import { SolutionSection } from '@/components/marketing/SolutionSection';
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
-import { Link } from '@/i18n/navigation';
-import { routing } from '@/i18n/routing';
-import { generateSEOMetadata } from '@/lib/metadata';
+import {
+  FeaturesSection,
+  PricingSection,
+  ProblemSection,
+  SolutionSection,
+} from '@/features/marketing';
+import { Link } from '@/platform/i18n/navigation';
+import { routing } from '@/platform/i18n/routing';
+import { generateSEOMetadata } from '@/platform/seo/metadata';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 

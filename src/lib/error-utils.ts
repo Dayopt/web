@@ -4,7 +4,7 @@
  * アプリケーション全体で一貫したエラーハンドリングを提供します。
  */
 
-import { isDevelopment } from '@/config/env';
+import { isDevelopment } from '@/platform/config/env';
 
 /**
  * エラーカテゴリ

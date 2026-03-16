@@ -1,8 +1,7 @@
-import { FilteredBlogClient } from '@/components/blog/FilteredBlogClient';
 import { Container } from '@/components/ui/container';
-import { routing } from '@/i18n/routing';
-import { getAllBlogPostMetas, getAllTagNames } from '@/lib/blog';
-import { generateSEOMetadata } from '@/lib/metadata';
+import { FilteredBlogClient, getAllBlogPostMetas, getAllTagNames } from '@/features/blog';
+import { routing } from '@/platform/i18n/routing';
+import { generateSEOMetadata } from '@/platform/seo/metadata';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 

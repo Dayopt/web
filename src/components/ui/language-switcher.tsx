@@ -7,8 +7,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { usePathname, useRouter } from '@/i18n/navigation';
-import { routing, type Locale } from '@/i18n/routing';
+import { usePathname, useRouter } from '@/platform/i18n/navigation';
+import { routing, type Locale } from '@/platform/i18n/routing';
 import { ChevronDown, Globe } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import * as React from 'react';

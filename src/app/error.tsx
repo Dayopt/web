@@ -2,7 +2,7 @@
 
 import { ErrorLayout } from '@/components/errors/ErrorLayout';
 import { Button } from '@/components/ui/button';
-import { isDevelopment } from '@/config/env';
+import { isDevelopment } from '@/platform/config/env';
 import Link from 'next/link';
 import { useEffect } from 'react';
 

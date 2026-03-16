@@ -1,4 +1,4 @@
-import { env, getAppUrl } from '@/config/env';
+import { env, getAppUrl } from '@/platform/config/env';
 import { Metadata } from 'next';
 
 interface SEOProps {

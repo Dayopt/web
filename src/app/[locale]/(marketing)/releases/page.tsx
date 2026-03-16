@@ -1,8 +1,7 @@
-import { ReleasesClient } from '@/components/releases/ReleasesClient';
 import { Container } from '@/components/ui/container';
-import { routing } from '@/i18n/routing';
-import { generateSEOMetadata } from '@/lib/metadata';
-import { getAllReleaseMetas, getAllReleaseTags } from '@/lib/releases';
+import { ReleasesClient, getAllReleaseMetas, getAllReleaseTags } from '@/features/releases';
+import { routing } from '@/platform/i18n/routing';
+import { generateSEOMetadata } from '@/platform/seo/metadata';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 

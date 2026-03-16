@@ -1,6 +1,6 @@
-import { apiError, apiSuccess, ErrorCode } from '@/lib/api-response';
-import { getClientIp, tagsRateLimit } from '@/lib/rate-limit';
-import { getAllTags } from '@/lib/tags-server';
+import { getAllTags } from '@/features/tags';
+import { apiError, apiSuccess, ErrorCode } from '@/platform/api/api-response';
+import { getClientIp, tagsRateLimit } from '@/platform/security/rate-limit';
 import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {

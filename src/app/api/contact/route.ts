@@ -1,7 +1,7 @@
-import { env } from '@/config/env';
-import { apiError, apiSuccess, ErrorCode } from '@/lib/api-response';
-import { verifyCsrfToken } from '@/lib/csrf-protection';
-import { contactRateLimit, getClientIp } from '@/lib/rate-limit';
+import { apiError, apiSuccess, ErrorCode } from '@/platform/api/api-response';
+import { env } from '@/platform/config/env';
+import { verifyCsrfToken } from '@/platform/security/csrf-protection';
+import { contactRateLimit, getClientIp } from '@/platform/security/rate-limit';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 

@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
 import { Heading, Text } from '@/components/ui/typography';
-import { isDevelopment } from '@/config/env';
+import { isDevelopment } from '@/platform/config/env';
 import { useEffect } from 'react';
 
 interface GlobalErrorProps {

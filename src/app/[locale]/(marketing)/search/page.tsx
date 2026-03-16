@@ -6,19 +6,10 @@ import { Container } from '@/components/ui/container';
 import { Input } from '@/components/ui/input';
 import { Heading, Text } from '@/components/ui/typography';
 import { Highlight } from '@/lib/highlight';
+import type { SearchResultItem } from '@/types/api';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-
-interface SearchResultItem {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  type: 'docs' | 'blog' | 'release';
-  breadcrumbs: string[];
-  lastModified: string;
-}
 
 function SearchResults() {
   const searchParams = useSearchParams();
@@ -255,7 +246,7 @@ function SearchResults() {
                                 : 'リリース'}
                           </Badge>
                           <span className="text-muted-foreground text-xs">
-                            {result.breadcrumbs.join(' › ')}
+                            {result.breadcrumbs?.join(' › ')}
                           </span>
                         </div>
                       </div>

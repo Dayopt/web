@@ -1,5 +1,5 @@
-import { apiError, ErrorCode } from '@/lib/api-response';
-import { getClientIp, searchRateLimit } from '@/lib/rate-limit';
+import { apiError, ErrorCode } from '@/platform/api/api-response';
+import { getClientIp, searchRateLimit } from '@/platform/security/rate-limit';
 import fs from 'fs';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';

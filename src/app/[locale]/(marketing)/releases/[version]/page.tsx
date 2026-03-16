@@ -1,9 +1,14 @@
 import { createMDXComponents } from '@/components/content/ContentMDXComponents';
-import { ReleaseCard } from '@/components/releases/ReleaseCard';
-import { ReleaseHeader } from '@/components/releases/ReleaseHeader';
 import { Container } from '@/components/ui/container';
-import { Link } from '@/i18n/navigation';
-import { changeTypes, getAllReleaseMetas, getRelatedReleases, getRelease } from '@/lib/releases';
+import {
+  ReleaseCard,
+  ReleaseHeader,
+  changeTypes,
+  getAllReleaseMetas,
+  getRelatedReleases,
+  getRelease,
+} from '@/features/releases';
+import { Link } from '@/platform/i18n/navigation';
 import { ArrowLeft, ArrowLeftRight, Info, TriangleAlert } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
