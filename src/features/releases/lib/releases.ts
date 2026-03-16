@@ -1,13 +1,13 @@
-import fs from 'fs';
-import matter from 'gray-matter';
-import path from 'path';
-import { cache } from 'react';
 import {
   type ReleaseFrontMatter as ReleaseFrontMatterType,
   parseFrontMatter,
   releaseFrontMatterSchema,
-} from './content-schemas';
-import { calculateReadingTime } from './utils';
+} from '@/lib/content-schemas';
+import { calculateReadingTime } from '@/lib/utils';
+import fs from 'fs';
+import matter from 'gray-matter';
+import path from 'path';
+import { cache } from 'react';
 
 export type ReleaseFrontMatter = ReleaseFrontMatterType;
 

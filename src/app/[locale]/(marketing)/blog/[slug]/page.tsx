@@ -1,13 +1,17 @@
-import { RelatedPosts } from '@/components/blog/RelatedPosts';
-import { ShareButton } from '@/components/blog/ShareButton';
 import { createMDXComponents } from '@/components/content/ContentMDXComponents';
-import { ClientTableOfContents } from '@/components/docs/ClientTableOfContents';
 import { Container } from '@/components/ui/container';
 import { TagPill } from '@/components/ui/tag-pill';
-import { Link } from '@/i18n/navigation';
-import { routing } from '@/i18n/routing';
-import { getAllBlogPostMetas, getBlogPost, getRelatedPosts } from '@/lib/blog';
-import { generateSEOMetadata } from '@/lib/metadata';
+import {
+  RelatedPosts,
+  ShareButton,
+  getAllBlogPostMetas,
+  getBlogPost,
+  getRelatedPosts,
+} from '@/features/blog';
+import { ClientTableOfContents } from '@/features/docs';
+import { Link } from '@/platform/i18n/navigation';
+import { routing } from '@/platform/i18n/routing';
+import { generateSEOMetadata } from '@/platform/seo/metadata';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';

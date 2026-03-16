@@ -5,11 +5,11 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { SearchInput } from '@/components/ui/search-input';
 import { TagPill } from '@/components/ui/tag-pill';
 import { Heading } from '@/components/ui/typography';
-import { Link } from '@/i18n/navigation';
-import type { TaggedContent } from '@/lib/tags-server';
+import { Link } from '@/platform/i18n/navigation';
 import { BookOpen, FileText, Filter, Megaphone, TrendingUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import type { TaggedContent } from '../lib/tags-server';
 
 // 統一コンテンツアイテム（TaggedContentにhrefを追加）
 interface UnifiedContentItem extends TaggedContent {

@@ -2,10 +2,10 @@
 
 import { Container } from '@/components/ui/container';
 import { Heading, Text } from '@/components/ui/typography';
-import { Link } from '@/i18n/navigation';
-import { BlogPostMeta } from '@/lib/blog';
+import { Link } from '@/platform/i18n/navigation';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { BlogPostMeta } from '../lib/blog';
 import { PostCard } from './PostCard';
 
 interface RelatedPostsProps {

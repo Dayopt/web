@@ -1,8 +1,8 @@
-import { getAllBlogPostMetas } from '@/lib/blog';
+import { getAllBlogPostMetas } from '@/features/blog';
+import { getAllReleaseMetas } from '@/features/releases';
+import { getAllTags } from '@/features/tags';
 import { getAllContent } from '@/lib/mdx';
-import { siteConfig } from '@/lib/metadata';
-import { getAllReleaseMetas } from '@/lib/releases';
-import { getAllTags } from '@/lib/tags-server';
+import { siteConfig } from '@/platform/seo/metadata';
 import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

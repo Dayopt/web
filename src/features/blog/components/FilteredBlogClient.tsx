@@ -1,17 +1,17 @@
 'use client';
 
-import { BlogFilters, type BlogFilterState } from '@/components/blog/BlogFilters';
-import { BlogSkeleton } from '@/components/blog/BlogSkeleton';
-import { PostCard } from '@/components/blog/PostCard';
 import { ContentHeader } from '@/components/content/ContentHeader';
 import { ContentPagination } from '@/components/ui/content-pagination';
 import { EmptyState } from '@/components/ui/empty-state';
 import { SearchInput } from '@/components/ui/search-input';
-import type { BlogPostMeta } from '@/lib/blog';
 import { Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import type { BlogPostMeta } from '../lib/blog';
+import { BlogFilters, type BlogFilterState } from './BlogFilters';
+import { BlogSkeleton } from './BlogSkeleton';
+import { PostCard } from './PostCard';
 
 const POSTS_PER_PAGE = 12;
 

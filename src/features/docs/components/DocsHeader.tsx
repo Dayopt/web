@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Link } from '@/i18n/navigation';
+import { Link } from '@/platform/i18n/navigation';
 import { Menu, Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

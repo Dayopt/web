@@ -2,7 +2,7 @@
 
 import { TagPill } from '@/components/ui/tag-pill';
 import { Heading } from '@/components/ui/typography';
-import { Link } from '@/i18n/navigation';
+import { Link } from '@/platform/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 // Local type definitions to avoid importing server-only lib

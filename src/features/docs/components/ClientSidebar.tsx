@@ -1,6 +1,6 @@
 'use client';
 
-import { type NavigationItem, type NavigationSection } from '@/lib/navigation';
+import { type NavigationItem, type NavigationSection } from '@/shell/navigation';
 import {
   BarChart3,
   Bell,

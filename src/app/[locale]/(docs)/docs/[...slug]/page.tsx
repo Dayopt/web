@@ -1,12 +1,9 @@
-import { Breadcrumbs } from '@/components/docs/Breadcrumbs';
-import { ClientTableOfContents } from '@/components/docs/ClientTableOfContents';
-import { mdxComponents } from '@/components/docs/MDXComponents';
-import { PageNavigation } from '@/components/docs/PageNavigation';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { TagPill } from '@/components/ui/tag-pill';
 import { Heading, Text } from '@/components/ui/typography';
-import { Link } from '@/i18n/navigation';
+import { Breadcrumbs, ClientTableOfContents, mdxComponents, PageNavigation } from '@/features/docs';
 import { getAllContent, getMDXContentForRSC, getRelatedContent } from '@/lib/mdx';
+import { Link } from '@/platform/i18n/navigation';
 import { ContentData } from '@/types/content';
 import { Tag } from 'lucide-react';
 import { Metadata } from 'next';

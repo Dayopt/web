@@ -1,8 +1,8 @@
 'use client';
 
-import { TocItem, generateTableOfContents, truncateHeading } from '@/lib/toc';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { TocItem, generateTableOfContents, truncateHeading } from '../lib/toc';
 
 interface AutoTableOfContentsProps {
   content: string;

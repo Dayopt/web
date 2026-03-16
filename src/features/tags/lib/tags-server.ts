@@ -1,9 +1,9 @@
+import { getAllBlogPostMetas } from '@/features/blog/lib/blog';
+import { getAllReleaseMetas } from '@/features/releases/lib/releases';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 import { cache } from 'react';
-import { getAllBlogPostMetas } from './blog';
-import { getAllReleaseMetas } from './releases';
 
 export interface TagCount {
   tag: string;

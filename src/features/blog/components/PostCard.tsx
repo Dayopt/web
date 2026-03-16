@@ -1,7 +1,7 @@
 import { TagPill } from '@/components/ui/tag-pill';
 import { Heading } from '@/components/ui/typography';
-import { Link } from '@/i18n/navigation';
-import { BlogPostMeta } from '@/lib/blog';
+import { Link } from '@/platform/i18n/navigation';
+import { BlogPostMeta } from '../lib/blog';
 import { BlogImage } from './BlogImage';
 
 interface PostCardProps {
