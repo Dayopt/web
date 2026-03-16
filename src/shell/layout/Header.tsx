@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
+import { Link } from '@/platform/i18n/navigation';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Menu, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';

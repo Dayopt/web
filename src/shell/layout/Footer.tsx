@@ -2,7 +2,7 @@
 
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Link } from '@/i18n/navigation';
+import { Link } from '@/platform/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 // SNS Icons

@@ -1,7 +1,6 @@
-import { ClientSidebar } from '@/components/docs/ClientSidebar';
-import { DocsHeader } from '@/components/docs/DocsHeader';
-import { Footer } from '@/components/layout/Footer';
-import { generateDocsNavigation } from '@/lib/navigation';
+import { ClientSidebar, DocsHeader } from '@/features/docs';
+import { Footer } from '@/shell/layout/Footer';
+import { generateDocsNavigation } from '@/shell/navigation';
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   const navigation = generateDocsNavigation();

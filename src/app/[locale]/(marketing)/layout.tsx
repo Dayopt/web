@@ -1,5 +1,5 @@
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
+import { Footer } from '@/shell/layout/Footer';
+import { Header } from '@/shell/layout/Header';
 
 interface MarketingLayoutProps {
   children: React.ReactNode;
