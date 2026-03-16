@@ -106,8 +106,8 @@
         "title": "Contact Us",
         "subtitle": "If you have any questions or inquiries, please feel free to contact us. Our expert staff will respond promptly.",
         "name": {
-          "label": "Name",
-          "support": "e.g., John Doe (50 characters max)",
+          "label": "Name / Nickname",
+          "support": "Your name or nickname (50 characters max)",
           "required": "Please enter your name",
           "maxLength": "Name must be 50 characters or less"
         },
@@ -116,23 +116,14 @@
           "support": "e.g., example@email.com",
           "invalid": "Please enter a valid email address"
         },
-        "subject": {
-          "label": "Subject",
-          "support": "Briefly describe your inquiry (100 characters max)",
-          "required": "Please enter a subject",
-          "maxLength": "Subject must be 100 characters or less"
-        },
         "category": {
           "label": "Inquiry Type",
-          "support": "Please select the category that best matches your inquiry",
+          "support": "Select the type of inquiry",
           "required": "Please select an inquiry type",
-          "placeholder": "Select an option",
           "options": {
-            "general": "General Inquiry",
-            "technical": "Technical Support",
-            "billing": "Billing & Payments",
-            "partnership": "Partnership & Collaboration",
-            "feedback": "Feedback & Suggestions",
+            "bug": "Bug Report",
+            "feature": "Feature Request",
+            "question": "Question",
             "other": "Other"
           }
         },
@@ -142,17 +133,6 @@
           "minLength": "Message must be at least 10 characters",
           "maxLength": "Message must be 1000 characters or less",
           "charCount": "characters"
-        },
-        "attachment": {
-          "label": "Attachment",
-          "support": "You can attach images or PDF files (max 5MB, optional)",
-          "button": "Choose File",
-          "noFile": "No file selected",
-          "remove": "Remove",
-          "invalidType": "Supported formats: PNG, JPG, GIF, PDF",
-          "tooLarge": "File size must be 5MB or less",
-          "dropzone": "or drag & drop file here",
-          "dropzoneActive": "Drop your file here"
         },
         "submit": "Send Message",
         "submitting": "Sending...",

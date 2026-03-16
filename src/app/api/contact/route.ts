@@ -10,7 +10,6 @@ const contactSchema = z.object({
   name: z.string().min(1).max(50),
   email: z.string().email(),
   category: z.string().min(1),
-  subject: z.string().min(1).max(100),
   message: z.string().min(10).max(1000),
 });
 
@@ -49,16 +48,13 @@ export async function POST(request: NextRequest) {
     }
 
     const categoryLabels: Record<string, string> = {
-      general: '一般的なお問い合わせ',
-      technical: '技術的なお問い合わせ',
-      billing: '請求・お支払い',
-      partnership: '提携・パートナーシップ',
-      feedback: 'フィードバック',
+      bug: 'バグ報告',
+      feature: '機能リクエスト',
+      question: '質問',
       other: 'その他',
     };
 
     // プライバシー保護: メールアドレスをマスク
-    // Strict モードではメールアドレスを完全にマスク、通常モードでは部分マスク
     const displayEmail = isStrictPrivacyMode() ? '***@***' : maskEmail(data.email);
 
     const issueBody = `## お問い合わせ内容
@@ -98,7 +94,7 @@ ${data.message}
           Accept: 'application/vnd.github.v3+json',
         },
         body: JSON.stringify({
-          title: `[Contact] ${data.subject}`,
+          title: `[Contact] ${categoryLabels[data.category] || data.category} - ${data.name}`,
           body: issueBody,
           labels: ['contact', 'triage'],
         }),
@@ -122,14 +118,12 @@ ${data.message}
     } catch (fetchError) {
       clearTimeout(timeoutId);
 
-      // タイムアウトエラー
       if (fetchError instanceof Error && fetchError.name === 'AbortError') {
         return apiError('Request timeout. Please try again later.', 504, {
           code: ErrorCode.TIMEOUT,
         });
       }
 
-      // その他の fetch エラー
       return apiError('Failed to submit contact request', 500, {
         code: ErrorCode.EXTERNAL_SERVICE_ERROR,
       });
