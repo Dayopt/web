@@ -162,3 +162,4 @@ public/search-index.json
 
 # Project specific
 memo/
+.env*.local
