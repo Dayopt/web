@@ -1,4 +1,4 @@
-import { env } from '@/config/env';
+import { env } from '@/platform/config/env';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 

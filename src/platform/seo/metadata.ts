@@ -1,4 +1,4 @@
-import { env, getSiteUrl } from '@/config/env';
+import { env, getSiteUrl } from '@/platform/config/env';
 import { Metadata } from 'next';
 
 export interface SEOData {
