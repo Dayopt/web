@@ -3,41 +3,25 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from '@/i18n/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CheckCircle, Paperclip, X } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'application/pdf'];
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
-const CATEGORY_OPTIONS = [
-  'general',
-  'technical',
-  'billing',
-  'partnership',
-  'feedback',
-  'other',
-] as const;
+const CATEGORY_OPTIONS = ['bug', 'feature', 'question', 'other'] as const;
 
 function createContactSchema(t: (key: string) => string) {
   return z.object({
     name: z.string().min(1, t('form.name.required')).max(50, t('form.name.maxLength')),
     email: z.string().min(1, t('form.email.invalid')).email(t('form.email.invalid')),
     category: z.string().min(1, t('form.category.required')),
-    subject: z.string().min(1, t('form.subject.required')).max(100, t('form.subject.maxLength')),
     message: z.string().min(10, t('form.message.minLength')).max(1000, t('form.message.maxLength')),
+    website: z.string().max(0).optional(),
   });
 }
 
@@ -70,10 +54,6 @@ export function ContactForm() {
   const t = useTranslations('marketing.contact');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [attachment, setAttachment] = useState<File | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const contactSchema = createContactSchema(t);
 
@@ -90,8 +70,8 @@ export function ContactForm() {
       name: '',
       email: '',
       category: '',
-      subject: '',
       message: '',
+      website: '',
     },
   });
 
@@ -103,9 +83,7 @@ export function ContactForm() {
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
@@ -119,74 +97,10 @@ export function ContactForm() {
     }
   }
 
-  const validateAndSetFile = useCallback(
-    (file: File | null) => {
-      setFileError(null);
-
-      if (!file) {
-        setAttachment(null);
-        return;
-      }
-
-      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        setFileError(t('form.attachment.invalidType'));
-        setAttachment(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        return;
-      }
-
-      if (file.size > MAX_FILE_SIZE) {
-        setFileError(t('form.attachment.tooLarge'));
-        setAttachment(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        return;
-      }
-
-      setAttachment(file);
-    },
-    [t],
-  );
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0] ?? null;
-    validateAndSetFile(file);
-  }
-
-  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    event.stopPropagation();
-    setIsDragOver(true);
-  }
-
-  function handleDragLeave(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    event.stopPropagation();
-    setIsDragOver(false);
-  }
-
-  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    event.stopPropagation();
-    setIsDragOver(false);
-
-    const file = event.dataTransfer.files?.[0] ?? null;
-    validateAndSetFile(file);
-  }
-
-  function handleRemoveFile() {
-    setAttachment(null);
-    setFileError(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  }
-
   function handleReset() {
     reset();
     setIsSubmitted(false);
     setSubmitError(null);
-    setAttachment(null);
-    setFileError(null);
-    setIsDragOver(false);
-    if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
   if (isSubmitted) {
@@ -247,7 +161,7 @@ export function ContactForm() {
 
       {/* 問い合わせ種別 */}
       <div className="space-y-2">
-        <Label htmlFor="category">
+        <Label>
           {t('form.category.label')}
           <RequiredBadge />
         </Label>
@@ -256,45 +170,34 @@ export function ContactForm() {
           name="category"
           control={control}
           render={({ field }) => (
-            <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger
-                id="category"
-                aria-required="true"
-                aria-invalid={!!errors.category}
-                aria-describedby={
-                  errors.category ? 'category-error category-support' : 'category-support'
-                }
-              >
-                <SelectValue placeholder={t('form.category.placeholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                {CATEGORY_OPTIONS.map((option) => (
-                  <SelectItem key={option} value={option}>
+            <RadioGroup
+              onValueChange={field.onChange}
+              value={field.value}
+              aria-required="true"
+              aria-invalid={!!errors.category}
+              aria-describedby={
+                errors.category ? 'category-error category-support' : 'category-support'
+              }
+              className="grid grid-cols-2 gap-4"
+            >
+              {CATEGORY_OPTIONS.map((option) => (
+                <div key={option} className="flex items-center gap-2">
+                  <RadioGroupItem value={option} id={`category-${option}`} />
+                  <Label htmlFor={`category-${option}`} className="font-normal">
                     {t(`form.category.options.${option}`)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
           )}
         />
         {errors.category && <ErrorText id="category-error">{errors.category.message}</ErrorText>}
       </div>
 
-      {/* 件名 */}
-      <div className="space-y-2">
-        <Label htmlFor="subject">
-          {t('form.subject.label')}
-          <RequiredBadge />
-        </Label>
-        <SupportText id="subject-support">{t('form.subject.support')}</SupportText>
-        <Input
-          id="subject"
-          aria-required="true"
-          aria-invalid={!!errors.subject}
-          aria-describedby={errors.subject ? 'subject-error subject-support' : 'subject-support'}
-          {...register('subject')}
-        />
-        {errors.subject && <ErrorText id="subject-error">{errors.subject.message}</ErrorText>}
+      {/* Honeypot（bot対策・非表示フィールド） */}
+      <div className="absolute -left-[9999px]" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register('website')} />
       </div>
 
       {/* メッセージ */}
@@ -318,82 +221,6 @@ export function ContactForm() {
             {messageValue.length}/1000 {t('form.message.charCount')}
           </span>
         </div>
-      </div>
-
-      {/* ファイル添付（デジタル庁ガイドライン準拠） */}
-      <div className="space-y-2">
-        <Label htmlFor="attachment">{t('form.attachment.label')}</Label>
-        <SupportText id="attachment-support">{t('form.attachment.support')}</SupportText>
-
-        {/* 隠しファイル入力 */}
-        <input
-          ref={fileInputRef}
-          id="attachment"
-          type="file"
-          accept=".png,.jpg,.jpeg,.gif,.pdf"
-          onChange={handleFileChange}
-          className="sr-only"
-          aria-describedby={
-            fileError ? 'attachment-error attachment-support' : 'attachment-support'
-          }
-        />
-
-        {/* ドロップエリア（ボタンを包含する構造） */}
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          className={`rounded-lg border p-4 transition-colors ${
-            isDragOver
-              ? 'border-success bg-muted'
-              : fileError
-                ? 'border-destructive bg-input'
-                : 'border-input bg-input'
-          }`}
-        >
-          {/* ファイル選択ボタン */}
-          <div className="mb-4">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Paperclip className="mr-2 size-4" aria-hidden="true" />
-              {t('form.attachment.button')}
-            </Button>
-          </div>
-
-          {/* ドラッグ&ドロップ案内テキスト */}
-          <p className={`text-sm ${isDragOver ? 'text-success' : 'text-muted-foreground'}`}>
-            {isDragOver ? t('form.attachment.dropzoneActive') : t('form.attachment.dropzone')}
-          </p>
-        </div>
-
-        {/* 選択済みファイル表示 */}
-        {attachment && (
-          <div className="bg-muted border-border flex items-center gap-2 rounded-lg border px-4 py-2">
-            <Paperclip className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
-            <span className="text-foreground min-w-0 flex-1 truncate text-sm">
-              {attachment.name}
-            </span>
-            <button
-              type="button"
-              onClick={handleRemoveFile}
-              className="text-muted-foreground hover:text-destructive shrink-0 p-1 transition-colors"
-              aria-label={t('form.attachment.remove')}
-            >
-              <X className="size-4" aria-hidden="true" />
-            </button>
-          </div>
-        )}
-
-        {/* ファイル未選択メッセージ */}
-        {!attachment && !fileError && (
-          <p className="text-muted-foreground text-sm">{t('form.attachment.noFile')}</p>
-        )}
-
-        {fileError && <ErrorText id="attachment-error">{fileError}</ErrorText>}
       </div>
 
       {/* 送信エラー */}

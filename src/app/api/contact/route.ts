@@ -1,7 +1,6 @@
 import { env } from '@/config/env';
 import { apiError, apiSuccess, ErrorCode } from '@/lib/api-response';
 import { verifyCsrfToken } from '@/lib/csrf-protection';
-import { isStrictPrivacyMode, maskEmail } from '@/lib/privacy';
 import { contactRateLimit, getClientIp } from '@/lib/rate-limit';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
@@ -10,8 +9,8 @@ const contactSchema = z.object({
   name: z.string().min(1).max(50),
   email: z.string().email(),
   category: z.string().min(1),
-  subject: z.string().min(1).max(100),
   message: z.string().min(10).max(1000),
+  website: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -41,6 +40,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = contactSchema.parse(body);
 
+    // Honeypot: bot が hidden フィールドに値を入れた場合、静かに成功を返す
+    if (data.website) {
+      return apiSuccess({ success: true });
+    }
+
     const githubToken = env.GITHUB_TOKEN;
     const githubRepo = env.GITHUB_CONTACT_REPO || 't3-nico/dayopt-web';
 
@@ -49,41 +53,25 @@ export async function POST(request: NextRequest) {
     }
 
     const categoryLabels: Record<string, string> = {
-      general: '一般的なお問い合わせ',
-      technical: '技術的なお問い合わせ',
-      billing: '請求・お支払い',
-      partnership: '提携・パートナーシップ',
-      feedback: 'フィードバック',
-      other: 'その他',
+      bug: 'Bug',
+      feature: 'Feature',
+      question: 'Question',
+      other: 'Other',
     };
 
-    // プライバシー保護: メールアドレスをマスク
-    // Strict モードではメールアドレスを完全にマスク、通常モードでは部分マスク
-    const displayEmail = isStrictPrivacyMode() ? '***@***' : maskEmail(data.email);
+    const categoryLabel = categoryLabels[data.category] || data.category;
 
-    const issueBody = `## お問い合わせ内容
+    const issueTitle = `[${categoryLabel}] ${data.name}`;
 
-**送信者:** ${data.name}
-**メールアドレス:** ${displayEmail}
-**カテゴリ:** ${categoryLabels[data.category] || data.category}
-
----
-
-${data.message}
-
----
-
-> [!WARNING]
-> **個人情報保護について**
->
-> この Issue には個人情報（名前、メールアドレス）が含まれています。
-> - リポジトリは **必ず private** に設定してください
-> - GDPR/個人情報保護法に準拠した取り扱いが必要です
-> - メールアドレス: \`${data.email}\` (実際の返信用)
-> - 作成日時: ${new Date().toISOString()}
-
-*このissueはコンタクトフォームから自動作成されました。*
-`;
+    const issueBody = [
+      `**Category:** ${categoryLabel}`,
+      `**From:** ${data.name}`,
+      `**Email:** ${data.email}`,
+      '',
+      '---',
+      '',
+      data.message,
+    ].join('\n');
 
     // タイムアウト設定（10秒）
     const controller = new AbortController();
@@ -98,9 +86,9 @@ ${data.message}
           Accept: 'application/vnd.github.v3+json',
         },
         body: JSON.stringify({
-          title: `[Contact] ${data.subject}`,
+          title: issueTitle,
           body: issueBody,
-          labels: ['contact', 'triage'],
+          labels: ['contact', data.category],
         }),
         signal: controller.signal,
       });
@@ -122,14 +110,12 @@ ${data.message}
     } catch (fetchError) {
       clearTimeout(timeoutId);
 
-      // タイムアウトエラー
       if (fetchError instanceof Error && fetchError.name === 'AbortError') {
         return apiError('Request timeout. Please try again later.', 504, {
           code: ErrorCode.TIMEOUT,
         });
       }
 
-      // その他の fetch エラー
       return apiError('Failed to submit contact request', 500, {
         code: ErrorCode.EXTERNAL_SERVICE_ERROR,
       });
