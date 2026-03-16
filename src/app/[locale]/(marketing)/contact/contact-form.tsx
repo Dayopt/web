@@ -21,6 +21,7 @@ function createContactSchema(t: (key: string) => string) {
     email: z.string().min(1, t('form.email.invalid')).email(t('form.email.invalid')),
     category: z.string().min(1, t('form.category.required')),
     message: z.string().min(10, t('form.message.minLength')).max(1000, t('form.message.maxLength')),
+    website: z.string().max(0).optional(),
   });
 }
 
@@ -70,6 +71,7 @@ export function ContactForm() {
       email: '',
       category: '',
       message: '',
+      website: '',
     },
   });
 
@@ -190,6 +192,12 @@ export function ContactForm() {
           )}
         />
         {errors.category && <ErrorText id="category-error">{errors.category.message}</ErrorText>}
+      </div>
+
+      {/* Honeypot（bot対策・非表示フィールド） */}
+      <div className="absolute -left-[9999px]" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register('website')} />
       </div>
 
       {/* メッセージ */}

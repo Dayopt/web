@@ -17,7 +17,12 @@ import { NextRequest } from 'next/server';
  * 開発環境: localhost
  */
 function getAllowedOrigins(): string[] {
-  const allowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+  ];
 
   // Vercel のプレビュー/本番環境
   if (env.VERCEL_URL) {
