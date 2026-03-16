@@ -7,11 +7,7 @@ import { cn } from '@/lib/utils';
 import { Calendar, Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-
-interface TagCount {
-  tag: string;
-  count: number;
-}
+import type { TagCount } from '../lib/releases';
 
 interface ReleaseFilterProps {
   tags: TagCount[];

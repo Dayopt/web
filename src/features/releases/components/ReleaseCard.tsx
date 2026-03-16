@@ -4,30 +4,10 @@ import { TagPill } from '@/components/ui/tag-pill';
 import { Heading } from '@/components/ui/typography';
 import { Link } from '@/platform/i18n/navigation';
 import { useTranslations } from 'next-intl';
-
-// Local type definitions to avoid importing server-only lib
-interface ReleaseFrontMatter {
-  version: string;
-  date: string;
-  title: string;
-  description: string;
-  tags: string[];
-  breaking: boolean;
-  featured: boolean;
-  prerelease?: boolean;
-  author?: string;
-  authorAvatar?: string;
-  coverImage?: string;
-}
-
-interface ReleasePostMeta {
-  frontMatter: ReleaseFrontMatter;
-  slug: string;
-  readingTime: number;
-}
+import type { ReleasePostMetaClient } from '../lib/releases';
 
 interface ReleaseCardProps {
-  release: ReleasePostMeta;
+  release: ReleasePostMetaClient;
   priority?: boolean;
   layout?: 'list' | 'vertical';
   locale?: string;

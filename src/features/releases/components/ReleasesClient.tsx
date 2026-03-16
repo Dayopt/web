@@ -7,39 +7,14 @@ import { FileText } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
+import type { ReleasePostMetaClient, TagCount } from '../lib/releases';
 import { ReleaseCard } from './ReleaseCard';
 import { ReleaseFilter } from './ReleaseFilter';
-
-// Define types locally to avoid importing from server-only lib
-interface ReleaseFrontMatter {
-  version: string;
-  date: string;
-  title: string;
-  description: string;
-  tags: string[];
-  breaking: boolean;
-  featured: boolean;
-  prerelease?: boolean;
-  author?: string;
-  authorAvatar?: string;
-  coverImage?: string;
-}
-
-interface ReleasePostMeta {
-  frontMatter: ReleaseFrontMatter;
-  slug: string;
-  readingTime: number;
-}
-
-interface TagCount {
-  tag: string;
-  count: number;
-}
 
 const RELEASES_PER_PAGE = 12;
 
 interface ReleasesClientProps {
-  initialReleases: ReleasePostMeta[];
+  initialReleases: ReleasePostMetaClient[];
   initialTags: TagCount[];
   locale: string;
 }
