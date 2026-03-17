@@ -11,7 +11,7 @@ export async function MissionSection({ locale }: MissionSectionProps) {
   const t = await getTranslations({ locale, namespace: 'marketing' });
 
   return (
-    <section id="mission" className="py-24">
+    <section id="mission" className="py-20">
       <Container>
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
@@ -51,13 +51,13 @@ export async function MissionSection({ locale }: MissionSectionProps) {
           </div>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-5xl gap-12 md:grid-cols-3">
+        <div className="border-border mx-auto mt-12 flex max-w-3xl flex-col items-center justify-center gap-6 border-t pt-8 sm:flex-row sm:gap-12">
           {valueKeys.map((key) => (
             <div key={key} className="text-center">
-              <h3 className="text-foreground text-xl font-bold">
+              <h3 className="text-foreground text-sm font-bold">
                 {t(`mission.values.${key}.title`)}
               </h3>
-              <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+              <p className="text-muted-foreground mt-1 text-xs">
                 {t(`mission.values.${key}.description`)}
               </p>
             </div>

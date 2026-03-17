@@ -20,20 +20,28 @@ export async function SolutionSection({ locale }: SolutionSectionProps) {
           <p className="text-muted-foreground mt-4 text-lg">{t('solution.subtitle')}</p>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-5xl gap-12 md:grid-cols-3">
-          {stepKeys.map((key) => (
-            <div key={key} className="text-center">
-              <div className="text-primary mx-auto mb-4 text-4xl font-bold">
-                {t(`solution.steps.${key}.number`)}
+        <div className="mx-auto mt-16 max-w-3xl space-y-12">
+          {stepKeys.map((key) => {
+            const isReflect = key === 'reflect';
+            return (
+              <div
+                key={key}
+                className={`flex items-start gap-6 ${isReflect ? 'bg-state-active/50 ring-primary/10 -mx-4 rounded-2xl p-4 ring-1 sm:-mx-6 sm:p-6' : ''}`}
+              >
+                <div className="text-primary shrink-0 text-3xl font-bold">
+                  {t(`solution.steps.${key}.number`)}
+                </div>
+                <div>
+                  <h3 className="text-foreground text-lg font-bold">
+                    {t(`solution.steps.${key}.title`)}
+                  </h3>
+                  <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                    {t(`solution.steps.${key}.description`)}
+                  </p>
+                </div>
               </div>
-              <h3 className="text-foreground text-xl font-bold">
-                {t(`solution.steps.${key}.title`)}
-              </h3>
-              <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-                {t(`solution.steps.${key}.description`)}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Container>
     </section>

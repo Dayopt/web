@@ -24,7 +24,7 @@ export async function PricingSection({ locale }: PricingSectionProps) {
   const proHighlights = t.raw('pricing.plans.pro.highlights') as string[];
 
   return (
-    <section id="pricing" className="py-24">
+    <section id="pricing" className="py-28">
       <Container>
         {/* Section Header */}
         <div className="mx-auto mb-16 max-w-4xl text-center">
