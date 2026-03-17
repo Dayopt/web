@@ -51,16 +51,23 @@
       "items": {
         "accuracyScore": {
           "title": "Accuracy Score",
-          "description": "See how closely your day matched your plan. A simple metric that drives continuous improvement."
+          "description": "See how closely your day matched your plan. A simple metric that drives continuous improvement.",
+          "example": "Plan 2 hours of deep work, complete 1.5 → score 75%. Track weekly trends to improve your estimates."
         },
         "energyMapping": {
           "title": "Energy Mapping",
-          "description": "Log your focus and energy levels throughout the day. Discover when you do your best work."
+          "description": "Log your focus and energy levels throughout the day. Discover when you do your best work.",
+          "example": "One tap after each block. After a week, see your peak hours and schedule important work there."
         },
         "aiReflection": {
           "title": "AI Reflection",
-          "description": "Get personalized insights and suggestions based on your patterns. Improve without the guesswork."
+          "description": "Get personalized insights and suggestions based on your patterns. Improve without the guesswork.",
+          "example": "Weekly summary: 'Deep work on Tuesday afternoons has a 90% completion rate. Consider blocking more.'"
         }
+      },
+      "integrations": {
+        "title": "Works with your tools",
+        "items": ["Google Calendar sync", "Keyboard shortcuts", "API access"]
       }
     },
     "mission": {
@@ -110,8 +117,8 @@
           "cta": "Get Started Free",
           "highlights": [
             "Unlimited projects & 100GB storage",
-            "Advanced analytics & custom reports",
-            "Team collaboration & custom integrations",
+            "AI-powered weekly insights",
+            "Advanced analytics & trends",
             "Priority support"
           ]
         }

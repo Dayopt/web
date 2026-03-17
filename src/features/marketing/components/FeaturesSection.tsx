@@ -46,10 +46,21 @@ export async function FeaturesSection({ locale }: FeaturesSectionProps) {
                   <CardDescription className="text-base leading-relaxed">
                     {t(`features.items.${key}.description`)}
                   </CardDescription>
+                  <p className="text-muted-foreground mt-4 text-sm italic">
+                    {t(`features.items.${key}.example`)}
+                  </p>
                 </CardContent>
               </Card>
             );
           })}
+        </div>
+
+        {/* Integrations */}
+        <div className="mx-auto mt-12 max-w-3xl text-center">
+          <p className="text-muted-foreground text-sm">
+            {t('features.integrations.title')}:{' '}
+            {(t.raw('features.integrations.items') as string[]).join(' · ')}
+          </p>
         </div>
       </Container>
     </section>
