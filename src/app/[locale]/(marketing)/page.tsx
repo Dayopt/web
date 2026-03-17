@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
 import {
+  AppPreviewMockup,
   FeaturesSection,
   MissionSection,
   PricingSection,
@@ -71,13 +72,12 @@ export default async function Home({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Screenshot */}
+            {/* App Preview */}
             <div className="mt-16 flow-root sm:mt-24">
               <div className="bg-muted ring-border -m-2 rounded-2xl p-2 ring-1 ring-inset lg:-m-4 lg:rounded-2xl lg:p-4">
-                <div className="bg-muted ring-border relative aspect-[16/9] w-full rounded-lg shadow-2xl ring-1">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-muted-foreground text-sm">App Screenshot Placeholder</p>
-                  </div>
+                <div className="bg-card ring-border relative aspect-[16/9] w-full overflow-hidden rounded-lg shadow-2xl ring-1">
+                  {/* TODO: Replace with actual screenshot via <Image src="/images/hero-screenshot.png" /> */}
+                  <AppPreviewMockup />
                 </div>
               </div>
             </div>
