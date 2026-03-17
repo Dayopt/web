@@ -2,7 +2,7 @@
   "marketing": {
     "hero": {
       "title": "Timeboxing, made simple",
-      "subtitle": "Plan your day in blocks, execute with focus, and reflect to improve — all in one app.",
+      "subtitle": "Timeboxing — planning your day in focused time blocks — made dead simple. Plan, execute, and reflect, all in one app.",
       "cta": "Get Started Free"
     },
     "problem": {
@@ -66,6 +66,7 @@
     "mission": {
       "title": "Why Dayopt exists",
       "description": "I built Dayopt because I kept losing days to reactive work. I had a calendar and a to-do list, but nothing that helped me plan realistically, stay on track, and learn from how I actually spent my time.",
+      "builderNote": "Built by an indie developer. Open development, no VC pressure, no data selling.",
       "values": {
         "simple": {
           "title": "Simple by design",
@@ -103,10 +104,10 @@
           "name": "Pro",
           "badge": "Recommended",
           "description": "Everything in Free, plus what you need to scale",
-          "price": "$29",
+          "price": "$5",
           "period": "/month",
-          "priceDaily": "Less than $1/day — less than a cup of coffee",
-          "cta": "Try free for 14 days",
+          "priceDaily": "Less than a cup of coffee per month",
+          "cta": "Get Started Free",
           "highlights": [
             "Unlimited projects & 100GB storage",
             "Advanced analytics & custom reports",
@@ -115,7 +116,7 @@
           ]
         }
       },
-      "trialNote": "No credit card required. Cancel anytime."
+      "trialNote": "No credit card required. Start free, upgrade anytime."
     },
     "contact": {
       "title": "Get in Touch",
