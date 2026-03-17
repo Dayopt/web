@@ -20,6 +20,7 @@ export async function MissionSection({ locale }: MissionSectionProps) {
           <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-relaxed">
             {t('mission.description')}
           </p>
+          <p className="text-muted-foreground mt-4 text-sm">{t('mission.builderNote')}</p>
         </div>
 
         <div className="mx-auto mt-16 grid max-w-5xl gap-12 md:grid-cols-3">

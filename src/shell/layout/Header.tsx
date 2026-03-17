@@ -14,9 +14,10 @@ export function Header() {
   const t = useTranslations('common');
 
   const navigation = [
+    { name: t('navigation.features'), href: '/#features' },
+    { name: t('navigation.pricing'), href: '/#pricing' },
     { name: t('navigation.blog'), href: '/blog' },
     { name: t('navigation.docs'), href: '/docs' },
-    { name: t('navigation.pricing'), href: '/#pricing' },
   ];
 
   useEffect(() => {
