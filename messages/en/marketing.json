@@ -63,6 +63,24 @@
         }
       }
     },
+    "mission": {
+      "title": "Why Dayopt exists",
+      "description": "I built Dayopt because I kept losing days to reactive work. I had a calendar and a to-do list, but nothing that helped me plan realistically, stay on track, and learn from how I actually spent my time.",
+      "values": {
+        "simple": {
+          "title": "Simple by design",
+          "description": "No feature bloat. One workflow — plan, execute, reflect — done well."
+        },
+        "honest": {
+          "title": "Honest time tracking",
+          "description": "Not about billing hours. About understanding where your time really goes."
+        },
+        "private": {
+          "title": "Your data, your business",
+          "description": "No ads, no selling data. You pay for the product, not with your attention."
+        }
+      }
+    },
     "pricing": {
       "title": "Pricing",
       "subtitle": "Start free. Upgrade as you grow.",

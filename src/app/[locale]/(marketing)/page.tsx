@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
 import {
   FeaturesSection,
+  MissionSection,
   PricingSection,
   ProblemSection,
   SolutionSection,
@@ -91,6 +92,9 @@ export default async function Home({ params }: PageProps) {
 
         {/* Features Section */}
         <FeaturesSection locale={locale} />
+
+        {/* Mission Section */}
+        <MissionSection locale={locale} />
 
         {/* Pricing Section */}
         <PricingSection locale={locale} />
