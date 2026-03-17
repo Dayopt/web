@@ -32,7 +32,7 @@ export function Header() {
     <header
       className={cn(
         'bg-background/95 supports-[backdrop-filter]:bg-background/60 z-dropdown sticky top-0 w-full backdrop-blur transition-shadow',
-        isScrolled && 'shadow-sm',
+        isScrolled && 'shadow-elevation-raised',
       )}
     >
       <nav

@@ -34,7 +34,7 @@ export async function FeaturesSection({ locale }: FeaturesSectionProps) {
             return (
               <Card
                 key={key}
-                className="border-border bg-background transition-shadow hover:shadow-lg"
+                className="border-border bg-background surface-flat hover:shadow-elevation-raised transition-shadow"
               >
                 <CardHeader>
                   <div className="bg-muted mb-4 inline-flex size-12 items-center justify-center rounded-lg">

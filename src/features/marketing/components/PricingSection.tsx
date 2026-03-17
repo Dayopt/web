@@ -67,7 +67,7 @@ export async function PricingSection({ locale }: PricingSectionProps) {
           </Card>
 
           {/* Pro Card (Highlighted) */}
-          <Card className="border-primary ring-primary/20 relative flex flex-col shadow-lg ring-2 md:scale-105">
+          <Card className="border-primary ring-primary/20 surface-raised relative flex flex-col ring-2 md:scale-105">
             <Badge className="bg-primary text-primary-foreground absolute -top-3 left-1/2 -translate-x-1/2">
               {t('pricing.plans.pro.badge')}
             </Badge>
