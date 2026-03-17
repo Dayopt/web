@@ -4,7 +4,7 @@ import { ContentHeader } from '@/components/content/ContentHeader';
 import { ContentPagination } from '@/components/ui/content-pagination';
 import { EmptyState } from '@/components/ui/empty-state';
 import { SearchInput } from '@/components/ui/search-input';
-import { Search } from 'lucide-react';
+import { Rss, Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -140,7 +140,18 @@ export function FilteredBlogClient({ initialPosts, tags, locale }: FilteredBlogC
 
   return (
     <div>
-      <ContentHeader title={t('header.title')} />
+      <div className="flex items-center justify-between">
+        <ContentHeader title={t('header.title')} />
+        <a
+          href="/blog/feed.xml"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="RSS Feed"
+        >
+          <Rss className="size-5" />
+        </a>
+      </div>
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
         {/* 左サイドバー: フィルター */}

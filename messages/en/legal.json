@@ -139,6 +139,12 @@
           "title": "Terms Modifications",
           "content": "We may modify these Terms as necessary. We will notify users in advance of any significant changes."
         },
+        "cancellation": {
+          "title": "Cancellation & Refunds",
+          "summary": "You may cancel your subscription at any time. No prorated refunds are provided for partial billing periods. Service remains available until the end of your current billing period.",
+          "details": "For full details, please see our Refund & Cancellation Policy.",
+          "detailsLink": "/legal/refund"
+        },
         "governingLaw": {
           "title": "Governing Law & Jurisdiction",
           "law": "These Terms are governed by Japanese law",
@@ -154,11 +160,46 @@
       "email": "support@dayopt.app",
       "website": "https://dayopt.app"
     },
+    "refund": {
+      "title": "Refund & Cancellation Policy",
+      "description": "Information about cancelling your subscription and our refund policy",
+      "sections": {
+        "cancellation": {
+          "title": "Cancellation Policy",
+          "anytime": "You can cancel your subscription at any time from your account settings.",
+          "access": "After cancellation, you will continue to have access to the service until the end of your current billing period.",
+          "noDowngrade": "Your subscription will not renew at the end of the billing period."
+        },
+        "refund": {
+          "title": "Refund Policy",
+          "general": "We do not provide prorated refunds for partial billing periods.",
+          "exception": "In exceptional circumstances, such as extended service outages or billing errors, we may issue refunds at our discretion.",
+          "request": "To request a refund for exceptional circumstances, please contact us at support@dayopt.app within 30 days of the charge."
+        },
+        "freeTrial": {
+          "title": "Free Trial",
+          "content": "If you cancel during your free trial period, you will not be charged. No credit card is required to start a free trial."
+        },
+        "howToCancel": {
+          "title": "How to Cancel",
+          "step1": "Log in to your Dayopt account",
+          "step2": "Go to Settings > Subscription",
+          "step3": "Click \"Cancel Subscription\"",
+          "step4": "Confirm your cancellation",
+          "note": "You will receive a confirmation email once your cancellation is processed."
+        },
+        "contact": {
+          "title": "Questions?",
+          "content": "If you have any questions about cancellation or refunds, please contact us at:"
+        }
+      }
+    },
     "navigation": {
       "backToApp": "← Back to Dayopt",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "tokushoho": "Commercial Transactions Act",
+      "refund": "Refund Policy",
       "security": "Security",
       "ossCredits": "OSS Licenses"
     },

@@ -42,17 +42,11 @@ export function Footer() {
       { name: t('common.navigation.docs'), href: '/docs' },
       { name: t('common.navigation.releases'), href: '/releases' },
     ],
-    support: [
-      { name: t('common.navigation.contact'), href: '/contact' },
-      {
-        name: tFooter('support.reportIssue'),
-        href: 'https://github.com/dayopt/dayopt-web/issues/new',
-        external: true,
-      },
-    ],
+    support: [{ name: t('common.navigation.contact'), href: '/contact' }],
     legal: [
       { name: tFooter('legal.termsOfService'), href: '/legal/terms' },
       { name: tFooter('legal.privacyPolicy'), href: '/legal/privacy' },
+      { name: tFooter('legal.refundPolicy'), href: '/legal/refund' },
       { name: tFooter('legal.tokushoho'), href: '/legal/tokushoho' },
     ],
   };

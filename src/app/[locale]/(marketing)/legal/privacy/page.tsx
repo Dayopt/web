@@ -194,22 +194,24 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
         </section>
       </div>
 
-      {/* 法的レビュー警告 */}
-      <div className="bg-muted border-destructive mt-12 rounded-2xl border-2 p-6">
-        <div className="flex items-start gap-4">
-          <span className="text-2xl">⚠️</span>
-          <div>
-            <p className="text-destructive font-bold">{t('legal.reviewWarning.title')}</p>
-            <p className="text-muted-foreground mt-1 text-sm">
-              {t('legal.reviewWarning.description')}
-            </p>
-            <ul className="text-muted-foreground mt-2 list-inside list-disc text-sm">
-              <li>{t('legal.reviewWarning.items.lawyer')}</li>
-              <li>{t('legal.reviewWarning.items.update')}</li>
-            </ul>
+      {/* 法的レビュー警告（開発環境のみ表示） */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="bg-muted border-destructive mt-12 rounded-2xl border-2 p-6">
+          <div className="flex items-start gap-4">
+            <span className="text-2xl">⚠️</span>
+            <div>
+              <p className="text-destructive font-bold">{t('legal.reviewWarning.title')}</p>
+              <p className="text-muted-foreground mt-1 text-sm">
+                {t('legal.reviewWarning.description')}
+              </p>
+              <ul className="text-muted-foreground mt-2 list-inside list-disc text-sm">
+                <li>{t('legal.reviewWarning.items.lawyer')}</li>
+                <li>{t('legal.reviewWarning.items.update')}</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { Link } from '@/platform/i18n/navigation';
 import type { Locale } from '@/platform/i18n/routing';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
@@ -143,7 +144,25 @@ export default async function TermsOfServicePage({ params }: PageProps) {
           </ul>
         </section>
 
-        {/* 9. 規約の変更 */}
+        {/* 9. 解約・返金 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.cancellation.title')}
+          </h2>
+          <p className="text-foreground leading-relaxed">
+            {t('legal.terms.sections.cancellation.summary')}
+          </p>
+          <p className="text-foreground mt-4 leading-relaxed">
+            <Link
+              href={t('legal.terms.sections.cancellation.detailsLink')}
+              className="text-primary underline hover:no-underline"
+            >
+              {t('legal.terms.sections.cancellation.details')}
+            </Link>
+          </p>
+        </section>
+
+        {/* 10. 規約の変更 */}
         <section>
           <h2 className="mb-4 text-2xl font-bold">
             {t('legal.terms.sections.modifications.title')}
@@ -181,22 +200,24 @@ export default async function TermsOfServicePage({ params }: PageProps) {
         </section>
       </div>
 
-      {/* 法的レビュー警告 */}
-      <div className="bg-muted border-destructive mt-12 rounded-2xl border-2 p-6">
-        <div className="flex items-start gap-4">
-          <span className="text-2xl">⚠️</span>
-          <div>
-            <p className="text-destructive font-bold">{t('legal.reviewWarning.title')}</p>
-            <p className="text-muted-foreground mt-1 text-sm">
-              {t('legal.reviewWarning.description')}
-            </p>
-            <ul className="text-muted-foreground mt-2 list-inside list-disc text-sm">
-              <li>{t('legal.reviewWarning.items.lawyer')}</li>
-              <li>{t('legal.reviewWarning.items.update')}</li>
-            </ul>
+      {/* 法的レビュー警告（開発環境のみ表示） */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="bg-muted border-destructive mt-12 rounded-2xl border-2 p-6">
+          <div className="flex items-start gap-4">
+            <span className="text-2xl">⚠️</span>
+            <div>
+              <p className="text-destructive font-bold">{t('legal.reviewWarning.title')}</p>
+              <p className="text-muted-foreground mt-1 text-sm">
+                {t('legal.reviewWarning.description')}
+              </p>
+              <ul className="text-muted-foreground mt-2 list-inside list-disc text-sm">
+                <li>{t('legal.reviewWarning.items.lawyer')}</li>
+                <li>{t('legal.reviewWarning.items.update')}</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

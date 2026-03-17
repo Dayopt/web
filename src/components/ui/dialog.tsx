@@ -52,7 +52,7 @@ const DialogContent = ({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          'border-border bg-card text-card-foreground z-modal fixed top-[50%] left-[50%] grid translate-x-[-50%] translate-y-[-50%] gap-4 rounded-2xl border p-6 shadow-xl duration-200',
+          'border-border bg-card text-card-foreground surface-raised-heavy z-modal fixed top-[50%] left-[50%] grid translate-x-[-50%] translate-y-[-50%] gap-4 rounded-2xl border p-6 duration-200',
           !className?.includes('max-w-')
             ? 'w-full max-w-[calc(100vw-2rem)] min-w-80 sm:max-w-lg'
             : 'w-full max-w-[calc(100vw-2rem)] min-w-80',

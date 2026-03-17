@@ -2,23 +2,23 @@
   "marketing": {
     "hero": {
       "title": "Timeboxing, made simple",
-      "subtitle": "Plan your day in blocks, execute with focus, and reflect to improve — all in one app.",
+      "subtitle": "Stop over-planning, start doing. See exactly what you can realistically achieve each day — and get better at it.",
       "cta": "Get Started Free"
     },
     "problem": {
       "title": "Sound familiar?",
       "items": {
         "separateApps": {
-          "title": "Calendar and tasks live in separate apps",
-          "description": "You switch between tools to plan, but nothing stays in sync."
+          "title": "Your plan lives in one app, your work in another",
+          "description": "Google Calendar for meetings, Todoist for tasks, Notion for notes. Nothing talks to each other."
         },
         "plansFallApart": {
-          "title": "Plans fall apart by midday",
-          "description": "You start the day with good intentions, but distractions take over."
+          "title": "By 10am, your morning plan is gone",
+          "description": "Slack pings, email, a 'quick sync' — your focused deep work block never stood a chance."
         },
         "noReview": {
-          "title": "No easy way to review how time was spent",
-          "description": "The day ends and you can't tell where the hours went."
+          "title": "Friday comes and you can't name what you finished",
+          "description": "You were busy all week. But what did you actually accomplish? You're not sure."
         }
       }
     },
@@ -29,17 +29,17 @@
         "plan": {
           "number": "01",
           "title": "Plan",
-          "description": "Drag tasks onto your calendar as timeboxes. Set how long each block should take."
+          "description": "Drag tasks onto your calendar as time blocks. Syncs with Google Calendar. Commit to real hours — not wishful thinking."
         },
         "execute": {
           "number": "02",
           "title": "Execute",
-          "description": "Work through your blocks one at a time. Track actual time as you go."
+          "description": "Work through your blocks one at a time. One click to start, one click to finish. No timers to babysit."
         },
         "reflect": {
           "number": "03",
           "title": "Reflect",
-          "description": "See planned vs actual. Identify patterns and improve your next day."
+          "description": "You planned 4 hours of deep work but delivered 2.5. Why? Dayopt shows you the patterns — so tomorrow is better."
         }
       }
     },
@@ -51,15 +51,41 @@
       "items": {
         "accuracyScore": {
           "title": "Accuracy Score",
-          "description": "See how closely your day matched your plan. A simple metric that drives continuous improvement."
+          "description": "See how closely your day matched your plan. A simple metric that drives continuous improvement.",
+          "example": "Plan 2 hours of deep work, complete 1.5 → score 75%. Track weekly trends to improve your estimates."
         },
         "energyMapping": {
           "title": "Energy Mapping",
-          "description": "Log your focus and energy levels throughout the day. Discover when you do your best work."
+          "description": "Log your focus and energy levels throughout the day. Discover when you do your best work.",
+          "example": "One tap after each block. After a week, see your peak hours and schedule important work there."
         },
         "aiReflection": {
           "title": "AI Reflection",
-          "description": "Get personalized insights and suggestions based on your patterns. Improve without the guesswork."
+          "description": "Get personalized insights and suggestions based on your patterns. Improve without the guesswork.",
+          "example": "Weekly summary: 'Deep work on Tuesday afternoons has a 90% completion rate. Consider blocking more.'"
+        }
+      },
+      "integrations": {
+        "title": "Works with your tools",
+        "items": ["Google Calendar sync", "Keyboard shortcuts", "API access"]
+      }
+    },
+    "mission": {
+      "title": "Why Dayopt exists",
+      "description": "I built Dayopt because I kept losing days to reactive work. I had a calendar and a to-do list, but nothing that helped me plan realistically, stay on track, and learn from how I actually spent my time.",
+      "builderNote": "Built by an indie developer. Open development, no VC pressure, no data selling.",
+      "values": {
+        "simple": {
+          "title": "Simple by design",
+          "description": "No feature bloat. One workflow — plan, execute, reflect — done well."
+        },
+        "honest": {
+          "title": "Honest time tracking",
+          "description": "Not about billing hours. About understanding where your time really goes."
+        },
+        "private": {
+          "title": "Your data, your business",
+          "description": "No ads, no selling data. You pay for the product, not with your attention."
         }
       }
     },
@@ -72,7 +98,7 @@
           "description": "Everything you need to experience timeboxing",
           "price": "$0",
           "period": "",
-          "cta": "Get Started Free",
+          "cta": "Start Free",
           "features": [
             "Up to 3 projects",
             "1GB storage",
@@ -84,20 +110,20 @@
         "pro": {
           "name": "Pro",
           "badge": "Recommended",
-          "description": "Everything in Free, plus what you need to scale",
-          "price": "$29",
+          "description": "Unlimited projects, AI insights, and advanced analytics",
+          "price": "$5",
           "period": "/month",
-          "priceDaily": "Less than $1/day — less than a cup of coffee",
-          "cta": "Try free for 14 days",
+          "priceDaily": "About 15¢ a day",
+          "cta": "Try Pro Free",
           "highlights": [
             "Unlimited projects & 100GB storage",
-            "Advanced analytics & custom reports",
-            "Team collaboration & custom integrations",
+            "AI-powered weekly insights",
+            "Advanced analytics & trends",
             "Priority support"
           ]
         }
       },
-      "trialNote": "No credit card required. Cancel anytime."
+      "trialNote": "No credit card required. Start free, upgrade anytime."
     },
     "contact": {
       "title": "Get in Touch",

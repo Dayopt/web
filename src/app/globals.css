@@ -1,6 +1,16 @@
 @import 'tailwindcss';
 @import 'highlight.js/styles/github.css';
 
+/* Design Tokens */
+@import '../styles/tokens/colors.css';
+@import '../styles/tokens/elevation.css';
+
+/* Tailwind Theme Mapping */
+@import '../styles/tailwind-theme.css';
+
+/* Utilities */
+@import '../styles/utilities.css';
+
 /* Tailwind Plugins */
 @plugin '@tailwindcss/typography';
 
@@ -8,360 +18,9 @@
 @variant dark (.dark &);
 
 /* ============================================
- * カラーシステム（modern-minimal OKLCH）
- * app側と完全同期（GAFA準拠）
+ * ベーススタイル
  * ============================================ */
 
-/* ライトモード（CSS変数定義） */
-:root {
-  /* ============================================
-   * Surface体系（GAFA準拠・4段階）
-   * Material Design 3 / Apple HIG の共通原則に基づく意味ベース設計
-   *
-   * Background: ページ背景（最明）
-   * Overlay: ポップオーバー（background直下の明度）
-   * Container: サイドバー、セクション
-   * Card: カード、ダイアログ
-   *
-   * 明度順（ライト）: background > overlay > container > card
-   * 各段階で約3%の明度差（GAFA準拠）
-   * ============================================ */
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.25 0 0);
-
-  /* Surface（意味ベース4段階・GAFA準拠の明度差） */
-  --overlay: oklch(0.96 0 0);
-  --container: oklch(0.93 0 0);
-  --card: oklch(0.9 0 0);
-
-  /* 互換性エイリアス（shadcn/ui用） */
-  --card-foreground: oklch(0.25 0 0);
-  --popover: var(--overlay);
-  --popover-foreground: oklch(0.25 0 0);
-  --secondary: var(--container);
-  --secondary-foreground: oklch(0.25 0 0);
-  --muted-foreground: oklch(0.35 0.02 264.54);
-
-  /* Primary */
-  --primary: oklch(0.45 0.188 259.8145);
-  --primary-foreground: oklch(1 0 0);
-
-  /* State: Active（選択中・アクティブ状態） */
-  --state-active: oklch(0.9514 0.025 236.8242);
-  --state-active-foreground: oklch(0.3791 0.1378 265.5222);
-
-  /* shadcn/ui互換エイリアス（accent → state-active） */
-  --accent: var(--state-active);
-  --accent-foreground: var(--state-active-foreground);
-
-  /* Semantic Colors */
-  --destructive: oklch(0.6368 0.2078 25.3313);
-  --destructive-foreground: oklch(1 0 0);
-  --warning: oklch(0.7039 0.1555 68.04);
-  --warning-foreground: oklch(1 0 0);
-  --success: oklch(0.5859 0.1684 149.2);
-  --success-foreground: oklch(1 0 0);
-  --info: oklch(0.4 0 0);
-  --info-foreground: oklch(1 0 0);
-
-  /* Tooltip（反転デザイン） */
-  --tooltip: oklch(0.25 0 0);
-  --tooltip-foreground: oklch(0.95 0 0);
-
-  /* Borders & Inputs */
-  --border: oklch(0.75 0.01 264.54);
-  --input: var(--overlay);
-  --ring: oklch(0.6231 0.188 259.8145);
-
-  /* Charts */
-  --chart-1: oklch(0.6231 0.188 259.8145);
-  --chart-2: oklch(0.5461 0.2152 262.8809);
-  --chart-3: oklch(0.4882 0.2172 264.3763);
-  --chart-4: oklch(0.4244 0.1809 265.6377);
-  --chart-5: oklch(0.3791 0.1378 265.5222);
-
-  /* ============================================
-   * Tag Colors（ライトモード）
-   * ダークモードでは明度を上げてアクセシビリティ確保
-   * ============================================ */
-  --tag-blue: oklch(0.62 0.21 257);
-  --tag-green: oklch(0.67 0.17 162);
-  --tag-red: oklch(0.63 0.23 25);
-  --tag-amber: oklch(0.78 0.18 75);
-  --tag-violet: oklch(0.55 0.24 293);
-  --tag-pink: oklch(0.64 0.22 350);
-  --tag-cyan: oklch(0.68 0.14 203);
-  --tag-orange: oklch(0.7 0.2 45);
-  --tag-gray: oklch(0.52 0.02 256);
-  --tag-indigo: oklch(0.54 0.24 275);
-}
-
-/* ダークモード（CSS変数上書き） */
-.dark {
-  /* ============================================
-   * Surface体系（GAFA準拠・4段階）
-   * MD3原則: 高いelevationほど明るい
-   * 各段階で約5〜6%の明度差（GAFA準拠）
-   *
-   * 明度順（ダーク）: overlay > background > container > card
-   * ============================================ */
-  --background: oklch(0.24 0 0);
-  --foreground: oklch(0.9219 0 0);
-
-  /* Surface（意味ベース4段階・GAFA準拠の明度差） */
-  --overlay: oklch(0.3 0 0);
-  --container: oklch(0.18 0 0);
-  --card: oklch(0.12 0 0);
-
-  /* 互換性エイリアス（shadcn/ui用） */
-  --card-foreground: oklch(0.9219 0 0);
-  --popover: var(--overlay);
-  --popover-foreground: oklch(0.9219 0 0);
-  --secondary: var(--container);
-  --secondary-foreground: oklch(0.95 0 0);
-  --muted-foreground: oklch(0.78 0 0);
-
-  /* Primary */
-  --primary: oklch(0.5 0.188 259.8145);
-  --primary-foreground: oklch(1 0 0);
-
-  /* State: Active（選択中・アクティブ状態） */
-  --state-active: oklch(0.3791 0.1378 265.5222);
-  --state-active-foreground: oklch(0.8823 0.0571 254.1284);
-
-  /* shadcn/ui互換エイリアス（accent → state-active） */
-  --accent: var(--state-active);
-  --accent-foreground: var(--state-active-foreground);
-
-  /* Semantic Colors */
-  --destructive: oklch(0.6368 0.2078 25.3313);
-  --destructive-foreground: oklch(1 0 0);
-  --warning: oklch(0.7039 0.1555 68.04);
-  --warning-foreground: oklch(1 0 0);
-  --success: oklch(0.5859 0.1684 149.2);
-  --success-foreground: oklch(1 0 0);
-  --info: oklch(0.4 0 0);
-  --info-foreground: oklch(1 0 0);
-
-  /* Tooltip（反転デザイン - ダークモードでは明るい背景） */
-  --tooltip: oklch(0.9 0 0);
-  --tooltip-foreground: oklch(0.2 0 0);
-
-  /* Borders & Inputs */
-  --border: oklch(0.3715 0 0);
-  --input: var(--overlay);
-  --ring: oklch(0.6231 0.188 259.8145);
-
-  /* Charts */
-  --chart-1: oklch(0.7137 0.1434 254.624);
-  --chart-2: oklch(0.6231 0.188 259.8145);
-  --chart-3: oklch(0.5461 0.2152 262.8809);
-  --chart-4: oklch(0.4882 0.2172 264.3763);
-  --chart-5: oklch(0.4244 0.1809 265.6377);
-
-  /* ============================================
-   * Tag Colors（ダークモード用）
-   * 明度を上げ、彩度を下げてアクセシビリティ確保
-   * WCAG 2.1 非テキスト要素コントラスト比 3:1 以上を目標
-   * ============================================ */
-  --tag-blue: oklch(0.75 0.18 257);
-  --tag-green: oklch(0.78 0.15 162);
-  --tag-red: oklch(0.75 0.2 25);
-  --tag-amber: oklch(0.85 0.16 75);
-  --tag-violet: oklch(0.72 0.2 293);
-  --tag-pink: oklch(0.76 0.18 350);
-  --tag-cyan: oklch(0.78 0.12 203);
-  --tag-orange: oklch(0.8 0.17 45);
-  --tag-gray: oklch(0.7 0.02 256);
-  --tag-indigo: oklch(0.72 0.2 275);
-}
-
-/* Tailwindへのマッピング（@theme inline） */
-@theme inline {
-  /* ============================================
-   * ステートレイヤー（M3準拠）
-   * foregroundベースの半透明オーバーレイ
-   * dayopt-appと同期
-   * ============================================ */
-  --color-state-hover: oklch(from var(--foreground) l c h / 10%);
-  --color-state-focus: oklch(from var(--foreground) l c h / 12%);
-  --color-state-pressed: oklch(from var(--foreground) l c h / 12%);
-  --color-state-selected: oklch(from var(--foreground) l c h / 12%);
-  --color-state-dragged: oklch(from var(--foreground) l c h / 16%);
-  --color-state-active: var(--state-active);
-  --color-state-active-foreground: var(--state-active-foreground);
-
-  /* 塗りボタン用ホバー（背景色を暗くする方式） */
-  --color-primary-hover: oklch(from var(--primary) l c h / 90%);
-  --color-destructive-hover: oklch(from var(--destructive) l c h / 90%);
-  --color-warning-hover: oklch(from var(--warning) l c h / 90%);
-  --color-success-hover: oklch(from var(--success) l c h / 90%);
-  --color-info-hover: oklch(from var(--info) l c h / 90%);
-  --color-secondary-hover: oklch(from var(--secondary) l c h / 80%);
-
-  /* セマンティックGhostホバー（薄い背景色） */
-  --color-primary-state-hover: oklch(from var(--primary) l c h / 10%);
-  --color-destructive-state-hover: oklch(from var(--destructive) l c h / 10%);
-
-  /* ============================================
-   * Surface トークン（GAFA準拠・4段階）
-   * ============================================ */
-  --color-overlay: var(--overlay);
-  --color-container: var(--container);
-
-  /* 共通トークン */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--container);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-info: var(--info);
-  --color-info-foreground: var(--info-foreground);
-  --color-tooltip: var(--tooltip);
-  --color-tooltip-foreground: var(--tooltip-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
-  /* ============================================
-   * Shadow トークン（ドラッグ、ホバー時のシャドウ）
-   * dayopt-appと同期
-   * ============================================ */
-  --shadow-color: oklch(0 0 0 / 15%);
-  --shadow-color-heavy: oklch(0 0 0 / 20%);
-
-  /* ============================================
-   * Tag Colors（ユーザー選択用カラーパレット）
-   * 使用例: bg-tag-blue, text-tag-red
-   * ============================================ */
-  --color-tag-blue: var(--tag-blue);
-  --color-tag-green: var(--tag-green);
-  --color-tag-red: var(--tag-red);
-  --color-tag-amber: var(--tag-amber);
-  --color-tag-violet: var(--tag-violet);
-  --color-tag-pink: var(--tag-pink);
-  --color-tag-cyan: var(--tag-cyan);
-  --color-tag-orange: var(--tag-orange);
-  --color-tag-gray: var(--tag-gray);
-  --color-tag-indigo: var(--tag-indigo);
-}
-
-@theme {
-  /* ============================================
-   * スペーシング（8pxグリッド）
-   * ============================================ */
-  --spacing-xs: 0.5rem; /* 8px */
-  --spacing-sm: 1rem; /* 16px */
-  --spacing-md: 1.5rem; /* 24px */
-  --spacing-lg: 2rem; /* 32px */
-  --spacing-xl: 3rem; /* 48px */
-  --spacing-2xl: 4rem; /* 64px */
-
-  /* ============================================
-   * ボーダー半径（Storybook準拠・5種類のみ）
-   * rounded-none: 0px    — タブ、結合部分
-   * rounded:      4px    — タグ、バッジ（Tailwind既定）
-   * rounded-lg:   8px    — 標準: ボタン、入力、カード（Tailwind既定）
-   * rounded-2xl:  16px   — モーダル、ダイアログ（Tailwind既定）
-   * rounded-full: 9999px — アバター、ピル型（Tailwind既定）
-   * ※ 上記5種類以外のradiusクラスは使用禁止
-   * ============================================ */
-
-  /* ============================================
-   * シャドウ（Storybook Elevation準拠・6段階）
-   * Level 0: none, Level 1-5: xs, sm, md, lg, xl
-   * ============================================ */
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-
-  /* ============================================
-   * タイポグラフィトークン
-   * Tailwindの text-* クラスにマッピング
-   * ============================================ */
-
-  /* フォントサイズ（Tailwind v4 デフォルト）→ text-xs, text-sm 等で使用可能 */
-  --text-xs: 0.75rem; /* 12px */
-  --text-sm: 0.875rem; /* 14px */
-  --text-base: 1rem; /* 16px */
-  --text-lg: 1.125rem; /* 18px */
-  --text-xl: 1.25rem; /* 20px */
-  --text-2xl: 1.5rem; /* 24px */
-  --text-3xl: 1.875rem; /* 30px */
-  --text-4xl: 2.25rem; /* 36px */
-  --text-5xl: 3rem; /* 48px */
-  --text-6xl: 3.75rem; /* 60px */
-
-  /* セマンティックエイリアス（参照用） */
-  --font-size-xs: var(--text-xs);
-  --font-size-sm: var(--text-sm);
-  --font-size-base: var(--text-base);
-  --font-size-lg: var(--text-lg);
-  --font-size-xl: var(--text-xl);
-  --font-size-2xl: var(--text-2xl);
-  --font-size-3xl: var(--text-3xl);
-  --font-size-4xl: var(--text-4xl);
-
-  /* 見出し用エイリアス */
-  --font-size-heading-h1: var(--text-5xl); /* 48px */
-  --font-size-heading-h2: var(--text-3xl); /* 30px */
-  --font-size-heading-h3: var(--text-2xl); /* 24px */
-  --font-size-heading-h4: var(--text-xl); /* 20px */
-
-  /* フォントウェイト → font-normal, font-medium 等で使用可能 */
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-
-  /* 行間 → leading-tight, leading-normal 等で使用可能 */
-  --leading-tight: 1.2;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.75;
-
-  /* 旧エイリアス（後方互換） */
-  --line-height-tight: var(--leading-tight);
-  --line-height-normal: var(--leading-normal);
-  --line-height-relaxed: var(--leading-relaxed);
-
-  /* ============================================
-   * Z-Index（Storybook準拠・セマンティックレイヤー）
-   * 用途別に階層化されたz-index値
-   * 値が大きいほど前面に表示される
-   * 使用例: z-dropdown, z-modal, z-tooltip
-   * ============================================ */
-  --z-index-dropdown: 50;
-  --z-index-popover: 100;
-  --z-index-sheet: 150;
-  --z-index-modal: 200;
-  --z-index-toast: 300;
-  --z-index-tooltip: 9999;
-}
-
-/* ブラウザUIのダークモード対応 */
 html {
   color-scheme: light;
   scroll-behavior: smooth;
@@ -371,13 +30,11 @@ html.dark {
   color-scheme: dark;
 }
 
-/* システムフォント（GAFA方針準拠フォールバックスタック） */
-/* NOTE: Google Fonts アクセス制限により一時的にシステムフォントのみを使用 */
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans',
     'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
-  font-size: 1rem; /* 16px - GAFA業界標準ベースサイズ */
+  font-size: 1rem;
   line-height: 1.6;
   margin: 0;
   padding: 0;
@@ -386,17 +43,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-img,
-picture,
-video,
-canvas,
-svg {
+img, picture, video, canvas, svg {
   max-width: 100%;
   height: auto;
 }
 
 /* Accessibility - focus states */
-/* Note: input, textarea, select have custom focus styles in their components */
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--ring);
@@ -406,27 +58,14 @@ button:focus-visible {
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
-  :root {
-    --border: oklch(0 0 0);
-  }
-
-  .dark {
-    --border: oklch(1 0 0);
-  }
-
-  button,
-  input,
-  select,
-  textarea {
-    border-width: 2px;
-  }
+  :root { --border: oklch(0 0 0); }
+  .dark { --border: oklch(1 0 0); }
+  button, input, select, textarea { border-width: 2px; }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -435,152 +74,9 @@ button:focus-visible {
 }
 
 /* ============================================
- * Utilities
- * ============================================ */
-@layer utilities {
-  /* Screen reader only */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* Responsive text */
-  .text-responsive-sm {
-    @apply text-sm sm:text-base;
-  }
-  .text-responsive-base {
-    @apply text-base sm:text-lg;
-  }
-  .text-responsive-lg {
-    @apply text-lg sm:text-xl;
-  }
-  .text-responsive-xl {
-    @apply text-xl sm:text-2xl;
-  }
-  .text-responsive-2xl {
-    @apply text-2xl sm:text-3xl;
-  }
-  .text-responsive-3xl {
-    @apply text-3xl sm:text-4xl lg:text-5xl;
-  }
-
-  /* 8px Grid spacing */
-  .space-responsive {
-    @apply space-y-4 sm:space-y-6 lg:space-y-8;
-  }
-  .gap-responsive {
-    @apply gap-4 sm:gap-6 lg:gap-8;
-  }
-  .p-responsive {
-    @apply p-4 sm:p-6 lg:p-8;
-  }
-
-  /* Touch targets */
-  .touch-target {
-    @apply flex min-h-[48px] min-w-[48px] items-center justify-center;
-  }
-
-  /* Visibility */
-  .mobile-only {
-    @apply block sm:hidden;
-  }
-  .desktop-only {
-    @apply hidden lg:block;
-  }
-
-  /* Line clamp */
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
-
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-
-  .line-clamp-3 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
-}
-
-/* ============================================
- * アニメーション（Storybook Motion準拠）
+ * Syntax Highlighting（highlight.js）
  * ============================================ */
 
-/* Shimmer - スケルトンローダー（Facebook/LinkedIn方式） */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--container) 0%,
-    var(--overlay) 50%,
-    var(--container) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-.dark .animate-shimmer {
-  background: linear-gradient(90deg, var(--container) 0%, var(--card) 50%, var(--container) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-/* Shake - エラーフィードバック（Apple HIG準拠） */
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: translateX(-4px);
-  }
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translateX(4px);
-  }
-}
-
-.animate-shake {
-  animation: shake 0.4s ease-in-out;
-}
-
-/* ============================================
- * Syntax Highlighting（highlight.js GitHub theme）
- * github.css をベーステーマとして使用。
- * background は MDX の bg-muted に委譲するため transparent に上書き。
- * ============================================ */
-
-/* ベース: 背景・パディングは MDX コンポーネント側で管理 */
 .hljs {
   background: transparent;
   color: inherit;
@@ -591,28 +87,19 @@ pre code.hljs {
   padding: 0;
 }
 
-/* ダークモード: github-dark.css のトークンカラーを .dark 下で適用 */
-.dark .hljs {
-  color: #c9d1d9;
-}
-
+/* ダークモード: github-dark トークンカラー */
+.dark .hljs { color: #c9d1d9; }
 .dark .hljs-doctag,
 .dark .hljs-keyword,
 .dark .hljs-meta .hljs-keyword,
 .dark .hljs-template-tag,
 .dark .hljs-template-variable,
 .dark .hljs-type,
-.dark .hljs-variable.language_ {
-  color: #ff7b72;
-}
-
+.dark .hljs-variable.language_ { color: #ff7b72; }
 .dark .hljs-title,
 .dark .hljs-title.class_,
 .dark .hljs-title.class_.inherited__,
-.dark .hljs-title.function_ {
-  color: #d2a8ff;
-}
-
+.dark .hljs-title.function_ { color: #d2a8ff; }
 .dark .hljs-attr,
 .dark .hljs-attribute,
 .dark .hljs-literal,
@@ -622,63 +109,23 @@ pre code.hljs {
 .dark .hljs-variable,
 .dark .hljs-selector-attr,
 .dark .hljs-selector-class,
-.dark .hljs-selector-id {
-  color: #79c0ff;
-}
-
+.dark .hljs-selector-id { color: #79c0ff; }
 .dark .hljs-regexp,
 .dark .hljs-string,
-.dark .hljs-meta .hljs-string {
-  color: #a5d6ff;
-}
-
+.dark .hljs-meta .hljs-string { color: #a5d6ff; }
 .dark .hljs-built_in,
-.dark .hljs-symbol {
-  color: #ffa657;
-}
-
+.dark .hljs-symbol { color: #ffa657; }
 .dark .hljs-comment,
 .dark .hljs-code,
-.dark .hljs-formula {
-  color: #8b949e;
-}
-
+.dark .hljs-formula { color: #8b949e; }
 .dark .hljs-name,
 .dark .hljs-quote,
 .dark .hljs-selector-tag,
-.dark .hljs-selector-pseudo {
-  color: #7ee787;
-}
-
-.dark .hljs-subst {
-  color: #c9d1d9;
-}
-
-.dark .hljs-section {
-  color: #1f6feb;
-  font-weight: bold;
-}
-
-.dark .hljs-bullet {
-  color: #f2cc60;
-}
-
-.dark .hljs-emphasis {
-  color: #c9d1d9;
-  font-style: italic;
-}
-
-.dark .hljs-strong {
-  color: #c9d1d9;
-  font-weight: bold;
-}
-
-.dark .hljs-addition {
-  color: #aff5b4;
-  background-color: #033a16;
-}
-
-.dark .hljs-deletion {
-  color: #ffdcd7;
-  background-color: #67060c;
-}
+.dark .hljs-selector-pseudo { color: #7ee787; }
+.dark .hljs-subst { color: #c9d1d9; }
+.dark .hljs-section { color: #1f6feb; font-weight: bold; }
+.dark .hljs-bullet { color: #f2cc60; }
+.dark .hljs-emphasis { color: #c9d1d9; font-style: italic; }
+.dark .hljs-strong { color: #c9d1d9; font-weight: bold; }
+.dark .hljs-addition { color: #aff5b4; background-color: #033a16; }
+.dark .hljs-deletion { color: #ffdcd7; background-color: #67060c; }

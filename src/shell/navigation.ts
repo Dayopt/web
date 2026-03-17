@@ -71,5 +71,9 @@ export function generateDocsNavigation(): NavigationSection[] {
         { title: 'Notifications', href: '/docs/account/notifications' },
       ],
     },
+    {
+      title: 'FAQ',
+      items: [{ title: 'Frequently Asked Questions', href: '/docs/faq' }],
+    },
   ];
 }
