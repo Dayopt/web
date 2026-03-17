@@ -147,6 +147,16 @@ const nextConfig = {
         destination: '/:locale',
         permanent: true,
       },
+      {
+        source: '/changelog',
+        destination: '/releases',
+        permanent: true,
+      },
+      {
+        source: '/:locale/changelog',
+        destination: '/:locale/releases',
+        permanent: true,
+      },
     ]
   },
 

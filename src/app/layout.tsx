@@ -32,6 +32,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Dayopt Blog"
+          href="/blog/feed.xml"
+        />
         <StructuredData
           type="Organization"
           data={{
