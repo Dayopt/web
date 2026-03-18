@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { TagPill } from '@/components/ui/tag-pill';
 import { Heading, Text } from '@/components/ui/typography';
 import { Breadcrumbs, ClientTableOfContents, mdxComponents, PageNavigation } from '@/features/docs';
+import { faqMdxComponents } from '@/features/docs/components/MDXComponents';
 import { getAllContent, getMDXContentForRSC, getRelatedContent } from '@/lib/mdx';
 import { Link } from '@/platform/i18n/navigation';
 import { ContentData } from '@/types/content';
@@ -169,7 +170,7 @@ export default async function DocPage({ params }: DocPageProps) {
             <article>
               <MDXRemote
                 source={mdxContent}
-                components={mdxComponents}
+                components={category === 'faq' && contentSlug ? faqMdxComponents : mdxComponents}
                 options={{
                   mdxOptions: {
                     remarkPlugins: [remarkGfm],
