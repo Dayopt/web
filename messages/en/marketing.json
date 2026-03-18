@@ -1,9 +1,9 @@
 {
   "marketing": {
     "hero": {
-      "title": "Timeboxing, made simple",
-      "subtitle": "Stop over-planning, start doing. See exactly what you can realistically achieve each day — and get better at it.",
-      "cta": "Get Started Free"
+      "title": "One workflow. Every day, a little better.",
+      "subtitle": "A simple loop: plan, execute, reflect. Each cycle, your estimates get sharper and your days get calmer.",
+      "cta": "Begin With One Day"
     },
     "problem": {
       "title": "Sound familiar?",
@@ -51,17 +51,17 @@
       "items": {
         "accuracyScore": {
           "title": "Accuracy Score",
-          "description": "See how closely your day matched your plan. A simple metric that drives continuous improvement.",
+          "description": "Not a grade. A mirror. See the gap between intention and execution — then gradually close it.",
           "example": "Plan 2 hours of deep work, complete 1.5 → score 75%. Track weekly trends to improve your estimates."
         },
         "energyMapping": {
           "title": "Energy Mapping",
-          "description": "Log your focus and energy levels throughout the day. Discover when you do your best work.",
+          "description": "Your body has a rhythm. Map it. Then stop fighting your energy and start working with it.",
           "example": "One tap after each block. After a week, see your peak hours and schedule important work there."
         },
         "aiReflection": {
           "title": "AI Reflection",
-          "description": "Get personalized insights and suggestions based on your patterns. Improve without the guesswork.",
+          "description": "AI-powered, but human-focused. Insights that help you gradually become more intentional about your time.",
           "example": "Weekly summary: 'Deep work on Tuesday afternoons has a 90% completion rate. Consider blocking more.'"
         }
       },
