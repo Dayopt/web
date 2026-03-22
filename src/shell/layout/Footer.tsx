@@ -46,6 +46,7 @@ export function Footer() {
     legal: [
       { name: tFooter('legal.termsOfService'), href: '/legal/terms' },
       { name: tFooter('legal.privacyPolicy'), href: '/legal/privacy' },
+      { name: tFooter('legal.cookiePolicy'), href: '/legal/cookies' },
       { name: tFooter('legal.refundPolicy'), href: '/legal/refund' },
       { name: tFooter('legal.tokushoho'), href: '/legal/tokushoho' },
     ],
