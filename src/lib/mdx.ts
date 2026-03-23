@@ -167,17 +167,29 @@ export async function getMDXContentForRSC(
   slug: string,
   locale?: string,
 ): Promise<{ content: string; frontMatter: FrontMatter } | null> {
+  // Try direct file first (e.g. "faq/features" → "faq/features.mdx")
   const filePath = `${slug}.mdx`;
   const content = await getMDXContent(filePath, locale);
 
-  if (!content) {
-    return null;
+  if (content) {
+    return {
+      content: content.content,
+      frontMatter: content.frontMatter,
+    };
   }
 
-  return {
-    content: content.content,
-    frontMatter: content.frontMatter,
-  };
+  // Fallback to index file (e.g. "faq" → "faq/index.mdx")
+  const indexPath = `${slug}/index.mdx`;
+  const indexContent = await getMDXContent(indexPath, locale);
+
+  if (indexContent) {
+    return {
+      content: indexContent.content,
+      frontMatter: indexContent.frontMatter,
+    };
+  }
+
+  return null;
 }
 
 /**

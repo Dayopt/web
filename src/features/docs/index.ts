@@ -4,7 +4,7 @@ export { ClientSidebar } from './components/ClientSidebar';
 export { ClientTableOfContents } from './components/ClientTableOfContents';
 export { CopyCodeButton } from './components/CopyCodeButton';
 export { DocsHeader } from './components/DocsHeader';
-export { mdxComponents } from './components/MDXComponents';
+export { faqMdxComponents, mdxComponents } from './components/MDXComponents';
 export { PageNavigation } from './components/PageNavigation';
 export {
   buildTocTree,

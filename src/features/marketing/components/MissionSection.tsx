@@ -17,7 +17,7 @@ export async function MissionSection({ locale }: MissionSectionProps) {
           <h2 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
             {t('mission.title')}
           </h2>
-          <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-relaxed">
+          <p className="text-muted-foreground mx-auto mt-6 max-w-3xl text-lg leading-relaxed">
             {t('mission.description')}
           </p>
           <p className="text-muted-foreground mt-4 text-sm">{t('mission.builderNote')}</p>
@@ -51,13 +51,13 @@ export async function MissionSection({ locale }: MissionSectionProps) {
           </div>
         </div>
 
-        <div className="border-border mx-auto mt-12 flex max-w-3xl flex-col items-center justify-center gap-6 border-t pt-8 sm:flex-row sm:gap-12">
+        <div className="border-border mx-auto mt-12 grid max-w-3xl grid-cols-1 gap-8 border-t pt-8 sm:grid-cols-3">
           {valueKeys.map((key) => (
             <div key={key} className="text-center">
               <h3 className="text-foreground text-sm font-bold">
                 {t(`mission.values.${key}.title`)}
               </h3>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
                 {t(`mission.values.${key}.description`)}
               </p>
             </div>

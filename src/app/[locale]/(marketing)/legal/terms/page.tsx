@@ -36,7 +36,7 @@ export default async function TermsOfServicePage({ params }: PageProps) {
   const t = await getTranslations({ locale });
 
   // 最終更新日（実際のプロジェクトでは、CMSや設定ファイルから取得）
-  const lastUpdated = '2025-10-15';
+  const lastUpdated = '2026-03-23';
 
   return (
     <div className="bg-background container mx-auto min-h-screen max-w-4xl px-4 py-12 md:px-8 md:py-16">
@@ -114,7 +114,113 @@ export default async function TermsOfServicePage({ params }: PageProps) {
           </ul>
         </section>
 
-        {/* 6. データのバックアップ */}
+        {/* 6. AI機能 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">{t('legal.terms.sections.aiTerms.title')}</h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.terms.sections.aiTerms.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.aiTerms.providers')}</li>
+            <li>{t('legal.terms.sections.aiTerms.noTraining')}</li>
+            <li>{t('legal.terms.sections.aiTerms.byok')}</li>
+            <li>{t('legal.terms.sections.aiTerms.accuracy')}</li>
+            <li>{t('legal.terms.sections.aiTerms.limits')}</li>
+            <li>{t('legal.terms.sections.aiTerms.liability')}</li>
+          </ul>
+        </section>
+
+        {/* 7. サブスクリプションプラン */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.subscriptionPlans.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.terms.sections.subscriptionPlans.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.subscriptionPlans.free')}</li>
+            <li>{t('legal.terms.sections.subscriptionPlans.pro')}</li>
+            <li>{t('legal.terms.sections.subscriptionPlans.changes')}</li>
+            <li>{t('legal.terms.sections.subscriptionPlans.downgrade')}</li>
+          </ul>
+        </section>
+
+        {/* 8. データの所有権とエクスポート */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.dataOwnership.title')}
+          </h2>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.dataOwnership.ownership')}</li>
+            <li>{t('legal.terms.sections.dataOwnership.license')}</li>
+            <li>{t('legal.terms.sections.dataOwnership.export')}</li>
+            <li>{t('legal.terms.sections.dataOwnership.termination')}</li>
+          </ul>
+        </section>
+
+        {/* 7. 利用ポリシー */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.acceptableUse.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.terms.sections.acceptableUse.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.acceptableUse.automation')}</li>
+            <li>{t('legal.terms.sections.acceptableUse.reverse')}</li>
+            <li>{t('legal.terms.sections.acceptableUse.abuse')}</li>
+            <li>{t('legal.terms.sections.acceptableUse.resale')}</li>
+            <li>{t('legal.terms.sections.acceptableUse.security')}</li>
+          </ul>
+        </section>
+
+        {/* 8. サービスレベルと可用性 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.serviceLevel.title')}
+          </h2>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.serviceLevel.target')}</li>
+            <li>{t('legal.terms.sections.serviceLevel.maintenance')}</li>
+            <li>{t('legal.terms.sections.serviceLevel.status')}</li>
+            <li>{t('legal.terms.sections.serviceLevel.credits')}</li>
+          </ul>
+        </section>
+
+        {/* 9. 責任の制限 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.limitationOfLiability.title')}
+          </h2>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.limitationOfLiability.cap')}</li>
+            <li>{t('legal.terms.sections.limitationOfLiability.indirect')}</li>
+            <li>{t('legal.terms.sections.limitationOfLiability.forceMajeure')}</li>
+            <li>{t('legal.terms.sections.limitationOfLiability.exceptions')}</li>
+          </ul>
+        </section>
+
+        {/* 10. 補償 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.indemnification.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.terms.sections.indemnification.obligation')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.indemnification.violations')}</li>
+            <li>{t('legal.terms.sections.indemnification.thirdParty')}</li>
+            <li>{t('legal.terms.sections.indemnification.misuse')}</li>
+          </ul>
+          <p className="text-muted-foreground mt-4 text-sm">
+            {t('legal.terms.sections.indemnification.notification')}
+          </p>
+        </section>
+
+        {/* 11. データのバックアップ */}
         <section>
           <h2 className="mb-4 text-2xl font-bold">{t('legal.terms.sections.dataBackup.title')}</h2>
           <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
@@ -183,7 +289,20 @@ export default async function TermsOfServicePage({ params }: PageProps) {
           </ul>
         </section>
 
-        {/* 11. お問い合わせ */}
+        {/* 一般条項 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.terms.sections.generalProvisions.title')}
+          </h2>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.terms.sections.generalProvisions.severability')}</li>
+            <li>{t('legal.terms.sections.generalProvisions.entireAgreement')}</li>
+            <li>{t('legal.terms.sections.generalProvisions.waiver')}</li>
+            <li>{t('legal.terms.sections.generalProvisions.assignment')}</li>
+          </ul>
+        </section>
+
+        {/* お問い合わせ */}
         <section>
           <h2 className="mb-4 text-2xl font-bold">{t('legal.terms.sections.contact.title')}</h2>
           <p className="text-foreground mb-4 leading-relaxed">

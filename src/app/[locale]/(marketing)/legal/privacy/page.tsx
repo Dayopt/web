@@ -1,3 +1,4 @@
+import { Link } from '@/platform/i18n/navigation';
 import type { Locale } from '@/platform/i18n/routing';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
@@ -35,7 +36,7 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
   const t = await getTranslations({ locale });
 
   // 最終更新日（実際のプロジェクトでは、CMSや設定ファイルから取得）
-  const lastUpdated = '2025-10-15';
+  const lastUpdated = '2026-03-23';
 
   return (
     <div className="bg-background container mx-auto min-h-screen max-w-4xl px-4 py-12 md:px-8 md:py-16">
@@ -103,7 +104,114 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
           </p>
         </section>
 
-        {/* 5. データ保持期間 */}
+        {/* 5. データの所有権 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.privacy.sections.dataOwnership.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.dataOwnership.content')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.dataOwnership.export')}</li>
+            <li>{t('legal.privacy.sections.dataOwnership.termination')}</li>
+          </ul>
+        </section>
+
+        {/* 6. サブプロセッサー */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.privacy.sections.subProcessors.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.subProcessors.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.subProcessors.supabase')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.vercel')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.sentry')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.stripe')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.anthropic')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.openai')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.resend')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.upstash')}</li>
+            <li>{t('legal.privacy.sections.subProcessors.google')}</li>
+          </ul>
+          <p className="text-muted-foreground mt-4 text-sm">
+            {t('legal.privacy.sections.subProcessors.changes')}
+          </p>
+        </section>
+
+        {/* 7. 国際データ移転 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.privacy.sections.internationalTransfers.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.internationalTransfers.content')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.internationalTransfers.location')}</li>
+            <li>{t('legal.privacy.sections.internationalTransfers.safeguards')}</li>
+            <li>{t('legal.privacy.sections.internationalTransfers.japan')}</li>
+          </ul>
+        </section>
+
+        {/* 8. 処理の法的根拠 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.privacy.sections.legalBasis.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.legalBasis.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.legalBasis.contract')}</li>
+            <li>{t('legal.privacy.sections.legalBasis.consent')}</li>
+            <li>{t('legal.privacy.sections.legalBasis.legitimate')}</li>
+            <li>{t('legal.privacy.sections.legalBasis.legal')}</li>
+          </ul>
+        </section>
+
+        {/* 9. データ処理の詳細 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.privacy.sections.dataProcessing.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.dataProcessing.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.dataProcessing.accountData')}</li>
+            <li>{t('legal.privacy.sections.dataProcessing.usageData')}</li>
+            <li>{t('legal.privacy.sections.dataProcessing.technicalData')}</li>
+          </ul>
+          <p className="text-foreground mt-4 leading-relaxed">
+            {t('legal.privacy.sections.dataProcessing.automated')}
+          </p>
+          <p className="text-foreground mt-4 leading-relaxed">
+            {t('legal.privacy.sections.dataProcessing.exportInfo')}
+          </p>
+        </section>
+
+        {/* 10. AI機能 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.privacy.sections.aiFeatures.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.aiFeatures.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.aiFeatures.whatIsSent')}</li>
+            <li>{t('legal.privacy.sections.aiFeatures.noTraining')}</li>
+            <li>{t('legal.privacy.sections.aiFeatures.byok')}</li>
+            <li>{t('legal.privacy.sections.aiFeatures.limitations')}</li>
+            <li>{t('legal.privacy.sections.aiFeatures.optOut')}</li>
+          </ul>
+        </section>
+
+        {/* 11. データ保持期間 */}
         <section>
           <h2 className="mb-4 text-2xl font-bold">
             {t('legal.privacy.sections.dataRetention.title')}
@@ -126,6 +234,7 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
             <li>{t('legal.privacy.sections.userRights.deletion')}</li>
             <li>{t('legal.privacy.sections.userRights.portability')}</li>
             <li>{t('legal.privacy.sections.userRights.objection')}</li>
+            <li>{t('legal.privacy.sections.userRights.complaint')}</li>
           </ul>
           <p className="text-muted-foreground mt-4 text-sm">
             {t('legal.privacy.sections.userRights.contact')}
@@ -159,9 +268,48 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
           <p className="text-muted-foreground mt-4 text-sm">
             {t('legal.privacy.sections.cookies.control')}
           </p>
+          <p className="text-foreground mt-4 leading-relaxed">
+            <Link href="/legal/cookies" className="text-primary underline hover:no-underline">
+              {t('legal.privacy.sections.cookies.policyLink')}
+            </Link>
+          </p>
         </section>
 
-        {/* 9. 未成年者について */}
+        {/* 14. データ侵害時の通知 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">
+            {t('legal.privacy.sections.dataBreach.title')}
+          </h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.dataBreach.content')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.dataBreach.notify')}</li>
+            <li>{t('legal.privacy.sections.dataBreach.inform')}</li>
+            <li>{t('legal.privacy.sections.dataBreach.document')}</li>
+            <li>{t('legal.privacy.sections.dataBreach.measures')}</li>
+          </ul>
+        </section>
+
+        {/* 15. カリフォルニア州のプライバシー権 */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">{t('legal.privacy.sections.ccpa.title')}</h2>
+          <p className="text-foreground mb-4 leading-relaxed">
+            {t('legal.privacy.sections.ccpa.intro')}
+          </p>
+          <ul className="text-foreground list-inside list-disc space-y-2 leading-relaxed">
+            <li>{t('legal.privacy.sections.ccpa.know')}</li>
+            <li>{t('legal.privacy.sections.ccpa.delete')}</li>
+            <li>{t('legal.privacy.sections.ccpa.noSell')}</li>
+            <li>{t('legal.privacy.sections.ccpa.nondiscrimination')}</li>
+            <li>{t('legal.privacy.sections.ccpa.categories')}</li>
+          </ul>
+          <p className="text-muted-foreground mt-4 text-sm">
+            {t('legal.privacy.sections.ccpa.contact')}
+          </p>
+        </section>
+
+        {/* 16. 未成年者について */}
         <section>
           <h2 className="mb-4 text-2xl font-bold">{t('legal.privacy.sections.children.title')}</h2>
           <p className="text-foreground leading-relaxed">

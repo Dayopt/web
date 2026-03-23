@@ -1,4 +1,5 @@
 import { createMDXComponents } from '@/components/content/ContentMDXComponents';
+import { generateAnchorId } from '@/features/docs/lib/toc';
 import type { MDXComponents } from 'mdx/types';
 import Link from 'next/link';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
@@ -92,7 +93,7 @@ function CustomLink({ href, children, ...props }: CustomLinkProps) {
 
 // ─── Docs MDX Components ────────────────────────────────────────────
 
-export const mdxComponents: MDXComponents = createMDXComponents({
+const docsOverrides = {
   // Docs: CopyCodeButton 付きコードブロック
   code: ({ children, className }: CodeComponentProps) => {
     if (className) {
@@ -108,4 +109,37 @@ export const mdxComponents: MDXComponents = createMDXComponents({
 
   // Docs: 外部リンクアイコン付き
   a: CustomLink,
+};
+
+export const mdxComponents: MDXComponents = createMDXComponents(docsOverrides);
+
+// ─── FAQ MDX Components ─────────────────────────────────────────────
+
+type HeadingProps = ComponentPropsWithoutRef<'h2'> & { children?: ReactNode };
+type ParagraphProps = ComponentPropsWithoutRef<'p'>;
+
+export const faqMdxComponents: MDXComponents = createMDXComponents({
+  ...docsOverrides,
+
+  // FAQ: 質問スタイルの h2 — "Q." ラベル付きカード
+  h2: (props: HeadingProps) => {
+    const text = props.children?.toString() || '';
+    const id = generateAnchorId(text);
+    return (
+      <h2
+        id={id}
+        className="border-border bg-container mt-10 flex items-baseline gap-3 rounded-lg border px-5 py-4 text-xl font-bold first:mt-0"
+      >
+        <span className="text-primary flex-shrink-0 text-base font-bold tracking-wide">Q.</span>
+        <span className="text-foreground">{props.children}</span>
+      </h2>
+    );
+  },
+
+  // FAQ: 回答スタイルの p — "A." 風のインデント + 左ボーダー
+  p: (props: ParagraphProps) => (
+    <div className="border-primary/20 ml-2 border-l-2 py-1 pl-6">
+      <p className="text-muted-foreground text-lg leading-7" {...props} />
+    </div>
+  ),
 });

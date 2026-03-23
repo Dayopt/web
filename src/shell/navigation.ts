@@ -73,7 +73,16 @@ export function generateDocsNavigation(): NavigationSection[] {
     },
     {
       title: 'FAQ',
-      items: [{ title: 'Frequently Asked Questions', href: '/docs/faq' }],
+      items: [
+        { title: 'Overview', href: '/docs/faq' },
+        { title: 'Features', href: '/docs/faq/features' },
+        { title: 'Comparisons', href: '/docs/faq/comparison' },
+        { title: 'Privacy & Security', href: '/docs/faq/privacy-security' },
+        { title: 'Pricing', href: '/docs/faq/pricing' },
+        { title: 'Technical', href: '/docs/faq/technical' },
+        { title: 'Philosophy', href: '/docs/faq/philosophy' },
+        { title: 'General', href: '/docs/faq/general' },
+      ],
     },
   ];
 }

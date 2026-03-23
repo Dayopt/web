@@ -24,22 +24,20 @@ export async function ProblemSection({ locale }: ProblemSectionProps) {
           {t('problem.title')}
         </h2>
 
-        <div className="mx-auto mt-12 max-w-2xl space-y-8">
+        <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-3">
           {problemKeys.map((key) => {
             const Icon = problemIcons[key];
             return (
-              <div key={key} className="flex items-start gap-4">
-                <div className="bg-background mt-1 inline-flex size-10 shrink-0 items-center justify-center rounded-lg">
+              <div key={key} className="flex flex-col items-center text-center">
+                <div className="bg-background inline-flex size-10 items-center justify-center rounded-lg">
                   <Icon className="text-muted-foreground size-5" />
                 </div>
-                <div>
-                  <h3 className="text-foreground text-base font-bold">
-                    {t(`problem.items.${key}.title`)}
-                  </h3>
-                  <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-                    {t(`problem.items.${key}.description`)}
-                  </p>
-                </div>
+                <h3 className="text-foreground mt-4 text-base font-bold">
+                  {t(`problem.items.${key}.title`)}
+                </h3>
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                  {t(`problem.items.${key}.description`)}
+                </p>
               </div>
             );
           })}
