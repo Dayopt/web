@@ -201,7 +201,7 @@ jobs:
 
       - name: PR Summary Comment
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9.0.0
         with:
           script: |
             const getEmoji = (result) => {
